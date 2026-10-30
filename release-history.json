@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "0.1.0": {
+    "sdk_version": "0.1.0",
+    "cookery_version": [
+      1,
+      6,
+      20001
+    ],
+    "payloads": {
+      "sdk.json": "9a38c4e697b46f34d2694c48f22bcd467eaf1748a2701c1cbdeaa032ae33f610",
+      "src/host_api/event_router.js": "666bc03cdd7bc93a9843feba71de5b0c48e5f1b5173c6529d6beeb43308227b9",
+      "src/host_api/food_api_core.js": "63794a5c86263a058f1424119cd3a5445db7a70fc64bb9d32c6a11fc9a160542",
+      "adapters/cookery-1.6.4.json": "90b2024e09e0a4a2abf5305d457cac206fb11b28a12bea25ff131e475d7012f5",
+      "tools/install_cookery.py": "ea0fec65caae7318451db8926f8873e5c05fde07a82e10a28beca59012b23856"
+    },
+    "original_cookery_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
+    "generated_cookery_sha256": "b65eb33606fed56180ce389ec0d01fb953fbb27457f3aed2bf688e0c8569b63a",
+    "grilling_version": [
+      2,
+      8,
+      201
+    ],
+    "grilling_sha256": "5cef5795b5ef40a800d8ac5592419dbcca40eeb7b2e036ed5c3c8c2bd7901fe4"
+  }
+}

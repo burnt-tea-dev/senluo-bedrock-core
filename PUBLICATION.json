@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "files": [
+    ".github/workflows/ci.yml",
+    ".gitignore",
+    ".repo-target.json",
+    "AGENTS.md",
+    "LICENSE",
+    "PUBLICATION.json",
+    "README.md",
+    "adapters/cookery-1.6.4.json",
+    "docs/COOKERY.md",
+    "docs/SDK.md",
+    "docs/VALIDATION.md",
+    "package.json",
+    "release-history.json",
+    "sdk.json",
+    "src/host_api/event_router.js",
+    "src/host_api/food_api_core.js",
+    "tests/sdk.test.mjs",
+    "tests/test_install_cookery.py",
+    "tools/build_release.py",
+    "tools/install_cookery.py"
+  ],
+  "rule": "Only these reviewed source/SDK/tool files are distributable. Original and generated author archives are never release assets."
+}

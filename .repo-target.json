@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "repository": "burnt-tea-dev/senluo-bedrock-core",
+  "repository_id": 1439792715,
+  "default_branch": "main",
+  "project": "Senluo Bedrock Core SDK",
+  "require_remote_identity_check_before_write": true,
+  "owner": {
+    "login": "burnt-tea-dev",
+    "id": 344456559,
+    "type": "Organization"
+  },
+  "private": false
+}
