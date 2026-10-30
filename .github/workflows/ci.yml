@@ -22,4 +22,12 @@ jobs:
           node-version: '22'
       - run: node --test tests/*.test.mjs
       - run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: burnt-tea-dev/kaleidoscope-grilling-unofficial
+          ref: 61864d017a1e4e9847325cd7313098b4379dc2e9
+          path: .grilling-input
+          persist-credentials: false
+      - name: Reproduce pinned public Grilling companion
+        run: python tools/build_grilling_input.py --source .grilling-input --output "$RUNNER_TEMP/Grilling-2.8.201.mcaddon"
       - run: python tools/build_release.py --output dist
