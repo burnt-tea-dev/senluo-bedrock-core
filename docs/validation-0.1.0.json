@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "version": "0.1.0",
+  "validated_at": "2026-10-30T14:33:47.295880+00:00",
+  "sdk": {
+    "version": "0.1.0",
+    "files": {
+      "scripts/host_api/event_router.js": {
+        "source": "src/host_api/event_router.js",
+        "sha256": "666bc03cdd7bc93a9843feba71de5b0c48e5f1b5173c6529d6beeb43308227b9"
+      },
+      "scripts/host_api/food_api_core.js": {
+        "source": "src/host_api/food_api_core.js",
+        "sha256": "63794a5c86263a058f1424119cd3a5445db7a70fc64bb9d32c6a11fc9a160542"
+      }
+    },
+    "consumer_grilling_version": [
+      2,
+      8,
+      201
+    ],
+    "consumer_runtime_bytes_changed": false
+  },
+  "local_build": {
+    "author_cookery_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
+    "grilling_sha256": "5cef5795b5ef40a800d8ac5592419dbcca40eeb7b2e036ed5c3c8c2bd7901fe4",
+    "output_sha256": "b65eb33606fed56180ce389ec0d01fb953fbb27457f3aed2bf688e0c8569b63a",
+    "cookery_local_version": [
+      1,
+      6,
+      20001
+    ],
+    "unchanged_author_files": 3443,
+    "unchanged_author_tree_sha256": "5da60fa22c1767fe3b9c313ee93ecbb5897a344e87fa1e463ab8918ad7ab8939",
+    "output_tree_sha256": "2c7251f41512103ba63c53cd9f8125d306b65e6aee5d509b3f26864f528e425f",
+    "owned_helper_count": 16,
+    "pack_and_module_uuids_preserved": true
+  },
+  "native": {
+    "bds_version": "1.26.60.6",
+    "bds_sha256": "ea16b541a448e07c337848d2c5f37321b706554b5216dd942f3f11e7a8ed2bad",
+    "saved_namespace_fixture": true,
+    "fixture_scope": "QA-only diagnostic import, two SDK helpers and an on_area_loaded callback in the original Cookery script module; original UUIDs and actual ItemStacks. Base archives are unchanged. Not a full-family deployment rehearsal.",
+    "phases": [
+      {
+        "phase": "old-cookery-clean",
+        "passed": true,
+        "normal_stop": true,
+        "errors": 0,
+        "both_registration_markers": false,
+        "log_sha256": "6b87da86e1d8ef8cc71e6df3e8004abb092eba0a2ab77603ee27bb9f497eded1",
+        "startup_watchdog_warnings": [
+          "Spike from 'Kaleidoscope Cookery v1.6.4 [BP]' (120ms)",
+          "Spike from 'Kaleidoscope Grilling BP' (149ms)"
+        ]
+      },
+      {
+        "phase": "new-cookery-first",
+        "passed": true,
+        "normal_stop": true,
+        "errors": 0,
+        "both_registration_markers": true,
+        "log_sha256": "1e8eee48446c8ac7a03e34cf05c84cb9785472c7fab1a5edabee0a621fe68d29",
+        "startup_watchdog_warnings": [
+          "Spike from 'Kaleidoscope Cookery v1.6.4 [BP]' (135ms)",
+          "Spike from 'Kaleidoscope Grilling BP' (145ms)"
+        ]
+      },
+      {
+        "phase": "new-cookery-restart",
+        "passed": true,
+        "normal_stop": true,
+        "errors": 0,
+        "both_registration_markers": true,
+        "log_sha256": "7d957ef463c8874c608874543f98738b9892ba8d61690a44e25a1a9837c8b650",
+        "startup_watchdog_warnings": [
+          "Spike from 'Kaleidoscope Cookery v1.6.4 [BP]' (144ms)",
+          "Spike from 'Kaleidoscope Grilling BP' (156ms)"
+        ]
+      },
+      {
+        "phase": "old-cookery-rollback",
+        "passed": true,
+        "normal_stop": true,
+        "errors": 0,
+        "both_registration_markers": false,
+        "log_sha256": "a3ec40ecc248f37c0e37fda05d62e99231f873a3a172de94eb266415e70545e7",
+        "startup_watchdog_warnings": [
+          "Spike from 'Kaleidoscope Cookery v1.6.4 [BP]' (125ms)",
+          "Spike from 'Kaleidoscope Grilling BP' (148ms)"
+        ]
+      }
+    ],
+    "metadata_preserved": [
+      "world dynamic properties",
+      "item dynamic properties",
+      "type and quantity",
+      "custom name",
+      "custom and translated lore",
+      "public food v1 heat deadline 1201 and seasoning/quality",
+      "enchantments",
+      "durability",
+      "canDestroy/canPlaceOn",
+      "keepOnDeath/lockMode"
+    ],
+    "memory_limit_bytes": 2684354560,
+    "swap_limit_bytes": 0,
+    "reserve_bytes": 2147483648,
+    "qa_restored": {
+      "refs_exactly_restored": true,
+      "temporary_pack_copies_removed": true,
+      "engine_idle": true
+    }
+  },
+  "acceptance": {
+    "sdk_release_checks": true,
+    "full_family_gate_b": false,
+    "live_deployment": false,
+    "rendered_client": false,
+    "complete_java_parity": false,
+    "multiplayer_performance": false,
+    "production_ready": false
+  },
+  "diagnostic_failures_preserved": "Earlier fixture/control failures remain separate. An unloaded chunk caused a false missing-stack result; native on_area_loaded callback confirmed the original chest and payload. No failed receipt was converted to a pass."
+}

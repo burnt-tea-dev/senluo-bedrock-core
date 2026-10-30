@@ -1,9 +1,9 @@
-# Validation
+# Validation 0.1.0
 
-Release validation is in progress. No validated installable Core release has been published.
+The SDK/local-adapter release checks passed on BDS 1.26.60.6. The [machine-readable summary](validation-0.1.0.json) pins inputs, outputs, module hashes and the scope of each check.
 
-The SDK consumer bytes match Grilling 2.8.201. SDK behavior tests and the Python local installer tests pass. A clean author Cookery 1.6.4 archive plus the pinned Grilling archive reproducibly produce the same local archive. All 3,443 untouched author files preserve their exact bytes; changed hooks and 16 owned helper copies match the public declaration. Original pack and module UUIDs remain unchanged.
+- SDK behavior and six Python installer tests passed in CI. The public Grilling source reproduces the exact pinned Grilling archive; clean author Cookery plus that input reproduce the exact adapted archive. All 3,443 unchanged author files retain their bytes. The ten reviewed host files and sixteen owned helpers match the public declaration. Pack and module UUIDs remain unchanged.
+- Native startup/restart accepted Cookery 1.6.20001 with Grilling 2.8.201. A separate original-UUID compatibility fixture passed old Cookery readback, candidate first load, candidate restart, and original Cookery rollback on the same existing QA database. It preserved world/item dynamic properties and a real chest ItemStack with name, lore, public heat/quality/seasoning, enchantment, durability and block permissions.
+- The compatibility fixture adds QA-only diagnostic code in the original Cookery script module. Its SDK helper copies match the published bytes. It uses the native on_area_loaded callback before reading a chest; a fixed two-second delay produced earlier false missing-item results. Earlier harness failures and raw logs remain preserved separately.
 
-Initial BDS 1.26.60.6 startup and restart accepted the adapted Cookery 1.6.20001 pair with Grilling 2.8.201. The first diagnostic retained an unrelated existing QA probe; its logs and startup watchdog warnings are preserved privately and this does not count as a full-family or saved-world gate. A controlled host-namespace saved-data and rollback check remains in progress.
-
-No rendered client, sound, complete Java parity, multiplayer performance, full-family deployment or real player acceptance is claimed.
+Startup watchdog spikes were observed and are retained in the summary. This is SDK and host-namespace evidence; it does not establish full-family saved-world admission, multiplayer performance, rendered gameplay, sound, complete Java parity or real-player acceptance. Client and production-ready status remain false. No LIVE world was changed for these checks.
