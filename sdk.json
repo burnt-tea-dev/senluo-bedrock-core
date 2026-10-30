@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "version": "0.1.0",
+  "files": {
+    "scripts/host_api/event_router.js": {
+      "source": "src/host_api/event_router.js",
+      "sha256": "666bc03cdd7bc93a9843feba71de5b0c48e5f1b5173c6529d6beeb43308227b9"
+    },
+    "scripts/host_api/food_api_core.js": {
+      "source": "src/host_api/food_api_core.js",
+      "sha256": "63794a5c86263a058f1424119cd3a5445db7a70fc64bb9d32c6a11fc9a160542"
+    }
+  },
+  "provenance": {
+    "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+    "commit": "61864d017a1e4e9847325cd7313098b4379dc2e9",
+    "scope": "Owned portable event routing and public item metadata SDK; copied byte-for-byte. Gameplay, persist keys, author modules and assets remain with their owners."
+  },
+  "data_owner": "Consumer host UUID; Core introduces no persistent keys, pack identity or scheduler."
+}
