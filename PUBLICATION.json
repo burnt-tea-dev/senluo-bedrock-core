@@ -19,6 +19,7 @@
     "src/host_api/food_api_core.js",
     "tests/sdk.test.mjs",
     "tests/test_install_cookery.py",
+    "tools/build_grilling_input.py",
     "tools/build_release.py",
     "tools/install_cookery.py"
   ],
