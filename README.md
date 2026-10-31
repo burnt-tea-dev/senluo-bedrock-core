@@ -22,11 +22,12 @@ official author release. Keep a complete stopped-world backup before upgrading.
 - [Owned-port adapters](docs/PORT-ADAPTERS.md)
 - [Validation limits](docs/VALIDATION.md)
 
-The generic family assembler is available as local tooling, but this release
-does not include a reviewed full-family recipe. The G203 Cookery adapter is a
-local owned-port integration; it does not establish that the full public family
-has the same gameplay as the live server. Its source and client behavior are not
-an engine or player acceptance result.
+The family assembler includes a pinned descriptor for our Tavern 0.6.194,
+Grilling 2.8.203 and World Liquor 0.1.180 ports plus the local Cookery adapter.
+It generates a file-by-file recipe from independently obtained inputs and
+assembles them without gameplay changes. Other authors' addon gameplay is
+outside this comparison. Full native, multiplayer and rendered gameplay
+acceptance for this combination remain pending; see the assembly instructions.
 
 Author archives, complete author modules, worlds, private integration history,
 server configuration and credentials are not distributed here. Obtain Cookery

@@ -64,5 +64,29 @@
       8,
       203
     ]
+  },
+  "0.4.0": {
+    "sdk_version": "0.1.0",
+    "toolkit_version": "0.4.0",
+    "scope": "Pinned owned three-port/local Cookery recipe generator; unchanged SDK, adapter runtime and save ownership. Other third-party gameplay excluded. Native/client/multiplayer acceptance remains separate.",
+    "payloads": {
+      "PUBLICATION.json": "6a7e982c836af479318aa7832bfaf7f3ef818c13cf89ba04671ae46e68e72aee",
+      "README.md": "d762d76b59ffd20671ccbedc019a887062a7d9b074d68708128cbe2280b63823",
+      "package.json": "32a17d43cf03c232ae3cf71980c0492c127d9bcb8480e40041c257183119ebd0",
+      "adapters/owned-t194-g203-w180.json": "43d5e000affe3716266ca42078fa6014368f463a2145f160048036eccd6aa32b",
+      "tools/build_owned_family_recipe.py": "e24e0bafd54a232c4a02242a46f78877f45b138ca3881f27fe78693ccf8140f2",
+      "tests/test_build_owned_family_recipe.py": "8b2c02cd5234d830b120b59045cb1a3ffb8482dca1149c9bc86abe7078eb8471",
+      "docs/FAMILY-ASSEMBLY.md": "a914150b3fd70ca33b037a9854fee8041728cea5d9b1d013fdbefc1bf4d97a96"
+    },
+    "cookery_version": [
+      1,
+      6,
+      20002
+    ],
+    "grilling_version": [
+      2,
+      8,
+      203
+    ]
   }
 }

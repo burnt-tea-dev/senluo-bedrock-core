@@ -1,0 +1,237 @@
+{
+  "schema": 1,
+  "id": "senluo-core:owned-t194-g203-w180",
+  "toolkit_version": "0.4.0",
+  "recipe_version": "1.0.0",
+  "scope": "Owned Tavern, Grilling and World Liquor ports plus the user-local Cookery host adapter. Other third-party addon gameplay is excluded.",
+  "inputs": {
+    "tavern": {
+      "filename": "Kaleidoscope_Tavern_Unofficial_0.6.194_baseline1.mcaddon",
+      "sha256": "03131885ffa8b243146b5dd02db3fdcc60cf217df969a4d7f55f3d47f1c3b0bb",
+      "distribution": "owned-public-release"
+    },
+    "grilling": {
+      "filename": "Kaleidoscope_Grilling_Unofficial_2.8.203_baseline1.mcaddon",
+      "sha256": "37e7fb693f98ec528ea41e4e3d2f6b0c922cca1101bdeae826b3da93353fc8d4",
+      "distribution": "owned-public-release"
+    },
+    "world-liquor": {
+      "filename": "Kaleidoscope_World_Liquor_Unofficial_0.1.180_baseline1.mcaddon",
+      "sha256": "979b9b89702fa809053a20138cca30dc72ca511aa2a49bcfa5d052f761087498",
+      "distribution": "owned-public-release"
+    },
+    "cookery": {
+      "filename": "cookery-g203.mcaddon",
+      "sha256": "84c30231acb5709351b4e3cfa13817ffc9a969e1cc1437d41cd5395189be71f4",
+      "distribution": "user-local-only"
+    }
+  },
+  "packs": [
+    {
+      "id": "tavern-bp",
+      "input": "tavern",
+      "uuid": "f54f37f9-485a-55bf-8f89-6558aca988c5",
+      "version": [
+        0,
+        6,
+        194
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "7ef0dab4-2bd9-5cc6-a84c-a0b6fac17ab1",
+          "version": [
+            0,
+            6,
+            194
+          ]
+        },
+        {
+          "uuid": "733b7540-9264-51f0-9c5b-e834378cb3ae",
+          "version": [
+            0,
+            6,
+            194
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tavern-rp",
+      "input": "tavern",
+      "uuid": "c2990d50-2cf7-59f7-886a-0f2d0240d156",
+      "version": [
+        0,
+        6,
+        194
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "54eba729-c2c9-538c-b7ca-c15aa6f6eb3c",
+          "version": [
+            0,
+            6,
+            194
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grilling-bp",
+      "input": "grilling",
+      "uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+      "version": [
+        2,
+        8,
+        203
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "dcf70052-c592-56e3-84d2-2a9b86abe7ab",
+          "version": [
+            2,
+            8,
+            203
+          ]
+        },
+        {
+          "uuid": "d0bb6818-8187-5d20-8e1f-a2ab7b517795",
+          "version": [
+            2,
+            8,
+            203
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grilling-rp",
+      "input": "grilling",
+      "uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+      "version": [
+        2,
+        8,
+        203
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "e7d592db-f4a0-53ce-8b0a-cab7a0cee8d7",
+          "version": [
+            2,
+            8,
+            203
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world-liquor-bp",
+      "input": "world-liquor",
+      "uuid": "355ffdfc-50e6-5a33-a126-4d78ab955b2b",
+      "version": [
+        0,
+        1,
+        180
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "6fd4fc8c-d15a-5bfb-acc5-6a06ef97e442",
+          "version": [
+            0,
+            1,
+            180
+          ]
+        },
+        {
+          "uuid": "536f813a-e373-57d3-896d-d94ef1d2be77",
+          "version": [
+            0,
+            1,
+            180
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world-liquor-rp",
+      "input": "world-liquor",
+      "uuid": "a610b357-ba70-5a2f-bca5-5a7a8a0fb2a8",
+      "version": [
+        0,
+        1,
+        180
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "d8e5fca6-425d-5995-8d5f-ade781237b41",
+          "version": [
+            0,
+            1,
+            180
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cookery-rp",
+      "input": "cookery",
+      "uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+      "version": [
+        1,
+        6,
+        20002
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "b25e061d-b15a-48c1-a6de-dcc15a9276d4",
+          "version": [
+            1,
+            6,
+            20002
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cookery-bp",
+      "input": "cookery",
+      "uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+      "version": [
+        1,
+        6,
+        20002
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "45b88a1d-d195-42c1-acd2-afd385791439",
+          "version": [
+            1,
+            6,
+            20002
+          ]
+        }
+      ]
+    }
+  ],
+  "order": {
+    "BP": [
+      "world-liquor-bp",
+      "tavern-bp",
+      "grilling-bp",
+      "cookery-bp"
+    ],
+    "RP": [
+      "world-liquor-rp",
+      "tavern-rp",
+      "grilling-rp",
+      "cookery-rp"
+    ]
+  }
+}
