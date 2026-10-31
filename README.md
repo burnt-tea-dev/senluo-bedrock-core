@@ -18,7 +18,12 @@ official author release. Keep a complete stopped-world backup before upgrading.
 
 - [SDK contract and source ownership](docs/SDK.md)
 - [Cookery local installation](docs/COOKERY.md)
+- [Local family assembly tool](docs/FAMILY-ASSEMBLY.md)
 - [Validation limits](docs/VALIDATION.md)
+
+The generic family assembler is available as local tooling, but this release
+does not include a reviewed family recipe. Its output does not establish that
+the public downloads have the same gameplay as the live server.
 
 Author archives, complete author modules, worlds, private integration history,
 server configuration and credentials are not distributed here. Obtain Cookery
