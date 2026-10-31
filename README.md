@@ -11,10 +11,11 @@ Core SDK ──→ Grilling (event routing and public food metadata)
 Local installer + your original Cookery archive ──→ your adapted local archive
 ```
 
-The first adapter targets Cookery 1.6.4 and Grilling 2.8.201. It preserves pack
-and module UUIDs, item/block IDs, existing dynamic-property keys and payloads.
-The adapted Cookery pair gets its own local version, 1.6.20001. It is not an
-official author release. Keep a complete stopped-world backup before upgrading.
+The original G203 adapter targets Cookery 1.6.4 and Grilling 2.8.203. It
+preserves pack and module UUIDs, item/block IDs, existing dynamic-property
+keys and payloads. Its user-local Cookery pair uses version 1.6.20002; it is
+not an official author release. Keep a complete stopped-world backup before
+upgrading.
 
 - [SDK contract and source ownership](docs/SDK.md)
 - [Cookery local installation](docs/COOKERY.md)
@@ -22,12 +23,13 @@ official author release. Keep a complete stopped-world backup before upgrading.
 - [Owned-port adapters](docs/PORT-ADAPTERS.md)
 - [Validation limits](docs/VALIDATION.md)
 
-The family assembler includes a pinned descriptor for our Tavern 0.6.194,
-Grilling 2.8.203 and World Liquor 0.1.180 ports plus the local Cookery adapter.
-It generates a file-by-file recipe from independently obtained inputs and
-assembles them without gameplay changes. Other authors' addon gameplay is
-outside this comparison. Full native, multiplayer and rendered gameplay
-acceptance for this combination remain pending; see the assembly instructions.
+The family assembler retains the pinned G203 recipe and adds a source-candidate
+recipe for Tavern 0.6.194, Grilling 2.8.205 and World Liquor 0.1.180 plus the
+local Cookery adapter. G205 is reproducible from a pinned public source commit,
+but is not a public Release or full-family admission. The G205 Cookery adapter
+reuses the reviewed helpers; its output stays at 1.6.20002 because rebuilding
+it produced the same archive bytes as G203. Full-family and client acceptance
+for G205 remain pending; see the assembly instructions.
 
 Author archives, complete author modules, worlds, private integration history,
 server configuration and credentials are not distributed here. Obtain Cookery
