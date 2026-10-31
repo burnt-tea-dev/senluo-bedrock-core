@@ -9,8 +9,11 @@
     "PUBLICATION.json",
     "README.md",
     "adapters/cookery-1.6.4.json",
+    "adapters/cookery-1.6.4-grilling-2.8.203.json",
+    "adapters/ie-grilling-2.8.203.json",
     "docs/COOKERY.md",
     "docs/FAMILY-ASSEMBLY.md",
+    "docs/PORT-ADAPTERS.md",
     "docs/SDK.md",
     "docs/VALIDATION.md",
     "docs/validation-0.1.0.json",
@@ -22,10 +25,13 @@
     "tests/sdk.test.mjs",
     "tests/test_assemble_family.py",
     "tests/test_install_cookery.py",
+    "tests/test_port_adapters.py",
     "tools/assemble_family.py",
     "tools/build_grilling_input.py",
     "tools/build_release.py",
-    "tools/install_cookery.py"
+    "tools/export_ie_grilling_compat.py",
+    "tools/install_cookery.py",
+    "tools/install_cookery_from_descriptor.py"
   ],
   "rule": "Only these reviewed source/SDK/tool files are distributable. Original and generated author archives are never release assets."
 }

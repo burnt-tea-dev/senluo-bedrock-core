@@ -17,7 +17,13 @@ TREES = {
 }
 
 
-def build(source):
+def build(source, descriptor=None):
+    if descriptor is None:
+        descriptor = json.loads((ROOT / 'adapters/cookery-1.6.4.json').read_text())
+    elif isinstance(descriptor, (str, Path)):
+        descriptor = json.loads(Path(descriptor).read_text())
+    companion = descriptor['companion']
+    expected_trees = companion.get('runtime_trees', TREES)
     payloads = {}
     for side, folder in [('BP', 'behavior_pack'), ('RP', 'resource_pack')]:
         root = source / 'projects/grilling/gameplay_core' / folder
@@ -33,8 +39,8 @@ def build(source):
                 records[name] = sha256(raw)
                 payloads[side + '/' + name] = raw
         actual = {'sha256': sha256(json.dumps(records, sort_keys=True, separators=(',', ':')).encode()), 'files': len(records)}
-        if actual != TREES[side]:
-            raise ValueError('Source runtime differs from the reviewed Grilling 2.8.201 tree: ' + side)
+        if actual != expected_trees[side]:
+            raise ValueError('Source runtime differs from the reviewed Grilling tree: ' + side)
     output = io.BytesIO()
     with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for name, raw in payloads.items():
@@ -43,8 +49,8 @@ def build(source):
             info.external_attr = 0o100644 << 16
             archive.writestr(info, raw)
     result = output.getvalue()
-    descriptor = json.loads((ROOT / 'adapters/cookery-1.6.4.json').read_text())
-    if sha256(result) != descriptor['companion']['archive_sha256']:
+    expected_archive = companion.get('archive_sha256')
+    if expected_archive and sha256(result) != expected_archive:
         raise ValueError('Local ZIP differs from the pinned Grilling input; retain the original lock')
     return result
 
@@ -52,8 +58,9 @@ def build(source):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', type=Path, required=True)
+    parser.add_argument('--descriptor', type=Path)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    raw = build(args.source)
+    raw = build(args.source, args.descriptor)
     _atomic_new(args.output, raw)
     print(json.dumps({'output': str(args.output), 'sha256': sha256(raw)}))

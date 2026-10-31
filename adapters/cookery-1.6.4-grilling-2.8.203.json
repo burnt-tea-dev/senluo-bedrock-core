@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "id": "senluo-core:cookery-1.6.4-grilling-2.8.203",
+  "toolkit_version": "0.3.0",
+  "archive_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
+  "host_uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+  "resource_uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+  "author_version": [
+    1,
+    6,
+    4
+  ],
+  "output_version": [
+    1,
+    6,
+    20002
+  ],
+  "prefixes": {
+    "BP": "Kaleidoscope Cookery v1.6.4 [BP]/",
+    "RP": "Kaleidoscope Cookery v1.6.4 [RP]/"
+  },
+  "companion": {
+    "archive_sha256": "37e7fb693f98ec528ea41e4e3d2f6b0c922cca1101bdeae826b3da93353fc8d4",
+    "bp_uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+    "version": [
+      2,
+      8,
+      203
+    ],
+    "rp_uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+    "rp_version": [
+      2,
+      8,
+      203
+    ],
+    "spec_path": "host-extensions/board-api.json",
+    "spec_sha256": "1fe1925262a06cee7fa95893be85c56cd1697fdfebb50e5f26a38dc40f9a5c95",
+    "source": {
+      "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+      "commit": "c879943b49c0947527a5fc8fc5341bc9827a708a",
+      "git_tree": "0b15937b0235b6fd8346e39a7a446e490b687c38"
+    },
+    "runtime_trees": {
+      "BP": {
+        "sha256": "6113602992aa57fd38a4c89a016afae70da35fad187fbe51d02e80fb4ff81b1a",
+        "files": 787
+      },
+      "RP": {
+        "sha256": "a8a9adbe3a037213014e09875c5d0cde2551890a7936c6fdc622eb68acf876d5",
+        "files": 2859
+      }
+    }
+  },
+  "owned_helpers": {
+    "scripts/host_api/board_api_core.js": "bc7298ec2843f9eb0948da6dc99e52fe71ae9ffcb1afd313b85bd8cf91717017",
+    "scripts/host_api/board_api_runtime.js": "be127f35dd42676729cfc059d6af05bd08d32ab71e3d8199a4bcfa4b3ef6705b",
+    "scripts/host_api/oil_api_core.js": "26fb0d08566314fe5d0644eb371ce1f6694c85d291ed69b482045a5b194f362c",
+    "scripts/host_api/oil_api_host.js": "21ed621fc7eb622ac91dfd2093ce19fc6f72f469dbaa78314f12c28337f21bdc",
+    "scripts/host_api/food_api_core.js": "63794a5c86263a058f1424119cd3a5445db7a70fc64bb9d32c6a11fc9a160542",
+    "scripts/host_api/cuisine_api_host.js": "ca7a1108fa3e136262fc566c579ddd43c43bdbf4cb62e2144ee530c13f3d9d40",
+    "scripts/host_api/guide_labels_core.js": "f1a301c0fc23f778568710e8ff322b1c93cae02d42df3c8119901d41f0e3cd4e",
+    "scripts/host_api/ingredient_api_host.js": "d65de1186d4c761122b871b11f9941d9c90af7c445e3c2d67d848682ee484fcf",
+    "scripts/food/wok_food_core.js": "0b99b672acce389f3831107bcea4f6cfbf4cd66770cd1e8bf4528224c9aceffe",
+    "scripts/host_api/pot_api_core.js": "177d343ae463b0751ca3a4d75b50f9581a9da0ce99bea22c943e7784e91df4fa",
+    "scripts/core/persist.js": "51d82fbe9c8e80a9c11d5cd4bf4bd4726fca29e5516911c8bcbbcbbd5a529df3",
+    "scripts/core/persist_keys.js": "5b3c35017e73ad199be63a4936db984a3abfb31e6f6a708ff4d17bfb97dc5aaf",
+    "scripts/host_api/pot_api_host.js": "eb2372a104b90a959b0dec531d90e432b21610909de1e614b94c52dc6c6aa886",
+    "scripts/host_api/cuisine_quality_core.js": "5819297f2c64d238cd34cf6c8ba04b35fb2ac7daefd445b4ea7b58219b7ccda2",
+    "scripts/host_api/millstone_api_core.js": "bb43b3a7fd9c172171fac83c3821787fb53e4a8e0047da5c4bd77d2718b4009b",
+    "scripts/host_api/event_router.js": "666bc03cdd7bc93a9843feba71de5b0c48e5f1b5173c6529d6beeb43308227b9"
+  },
+  "author_url": "https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial",
+  "distribution": "Generated Cookery archive is user-local. Download the original author release and current Grilling source inputs independently; do not redistribute this output."
+}

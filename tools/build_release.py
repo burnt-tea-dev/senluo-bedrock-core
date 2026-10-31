@@ -81,7 +81,10 @@ def main():
     for name, raw in assets.items():
         (output / name).write_bytes(raw)
     (output / 'SHA256SUMS').write_text(''.join(digest(raw) + '  ' + name + '\n' for name, raw in assets.items()))
-    print(json.dumps({'sdk_version': version, 'toolkit_version': toolkit_version, 'files': len(names), 'assets': {name: digest(raw) for name, raw in assets.items()}, 'cookery_version': release['cookery_version']}))
+    toolkit = json.loads((ROOT / 'release-history.json').read_text())[toolkit_version]
+    print(json.dumps({'sdk_version': version, 'toolkit_version': toolkit_version, 'files': len(names),
+                      'assets': {name: digest(raw) for name, raw in assets.items()},
+                      'cookery_version': toolkit.get('cookery_version', release['cookery_version'])}))
 
 
 if __name__ == '__main__':

@@ -30,4 +30,12 @@ jobs:
           persist-credentials: false
       - name: Reproduce pinned public Grilling companion
         run: python tools/build_grilling_input.py --source .grilling-input --output "$RUNNER_TEMP/Grilling-2.8.201.mcaddon"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: burnt-tea-dev/kaleidoscope-grilling-unofficial
+          ref: c879943b49c0947527a5fc8fc5341bc9827a708a
+          path: .grilling-current
+          persist-credentials: false
+      - name: Reproduce current G203 companion
+        run: python tools/build_grilling_input.py --source .grilling-current --descriptor adapters/cookery-1.6.4-grilling-2.8.203.json --output "$RUNNER_TEMP/Grilling-2.8.203.zip"
       - run: python tools/build_release.py --output dist
