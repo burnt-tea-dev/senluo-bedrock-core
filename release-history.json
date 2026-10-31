@@ -35,5 +35,34 @@
       "tests/test_assemble_family.py": "afcbeda83fdbc095e79fcd22d78e365adbd457f812b065aab92d4b2e5486cce8",
       "docs/FAMILY-ASSEMBLY.md": "1c69a511e812f51b8d0c28c45f5157189a63eab5990981ef9766a7170a08b691"
     }
+  },
+  "0.3.0": {
+    "sdk_version": "0.1.0",
+    "toolkit_version": "0.3.0",
+    "scope": "G203 Cookery local adapter descriptor and optional Immersive Eating first-person compatibility export; SDK 0.1.0 and legacy adapter payloads unchanged.",
+    "payloads": {
+      "PUBLICATION.json": "152b6095d8723c44060b969eca007d2c2982c518cf811e5a025f54b1585938c4",
+      "README.md": "a89a725b8bd34a4e5dac7924a45b2834f4929a80f88fa8eed5aadc7d9f132739",
+      "package.json": "e0ce7ff7ca379f25d5e089030c8e452d695803afbd5f6b99e194aa40fc3b2097",
+      "adapters/cookery-1.6.4-grilling-2.8.203.json": "3231e7d72e8d23187e654ed6277d91432b4b297976ea8670f7726b062a44904b",
+      "adapters/ie-grilling-2.8.203.json": "95ba2bafda3e75d68e60202849aa389356e22bc3123abc1ba398ede19585dd5e",
+      "docs/PORT-ADAPTERS.md": "a5dc95682e239a3890b434c1ba638787386e8cc5ad8f13ca659275618ad04921",
+      "tests/test_port_adapters.py": "382a96e6b67da5d690cdd0f003cb7662c90c3a7318e987ae75f7f4e9f53f37ce",
+      "tools/build_grilling_input.py": "5477834038d22d31936a7a281ee74d2841b3c567a29fbab36f4271c2d0ec4a9f",
+      "tools/export_ie_grilling_compat.py": "6d57acdd5845e2f06971d1f530cccb811781d6f99ccfd4a1c34d0842d559584b",
+      "tools/install_cookery_from_descriptor.py": "e91e58541fdcf31febb56426f8eec6fb895580359c144da52dd1fdd469435b24",
+      "tools/build_release.py": "4a5b4c2b6a1eff9a4e98449fc5681c4bd46cfbc03491fce73975aabb08fa1220",
+      ".github/workflows/ci.yml": "4d2b829bc191917669bb92aea7659f6d4201551304f2db18a0bb567d314db4fd"
+    },
+    "cookery_version": [
+      1,
+      6,
+      20002
+    ],
+    "grilling_version": [
+      2,
+      8,
+      203
+    ]
   }
 }
