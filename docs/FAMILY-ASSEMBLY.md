@@ -6,14 +6,45 @@ The recipe is the reviewed allowlist: it names every input, source member,
 output file, source hash, final hash, pack identity and load order.
 The toolkit source release follows the independent `package.json` version;
 the SDK version in `sdk.json` and its release history remain separate.
-This repository does not currently include a formal family recipe. The
-`families/current/recipe.json` path below is an example location only; a tool
-or pack file alone does not prove that assembled downloads match LIVE gameplay.
+The owned-port descriptor in `adapters/owned-t194-g203-w180.json` selects
+Tavern 0.6.194, Grilling 2.8.203, World Liquor 0.1.180 and the local Cookery
+host adapter. It covers these three ports and their required Cookery API.
+Other third-party gameplay and optional Immersive Eating are outside this set.
+A tool or pack file alone does not prove rendered gameplay matches LIVE.
+
+## Owned-port input recipe
+
+Obtain the three exact port archives named in the descriptor. Build
+`cookery-g203.mcaddon` locally from your own Cookery 1.6.4 archive, following
+[the G203 adapter instructions](PORT-ADAPTERS.md). Do not distribute that
+adapted author archive. Put all four files in one input directory, then run:
+
+```sh
+python3 tools/build_owned_family_recipe.py --inputs /path/to/local-inputs \
+  --output /path/to/new-owned-recipe.json
+python3 tools/assemble_family.py --recipe /path/to/new-owned-recipe.json \
+  --inputs /path/to/local-inputs --output /path/to/new-owned-output
+```
+
+The first command verifies whole-archive hashes, selects the pinned pack and
+module identities, and records every original file hash in a local recipe.
+The second command uses the existing assembler to preserve those exact files
+and the declared BP/RP order. Neither step changes gameplay or pack versions.
+Both outputs must be new paths. No downloads, server operations or save-data
+migrations run. The generated aggregate includes your local author content;
+it stays local and is not a Core release asset.
+
+This combination requires Beta APIs for the ports' declared server modules
+(including `2.12.0-beta`). BDS 1.26.60.6 accepted the exact G203 and adapted
+Cookery pair during saved-data/restart/rollback checks. Full three-port native,
+multiplayer and client acceptance are separate checks and remain pending.
+Port artifacts may be built from their canonical public sources while their
+matching Releases await admission; the descriptor does not claim publication.
 
 ## Run
 
 ```sh
-python3 tools/assemble_family.py --recipe families/current/recipe.json \
+python3 tools/assemble_family.py --recipe /path/to/reviewed-recipe.json \
   --inputs /path/to/local-inputs --output /path/to/new-output
 ```
 
