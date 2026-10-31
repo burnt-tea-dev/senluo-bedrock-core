@@ -10,6 +10,7 @@
     "README.md",
     "adapters/cookery-1.6.4.json",
     "docs/COOKERY.md",
+    "docs/FAMILY-ASSEMBLY.md",
     "docs/SDK.md",
     "docs/VALIDATION.md",
     "docs/validation-0.1.0.json",
@@ -19,7 +20,9 @@
     "src/host_api/event_router.js",
     "src/host_api/food_api_core.js",
     "tests/sdk.test.mjs",
+    "tests/test_assemble_family.py",
     "tests/test_install_cookery.py",
+    "tools/assemble_family.py",
     "tools/build_grilling_input.py",
     "tools/build_release.py",
     "tools/install_cookery.py"

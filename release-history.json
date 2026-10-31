@@ -22,5 +22,18 @@
       201
     ],
     "grilling_sha256": "5cef5795b5ef40a800d8ac5592419dbcca40eeb7b2e036ed5c3c8c2bd7901fe4"
+  },
+  "0.2.0": {
+    "sdk_version": "0.1.0",
+    "toolkit_version": "0.2.0",
+    "payloads": {
+      "PUBLICATION.json": "54dad5bcd0d9c0a3d8720b1a7ab1923226d9db325879d20b98ce1e7f45a2ec08",
+      "README.md": "d60ed1944d9b902ae7081d86d5eec34739a1ae7f82de70c15f51c277facc91a1",
+      "package.json": "a87cf144a6f9803a7bf60323fad8fdeb8cf5f991270bb56d6ae8cd6535cd6a4f",
+      "tools/build_release.py": "812338ea1f79d74b4b2ea249eff7bbfee0fe3732753bd0571510f9c5b0239b00",
+      "tools/assemble_family.py": "61661272b5c242fdb9a5a6c3565b4f1b69ca6e453e2ea9e4bd56cdd2c7c7bae4",
+      "tests/test_assemble_family.py": "afcbeda83fdbc095e79fcd22d78e365adbd457f812b065aab92d4b2e5486cce8",
+      "docs/FAMILY-ASSEMBLY.md": "1c69a511e812f51b8d0c28c45f5157189a63eab5990981ef9766a7170a08b691"
+    }
   }
 }
