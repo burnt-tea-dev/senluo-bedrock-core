@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "id": "senluo-core:immersive-eating-grilling-first-person-2.8.205",
+  "toolkit_version": "0.5.0",
+  "immersive_eating": {
+    "archive_sha256": "81575e63b40e2db4f58f0ab37b2aaa1854ff6ad564ba15e0acefa1f63c2f2fbf",
+    "version": [
+      1,
+      1,
+      0
+    ],
+    "player_entity_path": "Kaleidoscope Immersive Eating v1.1.0 [RP]/entity/player.entity.json",
+    "player_entity_sha256": "d7de539e2690611d704bfaf50b8a92662c1356ed86e5fe1171e5dfcbce99fe48",
+    "controller_path": "Kaleidoscope Immersive Eating v1.1.0 [RP]/render_controllers/kie_player_first_person.render_controllers.json",
+    "controller_sha256": "c274378763b41bb755040ed9bfceb644b67839a8288cccf944bde0da6b345e27",
+    "rp_uuid": "1cdbdcab-b063-4455-90e3-829de2dc91f5"
+  },
+  "grilling": {
+    "archive_sha256": "ba7008ef2786d01a871cd960aa7014d25e5bd2a2471b3960bc8085c714f56575",
+    "controller_path": "RP/render_controllers/java_eating_player.render_controllers.json",
+    "controller_sha256": "e4e0d81b4712a60621db2b0db0ae03f30d9097a8bc2937680c71387c76dfb419",
+    "source": {
+      "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+      "commit": "83026c0bb41fa6574e50a9b5a61cfb3b473bc59c",
+      "git_tree": "482a11c348d87c0963a7df8500d2bbeb9c33b1d4",
+      "resource_tree_sha256": "e770a5b19368725acdc005b2bacda3be68a1236eb9b94852ca63ff5afc17411e",
+      "resource_file_count": 2859
+    }
+  },
+  "output_path": "render_controllers/ie_grilling_first_person.render_controllers.json",
+  "output_sha256": "fb86eda52a0871b8824f6deba2011976651062675ac776e5b9e68e29a6e980ce",
+  "distribution": "The generated controller is user-local and requires the separately downloaded Immersive Eating author archive. It is not a standalone pack or official author release."
+}

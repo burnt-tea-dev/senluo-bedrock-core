@@ -6,11 +6,14 @@ The recipe is the reviewed allowlist: it names every input, source member,
 output file, source hash, final hash, pack identity and load order.
 The toolkit source release follows the independent `package.json` version;
 the SDK version in `sdk.json` and its release history remain separate.
-The owned-port descriptor in `adapters/owned-t194-g203-w180.json` selects
-Tavern 0.6.194, Grilling 2.8.203, World Liquor 0.1.180 and the local Cookery
-host adapter. It covers these three ports and their required Cookery API.
-Other third-party gameplay and optional Immersive Eating are outside this set.
-A tool or pack file alone does not prove rendered gameplay matches LIVE.
+The owned-port descriptor in `adapters/owned-t194-g203-w180.json` retains the
+Tavern 0.6.194, Grilling 2.8.203, World Liquor 0.1.180 and local Cookery
+combination. `adapters/owned-t194-g205-w180.json` records a separate G205 source
+candidate from the pinned public-source commit. It is not a public Release or
+full-family admission. Both descriptors cover only these three owned ports and
+the required Cookery API; other third-party gameplay and optional Immersive
+Eating are outside this set. A tool or pack file alone does not prove rendered
+gameplay matches LIVE.
 
 ## Owned-port input recipe
 
@@ -40,6 +43,35 @@ Cookery pair during saved-data/restart/rollback checks. Full three-port native,
 multiplayer and client acceptance are separate checks and remain pending.
 Port artifacts may be built from their canonical public sources while their
 matching Releases await admission; the descriptor does not claim publication.
+
+## G205 source-candidate recipe
+
+The G205 descriptor pins Grilling source commit `83026c0bb41fa6574e50a9b5a61cfb3b473bc59c`,
+Git tree `482a11c348d87c0963a7df8500d2bbeb9c33b1d4`, both runtime trees, the
+board API declaration and all copied Core helper hashes. Build its local input
+from that clean source checkout with the G205 adapter descriptor:
+
+```sh
+python3 tools/build_grilling_input.py \
+  --source /path/to/grilling-guide-perf-source-r1 \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.205.json \
+  --output /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.205_baseline1.mcaddon
+python3 tools/install_cookery_from_descriptor.py \
+  --cookery /path/to/original-cookery-1.6.4.mcaddon \
+  --grilling /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.205_baseline1.mcaddon \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.205.json \
+  --output /path/to/local-inputs/cookery-g205.mcaddon
+python3 tools/build_owned_family_recipe.py \
+  --descriptor adapters/owned-t194-g205-w180.json \
+  --inputs /path/to/local-inputs --output /path/to/new-owned-recipe.json
+```
+
+The current source reproduces the pinned G205 archive. Every copied Core helper
+matches G203, so rebuilding Cookery produces the exact same archive hash and
+keeps version `[1, 6, 20002]`; no manifest-only version bump is made. The
+descriptor is a source-rebuild record, not a claim that G205 has a public
+Release, full-family admission, BDS acceptance, or client acceptance. Keep the
+local Cookery archive and assembled family output out of this repository.
 
 ## Run
 

@@ -88,5 +88,37 @@
       8,
       203
     ]
+  },
+  "0.5.0": {
+    "sdk_version": "0.1.0",
+    "toolkit_version": "0.5.0",
+    "scope": "G205 source-rebuild descriptors for the unchanged Core/Cookery adapter helpers, owned T194/G205/W180 eight-pack recipe, and matching optional IE controller descriptor. SDK 0.1.0 and Cookery 1.6.20002 payload bytes remain unchanged. G205 is a source candidate, not a public Release or full-family/client admission.",
+    "payloads": {
+      "PUBLICATION.json": "0b1a4c69e123bf760c8641b186366a603b9ffd0974f4911ad9fdc0d03da60fcb",
+      "README.md": "12edcfc5346afbc84b8375978873306741f21c42db9170fec92216b636b315d5",
+      "package.json": "390831cd0a1be9c60d8f92fd5c7dfaa5cf7e1408c7d7f8224696275cb7de32d6",
+      "adapters/cookery-1.6.4-grilling-2.8.205.json": "f3dc14a14410d7541492aadaf5ff7c720f8f2dbae4c1dc72207a11c1da37da53",
+      "adapters/ie-grilling-2.8.205.json": "e99fb4a8a10c05918f0cf5596055365650a7b2ede01ed41d2e1abc4cb9585344",
+      "adapters/owned-t194-g205-w180.json": "e07fd22af71e613a59536801359841d9f00cde14db20c26557fc0f938c05b386",
+      "docs/FAMILY-ASSEMBLY.md": "28e0c071be31e53f8a9c2909e7c91b21abf78d3f2c14316b5f5c628710fd4712",
+      "docs/PORT-ADAPTERS.md": "8e83046f17461092ab95c892fc700e52a80df30a59679bc1b5aa53257f3081e5"
+    },
+    "cookery_version": [
+      1,
+      6,
+      20002
+    ],
+    "grilling_version": [
+      2,
+      8,
+      205
+    ],
+    "grilling_source": {
+      "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+      "commit": "83026c0bb41fa6574e50a9b5a61cfb3b473bc59c",
+      "git_tree": "482a11c348d87c0963a7df8500d2bbeb9c33b1d4",
+      "candidate_archive_sha256": "ba7008ef2786d01a871cd960aa7014d25e5bd2a2471b3960bc8085c714f56575"
+    },
+    "status": "source reproducible; public Release, full-family admission, and client acceptance pending"
   }
 }
