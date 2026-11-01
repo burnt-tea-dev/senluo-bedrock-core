@@ -18,12 +18,34 @@
     "all_other_source_bytes_retained": true,
     "targeted_tests": 5
   },
-  "native_verdict": "in_progress",
+  "native_verdict": "pass",
   "previous_native_performance": "TACZ20003 failed78 sustained Slowdowns; validation-0.10.0.json retained",
   "complete_private57_tested": false,
   "actual_tacz_rollback_tested": false,
   "client": false,
   "production_ready": false,
   "public_release_approved": false,
-  "pending_client_acceptance": true
+  "pending_client_acceptance": true,
+  "gate_b_receipt_sha256": "5c7a7003ce5c365755861df613b8664ab4a38b84a65939cb7b10c0338dd5bd6c",
+  "gameplay_save_flows": {
+    "verdict": "pass",
+    "count": 6,
+    "effective_player_property_count_every_flow": 28
+  },
+  "performance": {
+    "ok": true,
+    "owned_slowdowns": 0,
+    "previous_same_profile_20003_slowdowns": 78,
+    "one_off_spikes_are_separate": true
+  },
+  "world_dynamic_properties": {
+    "same_keys_and_types": true,
+    "differences": []
+  },
+  "original_player_records_changed": {
+    "after_first_stop": [],
+    "after_restart_stop": []
+  },
+  "readback_zero_drift": true,
+  "teardown": "STOPPED"
 }
