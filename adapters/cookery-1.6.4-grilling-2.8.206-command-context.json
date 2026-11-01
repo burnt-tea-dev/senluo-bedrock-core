@@ -1,0 +1,233 @@
+{
+  "schema": 1,
+  "id": "senluo-core:cookery-1.6.4-grilling-2.8.206-command-context",
+  "toolkit_version": "0.9.0",
+  "archive_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
+  "host_uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+  "resource_uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+  "author_version": [
+    1,
+    6,
+    4
+  ],
+  "output_version": [
+    1,
+    6,
+    20006
+  ],
+  "prefixes": {
+    "BP": "Kaleidoscope Cookery v1.6.4 [BP]/",
+    "RP": "Kaleidoscope Cookery v1.6.4 [RP]/"
+  },
+  "companion": {
+    "bp_uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+    "version": [
+      2,
+      8,
+      206
+    ],
+    "rp_uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+    "rp_version": [
+      2,
+      8,
+      206
+    ],
+    "spec_path": "host-extensions/board-api.json",
+    "spec_sha256": "1fe1925262a06cee7fa95893be85c56cd1697fdfebb50e5f26a38dc40f9a5c95",
+    "source": {
+      "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+      "commit": "a35a7a7adf0fcef41340fea8119c5166560c2ce8",
+      "git_tree": "4ee84fdf3c607d61103426c3231988373bcc027d",
+      "resource_tree_sha256": "63ff9337978d94f9a52053ad5175af460f6d046475d2b61518af0b1b381b3eab",
+      "resource_file_count": 2861
+    },
+    "runtime_trees": {
+      "BP": {
+        "sha256": "7645665bac9ae1fa292f3589a6f69591be51dcc4fd0a46a60c5dfd58cc606a74",
+        "files": 788
+      },
+      "RP": {
+        "sha256": "63ff9337978d94f9a52053ad5175af460f6d046475d2b61518af0b1b381b3eab",
+        "files": 2861
+      }
+    },
+    "archive_sha256": "383642abb93340a0aebed477a4fd099836850ee59c1c3737906d1387ed1bc222"
+  },
+  "owned_helpers": {
+    "scripts/host_api/board_api_core.js": "bc7298ec2843f9eb0948da6dc99e52fe71ae9ffcb1afd313b85bd8cf91717017",
+    "scripts/host_api/board_api_runtime.js": "be127f35dd42676729cfc059d6af05bd08d32ab71e3d8199a4bcfa4b3ef6705b",
+    "scripts/host_api/oil_api_core.js": "26fb0d08566314fe5d0644eb371ce1f6694c85d291ed69b482045a5b194f362c",
+    "scripts/host_api/oil_api_host.js": "21ed621fc7eb622ac91dfd2093ce19fc6f72f469dbaa78314f12c28337f21bdc",
+    "scripts/host_api/food_api_core.js": "63794a5c86263a058f1424119cd3a5445db7a70fc64bb9d32c6a11fc9a160542",
+    "scripts/host_api/cuisine_api_host.js": "ca7a1108fa3e136262fc566c579ddd43c43bdbf4cb62e2144ee530c13f3d9d40",
+    "scripts/host_api/guide_labels_core.js": "f1a301c0fc23f778568710e8ff322b1c93cae02d42df3c8119901d41f0e3cd4e",
+    "scripts/host_api/ingredient_api_host.js": "d65de1186d4c761122b871b11f9941d9c90af7c445e3c2d67d848682ee484fcf",
+    "scripts/food/wok_food_core.js": "0b99b672acce389f3831107bcea4f6cfbf4cd66770cd1e8bf4528224c9aceffe",
+    "scripts/host_api/pot_api_core.js": "177d343ae463b0751ca3a4d75b50f9581a9da0ce99bea22c943e7784e91df4fa",
+    "scripts/core/persist.js": "51d82fbe9c8e80a9c11d5cd4bf4bd4726fca29e5516911c8bcbbcbbd5a529df3",
+    "scripts/core/persist_keys.js": "c9286bd2459ba820caf0d8a04806c96917a112c4a8b6f5ab025a07c29c11f4ad",
+    "scripts/host_api/pot_api_host.js": "eb2372a104b90a959b0dec531d90e432b21610909de1e614b94c52dc6c6aa886",
+    "scripts/host_api/cuisine_quality_core.js": "5819297f2c64d238cd34cf6c8ba04b35fb2ac7daefd445b4ea7b58219b7ccda2",
+    "scripts/host_api/millstone_api_core.js": "bb43b3a7fd9c172171fac83c3821787fb53e4a8e0047da5c4bd77d2718b4009b",
+    "scripts/host_api/event_router.js": "666bc03cdd7bc93a9843feba71de5b0c48e5f1b5173c6529d6beeb43308227b9"
+  },
+  "author_url": "https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial",
+  "distribution": "Generated Cookery archive is user-local. Preserves the original welcome and all author script bodies; requires Bedrock1.26.60 for the behavior command context. Obtain original author and companion inputs separately.",
+  "post_adapter": {
+    "helper_path": "src/host_api/cookery-guide-decoding.js",
+    "helper_sha256": "6110dcf400fe92d384e9589036fb1d8d9c35c076e819ffb2851bf8c88ce48433",
+    "helper_destination": "scripts/api/senluo_guide_startup.js",
+    "preimages": {
+      "scripts/api/extensionRegistry.js": "7f585f6433b27c89f6885a61833fa3bb382ac69966a9698fba3f566f17555d13",
+      "scripts/api/guidebookExtensionRegistry.js": "fee24bd265e46d0e4c8fcad2d8c03892362dd60f1e2f50a315509e401173e2ab"
+    },
+    "postimages": {
+      "scripts/api/extensionRegistry.js": "c4d617b5993e4af9bf7ce0e669f5c6706669a5f2205ee2585a05d4253cda5fe4",
+      "scripts/api/guidebookExtensionRegistry.js": "cc105f5368f542f27ea318427faaa79a47ea6df8e79f9519b49db46a3625d6f9"
+    },
+    "imports": {
+      "scripts/api/extensionRegistry.js": "import {createCookeryReadyBroadcaster,createCookeryDisplayWorkQueue} from \"./senluo_guide_startup.js\";\n",
+      "scripts/api/guidebookExtensionRegistry.js": "import {createCookeryGuideWorkQueue,createCookeryReadyBroadcaster} from \"./senluo_guide_startup.js\";\n"
+    },
+    "insertions": [
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "anchor": "function sendReady",
+        "position": "after",
+        "text": "Now"
+      },
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "anchor": "function sendReadyNow(){",
+        "position": "before",
+        "text": "const sendReady=createCookeryReadyBroadcaster(system,sendReadyNow);\n"
+      },
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "anchor": "const sendReady=createCookeryReadyBroadcaster(system,sendReadyNow);",
+        "position": "before",
+        "text": "const senluoDisplayWorkQueue=createCookeryDisplayWorkQueue(system,registerExtensionDisplayRule);\n"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": " normalizeLocaleMap(raw, valueNormalizer) {",
+        "position": "before",
+        "text": "*"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": " normalizeExtension(raw, source) {",
+        "position": "before",
+        "text": "*"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "  for (const [locale, values] of Object.entries(raw)) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "    for (const [key, value] of Object.entries(values)) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "  for (const c of Array.isArray(raw.categories) ? raw.categories : []) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "  for (const e of Array.isArray(raw.entries) ? raw.entries : []) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "    for(const r of Array.isArray(e?.recipes)?e.recipes:[]){",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "      for(const [locale,steps] of Object.entries(e.mechanicsByLocale)){",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "  for (const a of Array.isArray(raw.actions) ? raw.actions : []) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "    for (const field of Array.isArray(f?.fields) ? f.fields : []) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "        for (const opt of Array.isArray(field?.options) ? field.options : []) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "normalizeLocaleMap(raw.names,",
+        "position": "before",
+        "text": "yield* "
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "normalizeLocaleMap(raw.text,",
+        "position": "before",
+        "text": "yield* "
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "  if (!rec || rec.revision !== revision || rec.received !== rec.chunks) return;",
+        "position": "after",
+        "text": "\n  senluoGuideWorkQueue.enqueue(key,rec);return;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "system.afterEvents.scriptEventReceive.subscribe(ev => {",
+        "position": "before",
+        "text": "const senluoGuideWorkQueue=createCookeryGuideWorkQueue(system,{normalize:normalizeExtension,pending,extensions});\n\n"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": ");\n\n// Drop incomplete transfers after 30 seconds.",
+        "position": "before",
+        "text": ",{namespaces:['kaleidoscope_cookery']}"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "function sendReady",
+        "position": "after",
+        "text": "Now"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "function sendReadyNow() {",
+        "position": "before",
+        "text": "const sendReady=createCookeryReadyBroadcaster(system,sendReadyNow);\n"
+      }
+    ],
+    "text_replacements": [
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "before": "   const payload=JSON.parse(String(ev.message??\"\"));\n   const result=registerExtensionDisplayRule(payload);\n   if(!result.ok)console.warn(`[Kaleidoscope Cookery] Rejected extension display rule (${result.reason}).`);",
+        "after": "   senluoDisplayWorkQueue.enqueue(ev.message);"
+      }
+    ]
+  },
+  "behavior_min_engine_version": [
+    1,
+    26,
+    60
+  ]
+}

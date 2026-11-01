@@ -94,3 +94,9 @@ These focused measurements do not establish full-family admission. The
 full-family fixture still reported other Cookery startup Slowdowns. Saved-world
 first load/restart, rollback, real client and normal multiplayer checks remain
 separate. See [the validation record](validation-0.8.0.json).
+
+The G206 source route is pinned by
+[`cookery-1.6.4-grilling-2.8.206-command-context.json`](../adapters/cookery-1.6.4-grilling-2.8.206-command-context.json).
+It retains the0.8 receiver/decoder and original welcome, uses the reviewed
+G206 helpers, and advances the paired local Cookery identity to1.6.20006.
+Use the selected-player adapter alongside it; see [port adapters](PORT-ADAPTERS.md).
