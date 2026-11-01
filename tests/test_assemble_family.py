@@ -1,4 +1,5 @@
 import hashlib
+import copy
 import importlib.util
 import io
 import json
@@ -156,6 +157,41 @@ class AssembleFamilyTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'competing behavior minecraft:player'):
                 assembler.assemble(recipe, recipe_path, inputs, output)
             self.assertFalse(output.exists())
+
+    def test_reviewed_composed_player_pins_both_definitions_and_effective_priority(self):
+        with tempfile.TemporaryDirectory() as td:
+            recipe, recipe_path, inputs, output = self.setup_case(Path(td))
+            recipe['packs'] = []
+            definitions = {}
+            for name, fields in [('composed', ['held:frame', 'gun:state']), ('grilling', ['held:frame'])]:
+                manifest = json.dumps({'header': {'uuid': name, 'version': [1, 0, 1]},
+                                       'modules': [{'uuid': name + '-module', 'version': [1, 0, 1]}]})
+                player = json.dumps({'minecraft:entity': {'description': {
+                    'identifier': 'minecraft:player', 'properties': {
+                        field: {'type': 'int', 'range': [0, 1], 'default': 0} for field in fields}}}})
+                if name == 'grilling':
+                    player = '// Author JSONC must stay byte-identical.\n' + player[:-1] + ',}\n'
+                files = {path: {'kind': 'generated', 'content': raw, 'sha256': digest(raw.encode())}
+                         for path, raw in [('manifest.json', manifest), ('entities/player.json', player)]}
+                recipe['packs'].append({'id': name, 'uuid': name, 'version': [1, 0, 1], 'side': 'BP',
+                    'modules': [{'uuid': name + '-module', 'version': [1, 0, 1]}], 'files': files})
+                definitions[name] = {'path': 'entities/player.json', 'sha256': digest(player.encode())}
+            recipe['order'] = {'BP': ['composed', 'grilling'], 'RP': []}
+            recipe['behavior_player_override'] = {'owner': 'composed', 'definitions': definitions}
+            result = assembler.assemble(recipe, recipe_path, inputs, output)
+            self.assertEqual(result['behavior_player_definition']['pack_id'], 'composed')
+            with zipfile.ZipFile(output / 'composed.mcpack') as archive:
+                self.assertEqual(digest(archive.read('entities/player.json')), definitions['composed']['sha256'])
+            for failure in ('priority', 'hash', 'missing'):
+                changed = copy.deepcopy(recipe)
+                if failure == 'priority':
+                    changed['order']['BP'].reverse()
+                elif failure == 'hash':
+                    changed['behavior_player_override']['definitions']['grilling']['sha256'] = '0' * 64
+                else:
+                    del changed['behavior_player_override']['definitions']['grilling']
+                with self.subTest(failure=failure), self.assertRaisesRegex(ValueError, 'Behavior player override'):
+                    assembler.assemble(changed, recipe_path, inputs, Path(td) / failure)
 
     def test_pack_reader_reuses_outer_index_and_one_nested_archive(self):
         outer, _, _, config, script = self.fixture()

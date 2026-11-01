@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "observed_at": "2026-11-01T12:37:44.160587+00:00",
+  "scope": "Optional public12 TACZ test profile only; no LIVE or private57 claim",
+  "engine": "1.26.60.6",
+  "sdk_version": "0.1.0",
+  "toolkit_version": "0.10.0",
+  "tacz_version": [
+    1,
+    0,
+    20003
+  ],
+  "tacz_archive_sha256": "dc1a946afd9e26d22ae9500c3fdd974d5b2a1f9e996697a7c3196208606813eb",
+  "gate_b_receipt_sha256": "01a24fe6d94dd94a08f6981d8c66d08f5e16ec13658bc662270472601904d335",
+  "verdict": "fail",
+  "gameplay_save_flows": {
+    "verdict": "pass",
+    "count": 6,
+    "effective_player_property_count_every_flow": 28
+  },
+  "native_repairs": [
+    "Legacy push flags preserve block-only pushing under format1.26.30",
+    "Two AWP pane spellings resolve on actual engine"
+  ],
+  "source_repairs": [
+    "Complete85 left-arm animation output and original model repair",
+    "Original gun right arms retained; normal offhand first-person route added"
+  ],
+  "world_dynamic_properties": {
+    "same_keys_and_types": true,
+    "differences": []
+  },
+  "original_player_records_changed": {
+    "after_first_stop": [],
+    "after_restart_stop": []
+  },
+  "readback_zero_drift": true,
+  "performance": {
+    "ok": false,
+    "owned_packs": [
+      "Kaleidoscope Cookery v1.6.4 [BP]",
+      "Kaleidoscope Grilling BP",
+      "Kaleidoscope Immersive Eating v1.1.0 [BP]",
+      "Kaleidoscope Tavern (Unofficial) BP",
+      "Kaleidoscope World Liquor (Unofficial) BP",
+      "TACZ Behavior v1.0.3 TRANSLATED EDITION +SkinPack by Kopystka Localization Studio"
+    ],
+    "owned_slowdowns": 78,
+    "failures": [
+      {
+        "reason": "owned_slowdown",
+        "packs": {
+          "TACZ Behavior v1.0.3 TRANSLATED EDITION +SkinPack by Kopystka Localization Studio": 78
+        }
+      }
+    ]
+  },
+  "complete_private57_tested": false,
+  "actual_tacz_rollback_tested": false,
+  "client": false,
+  "production_ready": false,
+  "public_release_approved": false,
+  "pending_client_acceptance": true
+}

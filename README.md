@@ -44,3 +44,9 @@ The guide-decoding descriptor applies the same Core-owned receiver repair and
 copies a separately versioned incremental JSON decoder. It builds local
 Cookery 1.6.20004 and leaves the G205 input unchanged. Its output is user-local
 only.
+
+The0.10.0 source candidate adds a separately generated optional TACZ test
+profile. Its28-field native player and six saved-world flows pass, but the
+TACZ script performance gate currently fails; it is not approved for LIVE or a
+public Release. The standard no-TACZ route remains the0.9.0 validated assembly.
+See [the0.10 validation record](docs/validation-0.10.0.json).

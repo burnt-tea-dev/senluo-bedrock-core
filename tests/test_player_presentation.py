@@ -5,10 +5,25 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from install_player_presentation import advance_manifest
+from install_player_presentation import advance_manifest, modern_tacz_player
 
 
 class PlayerManifestTests(unittest.TestCase):
+    def test_modern_tacz_player_keeps_block_only_push_rule_and_other_data(self):
+        actor = {'format_version': '1.26.30', 'minecraft:entity': {
+            'description': {'identifier': 'minecraft:player', 'properties': {'gun:state': {'type': 'int'}}},
+            'components': {'minecraft:pushable': {'is_pushable': False, 'is_pushable_by_piston': True},
+                           'minecraft:pushable_by_block': {}, 'minecraft:health': {'value': 20}},
+            'events': {'gun:keep': {'set_property': {'gun:state': 1}}}}}
+        raw = json.dumps(actor).encode()
+        result = json.loads(modern_tacz_player(raw))
+        self.assertNotIn('minecraft:pushable', result['minecraft:entity']['components'])
+        self.assertEqual(result['minecraft:entity']['components']['minecraft:pushable_by_block'], {})
+        self.assertNotIn('minecraft:pushable_by_entity', result['minecraft:entity']['components'])
+        result['minecraft:entity']['components']['minecraft:pushable'] = actor['minecraft:entity']['components']['minecraft:pushable']
+        self.assertEqual(result, actor)
+        self.assertEqual(json.loads(raw), actor)
+
     def test_pair_upgrade_preserves_ids_metadata_and_other_dependencies(self):
         original = {'header': {'uuid': 'original-bp', 'version': [1, 1, 0],
                                'min_engine_version': [1, 26, 1], 'name': 'Author name'},
