@@ -27,7 +27,7 @@ The family assembler retains the pinned G203 recipe and adds a source-candidate
 recipe for Tavern 0.6.194, Grilling 2.8.205 and World Liquor 0.1.180 plus the
 local Cookery adapter. G205 is reproducible from a pinned public source commit,
 but is not a public Release or full-family admission. The G205 Cookery adapter
-reuses the reviewed helpers; its output stays at 1.6.20002 because rebuilding
+reuses the reviewed helpers; legacy descriptor stays at 1.6.20002; the separate startup descriptor builds
 it produced the same archive bytes as G203. Full-family and client acceptance
 for G205 remain pending; see the assembly instructions.
 
@@ -39,3 +39,5 @@ This unofficial project is not affiliated with Mojang or the original authors.
 The SDK and newly written tools are BSD-3-Clause; see [LICENSE](LICENSE).
 Gameplay helpers supplied by the separate Grilling addon retain that project's
 notices. Locally adapted author content retains its original license and credits.
+
+The separate G205 startup descriptor applies a Core-owned, hash-pinned Cookery receiver repair after the original G205 adapter. It builds local Cookery 1.6.20003, preserves author UUIDs/data keys, and does not modify the Grilling input. Its output is user-local only.

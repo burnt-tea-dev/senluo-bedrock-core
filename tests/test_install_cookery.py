@@ -6,12 +6,17 @@ from pathlib import Path
 import tempfile
 import unittest
 import zipfile
+import sys
 
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "tools/install_cookery.py"
+sys.path.insert(0, str(MODULE_PATH.parent))
 spec = importlib.util.spec_from_file_location("install_cookery", MODULE_PATH)
 installer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(installer)
+wrapper_spec = importlib.util.spec_from_file_location("install_cookery_from_descriptor", MODULE_PATH.with_name("install_cookery_from_descriptor.py"))
+wrapper = importlib.util.module_from_spec(wrapper_spec)
+wrapper_spec.loader.exec_module(wrapper)
 
 
 def digest(raw):
@@ -28,6 +33,40 @@ def make_zip(entries, infos=None):
 
 
 class InstallerTests(unittest.TestCase):
+    def test_separate_post_adapter_checks_helper_and_exact_images(self):
+        data = self.fixture()
+        cookery, grilling = self.paths(data)
+        output, _ = installer.apply_archive(cookery, grilling, data[2])
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); (root / "src").mkdir(); helper = b"core-owned helper"
+            (root / "src/helper.js").write_bytes(helper)
+            original_root = wrapper.ROOT
+            wrapper.ROOT = root
+            self.addCleanup(setattr, wrapper, "ROOT", original_root)
+            before = b"const hostHook = true;\nexport const marker = 1;\n"
+            after = b"import './startup.js';\n" + before.replace(b"marker = 1", b"marker = 2")
+            post = {"helper_path": "src/helper.js", "helper_sha256": digest(helper),
+                    "helper_destination": "scripts/api/startup.js",
+                    "preimages": {data[3]: digest(before)}, "postimages": {data[3]: digest(after)},
+                    "imports": {data[3]: "import './startup.js';\n"},
+                    "insertions": [], "text_replacements": [{"path": data[3], "before": "marker = 1", "after": "marker = 2"}]}
+            cooked, changed, helper_hash = wrapper.apply_post_adapter(output, {"prefixes": {"BP": data[4]}, "post_adapter": post})
+            self.assertEqual(changed[data[3]], digest(after)); self.assertEqual(helper_hash, digest(helper))
+            with zipfile.ZipFile(io.BytesIO(cooked)) as archive:
+                self.assertEqual(archive.read(data[4] + data[3]), after)
+                self.assertEqual(archive.read(data[4] + "scripts/api/startup.js"), helper)
+            post["postimages"][data[3]] = "0" * 64
+            with self.assertRaisesRegex(ValueError, "postimage differs"):
+                wrapper.apply_post_adapter(output, {"prefixes": {"BP": data[4]}, "post_adapter": post})
+            post["postimages"][data[3]] = digest(after)
+            post["helper_sha256"] = "0" * 64
+            with self.assertRaisesRegex(ValueError, "helper hash"):
+                wrapper.apply_post_adapter(output, {"prefixes": {"BP": data[4]}, "post_adapter": post})
+            post["helper_sha256"] = digest(helper); post["helper_path"] = "../escape.js"
+            with self.assertRaisesRegex(ValueError, "unsafe post-adapter helper"):
+                wrapper.apply_post_adapter(output, {"prefixes": {"BP": data[4]}, "post_adapter": post})
+            wrapper.ROOT = original_root
+
     def fixture(self, bad_anchor=False, preimage_override=None, bad_position=False, invalid_json_update=False):
         bp, rp, gbp = "Cookery BP/", "Cookery RP/", "GrillingPack/"
         target = "scripts/worker.js"

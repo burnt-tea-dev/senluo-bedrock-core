@@ -66,10 +66,16 @@ python3 tools/build_owned_family_recipe.py \
   --inputs /path/to/local-inputs --output /path/to/new-owned-recipe.json
 ```
 
-The current source reproduces the pinned G205 archive. Every copied Core helper
-matches G203, so rebuilding Cookery produces the exact same archive hash and
-keeps version `[1, 6, 20002]`; no manifest-only version bump is made. The
-descriptor is a source-rebuild record, not a claim that G205 has a public
+The legacy G205 descriptor keeps producing Cookery `[1, 6, 20002]` unchanged.
+For the separate startup adapter candidate, build Cookery with
+`adapters/cookery-1.6.4-grilling-2.8.205-guide-startup.json` instead, producing
+local `[1, 6, 20003]`. Then use
+`adapters/owned-t194-g205-w180-cookery-startup.json` with that new archive to
+build the corresponding eight-pack family recipe. The new descriptor pins
+Cookery archive SHA256
+`1e9b308445119be3d2b56adf26cf292a639b490d6e1bb2047ebbd2d779b9ae6b`. Both descriptors preserve the same
+author UUIDs; only the new descriptor selects the receiver repair. The recipe
+pins the exact local Cookery archive hash. Neither descriptor is a claim that G205 has a public
 Release, full-family admission, BDS acceptance, or client acceptance. Keep the
 local Cookery archive and assembled family output out of this repository.
 
