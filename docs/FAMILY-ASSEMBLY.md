@@ -13,8 +13,10 @@ archives named by
 [`owned-t194-g206-w180-cookery-recipe-index.json`](../adapters/owned-t194-g206-w180-cookery-recipe-index.json).
 Obtain clean Cookery 1.6.4 (file 9317031) and Immersive Eating 1.1.0 from
 their authors. Keep original and locally adapted author files private.
-Toolkit 0.12.1 is a documentation update; these adapters and their local
-output hashes are unchanged from 0.12.0. The SDK remains 0.1.0.
+Toolkit 0.12.2 corrects the source and family builder defaults to this same
+G206 installation. These adapters and their local output hashes are unchanged
+from 0.12.0. The SDK remains 0.1.0. Omitting `--descriptor` selects the current
+recipe; the explicit arguments below make the selected inputs unambiguous.
 
 Build from a clean Grilling checkout at
 `a35a7a7adf0fcef41340fea8119c5166560c2ce8`. Use the published Grilling archive
@@ -69,6 +71,7 @@ adapted author archive. Put all four files in one input directory, then run:
 
 ```sh
 python3 tools/build_owned_family_recipe.py --inputs /path/to/local-inputs \
+  --descriptor adapters/owned-t194-g203-w180.json \
   --output /path/to/new-owned-recipe.json
 python3 tools/assemble_family.py --recipe /path/to/new-owned-recipe.json \
   --inputs /path/to/local-inputs --output /path/to/new-owned-output

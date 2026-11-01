@@ -12,12 +12,16 @@ Local installer + your original Cookery archive ──→ your adapted local arc
 ```
 
 The current installation uses Tavern 0.6.194, Grilling 2.8.206 and World
-Liquor 0.1.180. Toolkit 0.12.1 contains the unchanged 0.12.0 adapters: local
+Liquor 0.1.180. Toolkit 0.12.2 contains the unchanged 0.12.0 adapters: local
 Cookery 1.6.20007 and Immersive Eating 1.1.20002. It preserves welcome chat
 and native recipe ordering while avoiding repeated full recipe sorts.
 Start with [the current family installation](docs/FAMILY-ASSEMBLY.md#current-g206-installation).
 Pack/module UUIDs, item IDs and save ownership are retained. Back up a stopped
 world and test a copy before upgrading.
+
+Toolkit 0.12.2 aligns the Grilling source builder and family recipe builder
+defaults with this current installation. Historical recipes require an explicit
+`--descriptor`; their pinned inputs and output checks remain unchanged.
 
 - [SDK contract and source ownership](docs/SDK.md)
 - [Cookery local installation](docs/COOKERY.md)
