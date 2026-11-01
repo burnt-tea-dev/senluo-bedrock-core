@@ -8,7 +8,7 @@ from assemble_family import _load_and_verify_inputs, _tree_fingerprint
 from install_cookery import _atomic_new, _read_zip, sha256
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DESCRIPTOR = ROOT / 'adapters/owned-t194-g203-w180.json'
+DEFAULT_DESCRIPTOR = ROOT / 'adapters/owned-t194-g206-w180-cookery-recipe-index.json'
 
 
 def build_recipe(descriptor, inputs_dir):

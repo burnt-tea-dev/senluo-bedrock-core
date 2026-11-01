@@ -28,15 +28,15 @@ jobs:
           ref: 61864d017a1e4e9847325cd7313098b4379dc2e9
           path: .grilling-input
           persist-credentials: false
-      - name: Reproduce pinned public Grilling companion
-        run: python tools/build_grilling_input.py --source .grilling-input --output "$RUNNER_TEMP/Grilling-2.8.201.mcaddon"
+      - name: Reproduce explicit historical G201 companion
+        run: python tools/build_grilling_input.py --source .grilling-input --descriptor adapters/cookery-1.6.4.json --output "$RUNNER_TEMP/Grilling-2.8.201.mcaddon"
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: burnt-tea-dev/kaleidoscope-grilling-unofficial
           ref: c879943b49c0947527a5fc8fc5341bc9827a708a
           path: .grilling-current
           persist-credentials: false
-      - name: Reproduce current G203 companion
+      - name: Reproduce explicit historical G203 companion
         run: python tools/build_grilling_input.py --source .grilling-current --descriptor adapters/cookery-1.6.4-grilling-2.8.203.json --output "$RUNNER_TEMP/Grilling-2.8.203.zip"
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -44,13 +44,13 @@ jobs:
           ref: a35a7a7adf0fcef41340fea8119c5166560c2ce8
           path: .grilling-next
           persist-credentials: false
-      - name: Reproduce G206 and adapt exact clean author inputs locally
+      - name: Reproduce default G206 and adapt exact clean author inputs locally
         run: |
-          python tools/build_grilling_input.py --source .grilling-next --descriptor adapters/cookery-1.6.4-grilling-2.8.206-recipe-index.json --output "$RUNNER_TEMP/Grilling-2.8.206.mcaddon"
+          python tools/build_grilling_input.py --source .grilling-next --output "$RUNNER_TEMP/Grilling-2.8.206.mcaddon"
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9104/552/Kaleidoscope%20Immersive%20Eating%20v1.1.0.mcaddon' --output "$RUNNER_TEMP/ie.mcaddon"
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9317/31/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' --output "$RUNNER_TEMP/cookery.mcaddon"
           python tools/install_player_presentation.py --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --grilling-source .grilling-next --output "$RUNNER_TEMP/ie-g206.mcaddon"
-          python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --descriptor adapters/cookery-1.6.4-grilling-2.8.206-recipe-index.json --output "$RUNNER_TEMP/cookery-g206.mcaddon"
+          python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --output "$RUNNER_TEMP/cookery-g206.mcaddon"
       - name: Reproduce the exact local optional TACZ pair
         run: |
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/7854/487/TACZ%20SkinPack%20by%20Kopystka%20Localization%20Studio.mcaddon' --output "$RUNNER_TEMP/tacz.mcaddon"
