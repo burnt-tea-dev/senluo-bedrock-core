@@ -4,7 +4,11 @@ These tools join our Grilling port to separately downloaded author inputs.
 They create user-local files. They do not modify a server or publish author
 archives.
 
-## Cookery 1.6.4 with Grilling 2.8.203
+For the current G206, Cookery 1.6.20007 and IE 1.1.20002 route, use
+[the current family installation](FAMILY-ASSEMBLY.md#current-g206-installation).
+The older descriptor examples below remain historical reproduction paths.
+
+## Historical Cookery 1.6.4 with Grilling 2.8.203
 
 The G203 descriptor pins Grilling source commit `c879943b`, both runtime tree
 hashes, the board API declaration, and each copied helper hash. Build the G203
@@ -97,7 +101,7 @@ Use `adapters/cookery-1.6.4-grilling-2.8.205-guide-startup.json` with the normal
 
 ## Cookery incremental guide decoding (G205, toolkit 0.7.0)
 
-The current local source candidate uses
+The historical 0.7.0 local source candidate uses
 `adapters/cookery-1.6.4-grilling-2.8.205-guide-decoding.json`. It repeats the
 same G205 and receiver operations, but copies the new Core-owned incremental
 decoder into the existing helper destination. Cookery BP/RP and their modules
