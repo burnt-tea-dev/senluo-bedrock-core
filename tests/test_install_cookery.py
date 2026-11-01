@@ -73,11 +73,11 @@ class InstallerTests(unittest.TestCase):
         source = b"export const marker = 1;\n"
         anchor = "export const marker = 1;"
         replacement = "const hostHook = true;\n"
-        manifest_bp = {"header": {"uuid": "bp-uuid", "version": [1, 6, 4]},
+        manifest_bp = {"header": {"uuid": "bp-uuid", "version": [1, 6, 4], "min_engine_version": [1, 26, 1]},
                        "modules": [{"uuid": "bp-module", "version": [1, 6, 4], "type": "data"}],
                        "dependencies": [{"uuid": "rp-uuid", "version": [1, 6, 4]},
                                        {"uuid": "engine", "version": "1.21.0"}]}
-        manifest_rp = {"header": {"uuid": "rp-uuid", "version": [1, 6, 4]}, "modules": []}
+        manifest_rp = {"header": {"uuid": "rp-uuid", "version": [1, 6, 4], "min_engine_version": [1, 26, 1]}, "modules": []}
         bp_manifest = json.dumps(manifest_bp, indent=2).encode()
         rp_manifest = json.dumps(manifest_rp, indent=2).encode()
         untouched_info = zipfile.ZipInfo(bp + "unrelated.bin", (2020, 2, 3, 4, 5, 6))
@@ -154,6 +154,29 @@ class InstallerTests(unittest.TestCase):
             cookery, grilling = self.paths(fixture)
             with self.assertRaises(ValueError):
                 installer.apply_archive(cookery, grilling, fixture[2])
+
+    def test_behavior_engine_context_preserves_other_payloads(self):
+        data = self.fixture()
+        cookery, grilling = self.paths(data)
+        old_output, _ = installer.apply_archive(cookery, grilling, data[2])
+        descriptor = {**data[2], "behavior_min_engine_version": [1, 26, 60]}
+        output, receipt = installer.apply_archive(cookery, grilling, descriptor)
+        with zipfile.ZipFile(io.BytesIO(old_output)) as old, zipfile.ZipFile(io.BytesIO(output)) as new:
+            changed = [name for name in old.namelist() if old.read(name) != new.read(name)]
+            self.assertEqual(changed, [data[4] + "manifest.json"])
+            bp = json.loads(new.read(data[4] + "manifest.json"))
+            rp = json.loads(new.read(data[5] + "manifest.json"))
+            self.assertEqual(bp["header"]["min_engine_version"], [1, 26, 60])
+            self.assertEqual(rp["header"]["min_engine_version"], [1, 26, 1])
+            self.assertEqual(bp["header"]["uuid"], "bp-uuid")
+        self.assertEqual(receipt["manifest_identities"][data[4] + "manifest.json"]["min_engine_version"], [1, 26, 60])
+
+    def test_rejects_behavior_engine_downgrade(self):
+        data = self.fixture()
+        cookery, grilling = self.paths(data)
+        descriptor = {**data[2], "behavior_min_engine_version": [1, 21, 120]}
+        with self.assertRaisesRegex(ValueError, "minimum engine.*older"):
+            installer.apply_archive(cookery, grilling, descriptor)
 
     def test_rejects_malformed_insertion_position(self):
         data = self.fixture(bad_position=True)

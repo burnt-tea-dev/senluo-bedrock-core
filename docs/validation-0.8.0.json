@@ -1,0 +1,33 @@
+{
+  "observed_date": "2026-11-01",
+  "scope": "Source candidate and isolated command-context measurements; not full-family admission",
+  "bds_version": "1.26.60.6",
+  "server_api": "2.7.0",
+  "network_player_control": {
+    "transport": "isolated offline Raknet, gophertunnel1.63.0; not a rendered human client",
+    "engine_declaration_1_26_1_first_ms": 155,
+    "engine_declaration_1_26_60_first_ms": 1,
+    "second_ms": 0,
+    "both_messages_received": true
+  },
+  "cookery_original_welcome": {
+    "public_eight_side_call_ms": 0,
+    "full_family_call_ms": 0,
+    "timing_resolution_ms": 1,
+    "warmup_or_forwarding_pack": false,
+    "welcome_script_preserved": true,
+    "other_full_family_cookery_startup_slowdowns": 19
+  },
+  "clean_author_rebuild": {
+    "cookery_version": [1, 6, 20005],
+    "grilling_version": [2, 8, 205],
+    "changed_from_local_20004": ["BP/manifest.json", "RP/manifest.json"],
+    "unchanged_files": 3470,
+    "pack_and_module_uuids_preserved": true,
+    "world_database_read_or_written": false
+  },
+  "internal_command_context_cause": "Inference from native CPU samples and the isolated manifest-only A/B; no confirmed engine function symbol",
+  "full_family_admission": false,
+  "client": false,
+  "production_ready": false
+}

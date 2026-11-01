@@ -137,6 +137,11 @@ def apply_archive(cookery: Path, grilling: Path, descriptor: dict) -> tuple[byte
         author_version = _required(descriptor, "author_version")
         if version <= author_version:
             raise ValueError("local output version must be newer than the author version")
+        minimum_engine = descriptor.get("behavior_min_engine_version")
+        if minimum_engine is not None and not (
+                isinstance(minimum_engine, list) and len(minimum_engine) == 3
+                and all(type(part) is int and part >= 0 for part in minimum_engine)):
+            raise ValueError("behavior minimum engine must be a three-part version")
         manifest_paths = [prefixes["cookery_bp"] + "manifest.json", prefixes["cookery_rp"] + "manifest.json"]
         owned_pack_uuids = {descriptor["host_uuid"], descriptor["resource_uuid"]}
         manifest_receipt = {}
@@ -151,6 +156,12 @@ def apply_archive(cookery: Path, grilling: Path, descriptor: dict) -> tuple[byte
                 raise ValueError("unexpected author manifest version: " + path)
             if header.get("uuid") != expected_uuid:
                 raise ValueError("author manifest UUID differs: " + path)
+            if path == manifest_paths[0] and minimum_engine is not None:
+                if minimum_engine < header.get("min_engine_version", [0, 0, 0]):
+                    raise ValueError("behavior minimum engine cannot be older than the author requirement")
+                # The engine's command context depends on this declaration.
+                # Keep the author's RP requirement and all gameplay bytes intact.
+                header["min_engine_version"] = minimum_engine
             for module in doc.get("modules", []):
                 if "version" in module:
                     if module["version"] != author_version:
@@ -274,6 +285,7 @@ def _manifest_identities(files, paths):
         result[path] = {
             "uuid": doc.get("header", {}).get("uuid"),
             "header_version": doc.get("header", {}).get("version"),
+            "min_engine_version": doc.get("header", {}).get("min_engine_version"),
             "modules": [{"uuid": module.get("uuid"), "type": module.get("type"),
                          "version": module.get("version")} for module in doc.get("modules", [])],
             "dependencies": doc.get("dependencies", []),

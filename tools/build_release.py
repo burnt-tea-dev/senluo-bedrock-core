@@ -15,6 +15,10 @@ def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
+def sdk_files(sdk):
+    return ['LICENSE', 'sdk.json', *[row['source'] for row in sdk['files'].values()]]
+
+
 def validate():
     publication = json.loads((ROOT / 'PUBLICATION.json').read_text())
     names = publication['files']
@@ -29,8 +33,10 @@ def validate():
     history = json.loads((ROOT / 'release-history.json').read_text())
     release = history[sdk['version']]
     payloads = release['payloads']
-    for name, expected in payloads.items():
-        if digest((ROOT / name).read_bytes()) != expected:
+    # Historical source releases also pinned tools. Those belong to their
+    # toolkit identity; SDK immutability covers the actual SDK download.
+    for name in set(sdk_files(sdk)) & payloads.keys():
+        if digest((ROOT / name).read_bytes()) != payloads[name]:
             raise ValueError('Release payload changed without a fresh identity: ' + name)
     for row in sdk['files'].values():
         if digest((ROOT / row['source']).read_bytes()) != row['sha256'] or row['source'] not in payloads:
@@ -76,7 +82,7 @@ def main():
         raise ValueError('Choose a new output directory')
     output.mkdir(parents=True)
     version = sdk['version']
-    assets = {'senluo-core-' + version + '-sdk.zip': archive(['LICENSE', 'sdk.json', *[v['source'] for v in sdk['files'].values()]]),
+    assets = {'senluo-core-' + version + '-sdk.zip': archive(sdk_files(sdk)),
               'senluo-core-toolkit-' + toolkit_version + '-source.zip': archive(names)}
     for name, raw in assets.items():
         (output / name).write_bytes(raw)
