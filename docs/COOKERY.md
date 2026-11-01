@@ -50,7 +50,7 @@ official Cookery download. Installing it into a world or validating saved
 world behavior is a separate step; a successful build does not prove client
 gameplay.
 
-## Current G205 guide-decoding candidate
+## G205 guide-decoding source candidate (0.7.0)
 
 For the reviewed G205 source candidate, use the
 `adapters/cookery-1.6.4-grilling-2.8.205-guide-decoding.json` descriptor with
@@ -72,3 +72,25 @@ python3 tools/install_cookery_from_descriptor.py \
 Keep the generated archive and receipt outside this repository. This is a
 local source build; it does not establish full-family, saved-world or client
 acceptance.
+
+## G205 command-context source candidate (0.8.0)
+
+Use `adapters/cookery-1.6.4-grilling-2.8.205-command-context.json` with the
+same clean author and G205 inputs. It builds the fresh local BP/RP pair
+`[1, 6, 20005]`. The BP minimum engine becomes `[1, 26, 60]`; the RP's
+author requirement stays unchanged. Older clients cannot use this route.
+The welcome script, other gameplay files, UUIDs and save keys are preserved.
+The installer refuses to lower an author's engine requirement.
+
+On isolated BDS 1.26.60.6, changing only the diagnostic BP engine declaration
+from 1.26.1 to 1.26.60 reduced its first network Player message from 155 ms
+to 1 ms, with both messages received. The same declaration change in Cookery
+made the unchanged welcome call take less than 1 ms in both the eight-side
+public fixture and the full family fixture. No warm-up message or forwarding
+pack was used. This supports an engine command-context initialization cause;
+the stripped engine does not provide a confirmed internal function name.
+
+These focused measurements do not establish full-family admission. The
+full-family fixture still reported other Cookery startup Slowdowns. Saved-world
+first load/restart, rollback, real client and normal multiplayer checks remain
+separate. See [the validation record](validation-0.8.0.json).

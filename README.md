@@ -25,8 +25,10 @@ upgrading.
 
 The family assembler retains the pinned G203 and G205 recipes. The G205 inputs
 are Tavern 0.6.194, Grilling 2.8.205 and World Liquor 0.1.180. The newest local
-Cookery route is the 0.7.0 guide-decoding descriptor, which builds Cookery
-1.6.20004 while keeping the author's pack IDs and existing receiver patches.
+Cookery route is the 0.8.0 command-context descriptor, which builds Cookery
+1.6.20005 and requires Bedrock 1.26.60 for its behavior pack. It retains the
+guide decoder, original welcome and author pack IDs. The 0.7.0 descriptor
+still reproduces Cookery 1.6.20004.
 The 0.6.0 startup descriptor remains available and reproduces Cookery
 1.6.20003. These local archives are source candidates, not public Releases or
 full-family/client acceptance; see the adapter and assembly instructions.
