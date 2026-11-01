@@ -29,6 +29,24 @@ def make_zip(entries):
 
 
 class PortAdapterTests(unittest.TestCase):
+    def test_incremental_decoder_descriptor_keeps_startup_receiver_operations_unchanged(self):
+        root = Path(__file__).resolve().parents[1]
+        startup = json.loads((root / 'adapters/cookery-1.6.4-grilling-2.8.205-guide-startup.json').read_text())
+        decoding = json.loads((root / 'adapters/cookery-1.6.4-grilling-2.8.205-guide-decoding.json').read_text())
+        self.assertEqual(startup['output_version'], [1, 6, 20003])
+        self.assertEqual(startup['post_adapter']['helper_sha256'],
+                         '08cd854cc20952cf42532b1adb2c906727ee88fc42ae2c4ae265a1a34ce4ca13')
+        self.assertEqual(digest((root / startup['post_adapter']['helper_path']).read_bytes()),
+                         startup['post_adapter']['helper_sha256'])
+        self.assertEqual(decoding['toolkit_version'], '0.7.0')
+        self.assertEqual(decoding['output_version'], [1, 6, 20004])
+        self.assertEqual(decoding['id'], 'senluo-core:cookery-1.6.4-grilling-2.8.205-guide-decoding')
+        for key in ('helper_destination', 'preimages', 'postimages', 'imports', 'insertions', 'text_replacements'):
+            self.assertEqual(decoding['post_adapter'][key], startup['post_adapter'][key], key)
+        self.assertEqual(decoding['post_adapter']['helper_path'], 'src/host_api/cookery-guide-decoding.js')
+        helper = (root / decoding['post_adapter']['helper_path']).read_bytes()
+        self.assertEqual(digest(helper), decoding['post_adapter']['helper_sha256'])
+
     def test_grilling_exporter_uses_descriptor_specific_tree_pins(self):
         with tempfile.TemporaryDirectory() as td:
             source = Path(td) / "source"

@@ -91,6 +91,27 @@ therefore unchanged. It adds no Grilling or Immersive Eating gameplay change.
 Use it only with the matching original Immersive Eating archive and G205
 Grilling input. This is still a local source candidate, not client acceptance.
 
-## Cookery guide startup receiver (G205)
+## Cookery guide startup receiver (G205, toolkit 0.6.0)
 
-Use `adapters/cookery-1.6.4-grilling-2.8.205-guide-startup.json` with the normal installer command and `tools/install_cookery_from_descriptor.py`. This runs the existing G205 adapter first, then applies a separate Core-owned stage pinned to exact Cookery receiver preimages/postimages and the Core helper hash. It produces local version 1.6.20003 while retaining the author pack/module UUIDs and data keys. The existing G205 descriptor still reproduces 1.6.20002. Do not distribute the generated Cookery archive.
+Use `adapters/cookery-1.6.4-grilling-2.8.205-guide-startup.json` with the normal installer command and `tools/install_cookery_from_descriptor.py` to reproduce the earlier local version 1.6.20003. This runs the G205 adapter first, then applies the Core-owned startup stage. Its original helper hash, receiver operations and output remain unchanged.
+
+## Cookery incremental guide decoding (G205, toolkit 0.7.0)
+
+The current local source candidate uses
+`adapters/cookery-1.6.4-grilling-2.8.205-guide-decoding.json`. It repeats the
+same G205 and receiver operations, but copies the new Core-owned incremental
+decoder into the existing helper destination. Cookery BP/RP and their modules
+become `[1, 6, 20004]`; the author pack UUIDs and existing save keys stay the
+same. The descriptor's receiver preimages, postimages and operations match the
+0.6 startup descriptor exactly. The SDK remains 0.1.0.
+
+```sh
+python3 tools/install_cookery_from_descriptor.py \
+  --cookery /path/to/original-cookery-1.6.4.mcaddon \
+  --grilling /path/to/pinned-grilling-2.8.205.mcaddon \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.205-guide-decoding.json \
+  --output /path/to/private-output/cookery-g205-decoding.mcaddon
+```
+
+Keep the generated archive and receipt outside this repository. This source
+build does not prove full-family, saved-world or client acceptance.

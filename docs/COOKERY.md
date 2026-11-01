@@ -49,3 +49,26 @@ paths, and SDK helper hashes. Treat adapted output as a local build, not an
 official Cookery download. Installing it into a world or validating saved
 world behavior is a separate step; a successful build does not prove client
 gameplay.
+
+## Current G205 guide-decoding candidate
+
+For the reviewed G205 source candidate, use the
+`adapters/cookery-1.6.4-grilling-2.8.205-guide-decoding.json` descriptor with
+the same installer. It keeps the receiver's startup patch and adds a pinned
+Core helper that scans large guide JSON in small slices. Both Cookery pack
+versions become `[1, 6, 20004]`; pack and module UUIDs stay with the author.
+Toolkit 0.7.0 and SDK 0.1.0 are separate versions. The 0.6.0
+`guide-startup` descriptor remains available to reproduce local version
+`[1, 6, 20003]`.
+
+```sh
+python3 tools/install_cookery_from_descriptor.py \
+  --cookery /path/to/original-cookery-1.6.4.mcaddon \
+  --grilling /path/to/pinned-grilling-2.8.205.mcaddon \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.205-guide-decoding.json \
+  --output /path/to/private-output/cookery-g205-decoding.mcaddon
+```
+
+Keep the generated archive and receipt outside this repository. This is a
+local source build; it does not establish full-family, saved-world or client
+acceptance.

@@ -79,6 +79,27 @@ pins the exact local Cookery archive hash. Neither descriptor is a claim that G2
 Release, full-family admission, BDS acceptance, or client acceptance. Keep the
 local Cookery archive and assembled family output out of this repository.
 
+For the current incremental-decoding source candidate, build the user-local
+Cookery input with
+`adapters/cookery-1.6.4-grilling-2.8.205-guide-decoding.json`. It produces local
+Cookery `[1, 6, 20004]`. Keep the 0.6 startup archive and recipe above intact.
+Use the exact Tavern 0.6.194, Grilling 2.8.205 and World Liquor 0.1.180
+archives named by the family descriptor and the generated Cookery archive
+named `cookery-g205-decoding.mcaddon`. Then use the public family descriptor;
+it pins these input hashes, the Cookery pair and `toolkit_version` 0.7.0:
+
+```sh
+python3 tools/build_owned_family_recipe.py \
+  --descriptor adapters/owned-t194-g205-w180-cookery-decoding.json \
+  --inputs /path/to/local-inputs \
+  --output /path/to/private-owned-t194-g205-w180-cookery-decoding.recipe.json
+```
+
+The generated eight-pack recipe records `toolkit_version` 0.7.0 and the exact
+local Cookery archive hash. Keep the recipe and Cookery archive with the local
+build inputs; they are not Core publication files. This is still a source
+candidate, not full-family, BDS or client acceptance.
+
 ## Run
 
 ```sh

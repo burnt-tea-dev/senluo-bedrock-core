@@ -54,10 +54,13 @@ def build_recipe(descriptor, inputs_dir):
             archive.close()
     if set(found) != {row['id'] for row in selected} or len(found) != len(selected):
         raise ValueError('descriptor pack set is missing or duplicated')
-    return {'schema': 1, 'id': descriptor['id'], 'version': descriptor['recipe_version'],
-            'inputs': {key: {'filename': value['filename'], 'sha256': value['sha256']}
-                       for key, value in descriptor['inputs'].items()},
-            'packs': [found[row['id']] for row in selected], 'order': descriptor['order']}
+    recipe = {'schema': 1, 'id': descriptor['id'], 'version': descriptor['recipe_version'],
+              'inputs': {key: {'filename': value['filename'], 'sha256': value['sha256']}
+                         for key, value in descriptor['inputs'].items()},
+              'packs': [found[row['id']] for row in selected], 'order': descriptor['order']}
+    if 'toolkit_version' in descriptor:
+        recipe['toolkit_version'] = descriptor['toolkit_version']
+    return recipe
 
 
 def main(argv=None):
