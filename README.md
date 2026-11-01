@@ -28,8 +28,7 @@ adapter. It builds user-local Cookery1.6.20006 and IE1.1.20002 using original
 author inputs; the original welcome remains. Public and server integration call
 the same canonical Grilling player composer. See [owned-port adapters](docs/PORT-ADAPTERS.md).
 The G203 and G205 descriptors remain immutable for reproducing earlier local
-outputs. Current source candidates are not a public Release or rendered/client
-acceptance. See each pinned descriptor and validation record.
+outputs. Use [Releases](https://github.com/burnt-tea-dev/senluo-bedrock-core/releases) for published downloads. Source and native evidence do not establish rendered/client acceptance. See each pinned descriptor and validation record.
 
 Author archives, complete author modules, worlds, private integration history,
 server configuration and credentials are not distributed here. Obtain Cookery
@@ -52,3 +51,5 @@ profile. Its28-field native player and six saved-world flows pass, but the
 TACZ script performance gate currently fails; it is not approved for LIVE or a
 public Release. The standard no-TACZ route remains the0.9.0 validated assembly.
 See [the0.10 validation record](docs/validation-0.10.0.json).
+
+Toolkit0.12.0 source candidate keeps Cookery recipe indexes in the original native locale order while inserting newly registered keys incrementally. This removes repeated complete sorts during registration bursts. Use `adapters/cookery-1.6.4-grilling-2.8.206-recipe-index.json` for local Cookery1.6.20007. Welcome chat, recipe contents, update timing, UUIDs and save ownership are retained. Existing pre-0.12 decoding descriptors require their original toolkit source; a changed helper cannot regenerate their immutable local versions.

@@ -137,3 +137,25 @@ export function createCookeryDisplayWorkQueue(system,register,warn=console.warn)
   status:()=>({queued:queue.length,committed,rejected,scheduler:"native-job"})
  });
 }
+
+/** Keep the author's locale order while registering keys incrementally. */
+export function createCookeryRecipeOrder(){
+ const cache=new WeakMap();
+ return Object.freeze({
+  values(map){
+   let keys=cache.get(map);
+   if(!keys){keys=[...map.keys()].sort((a,b)=>a.localeCompare(b));cache.set(map,keys);}
+   return keys.map(key=>map.get(key));
+  },
+  set(map,key,value){
+   const present=map.has(key);map.set(key,value);
+   const keys=cache.get(map);
+   if(keys&&!present){
+    let first=0,last=keys.length;
+    while(first<last){const middle=(first+last)>>>1;if(keys[middle].localeCompare(key)<=0)first=middle+1;else last=middle;}
+    keys.splice(first,0,key);
+   }
+   return map;
+  }
+ });
+}

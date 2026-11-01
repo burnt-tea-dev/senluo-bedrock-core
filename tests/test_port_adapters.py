@@ -45,7 +45,11 @@ class PortAdapterTests(unittest.TestCase):
             self.assertEqual(decoding['post_adapter'][key], startup['post_adapter'][key], key)
         self.assertEqual(decoding['post_adapter']['helper_path'], 'src/host_api/cookery-guide-decoding.js')
         helper = (root / decoding['post_adapter']['helper_path']).read_bytes()
-        self.assertEqual(digest(helper), decoding['post_adapter']['helper_sha256'])
+        current=json.loads((root/'adapters/cookery-1.6.4-grilling-2.8.206-recipe-index.json').read_text())
+        self.assertEqual(digest(helper),current['post_adapter']['helper_sha256'])
+        from install_cookery_from_descriptor import apply_post_adapter
+        with self.assertRaisesRegex(ValueError,'helper hash differs'):
+            apply_post_adapter(b'',decoding)
 
     def test_grilling_exporter_uses_descriptor_specific_tree_pins(self):
         with tempfile.TemporaryDirectory() as td:
