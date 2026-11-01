@@ -222,6 +222,7 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
     output.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix="." + output.name + ".", dir=output.parent))
     pack_receipts = []
+    behavior_player = None
     world_lists = {"BP": [], "RP": []}
     archive_reader = None
     try:
@@ -282,6 +283,13 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                 if source_hash != spec.get("sha256"):
                     raise ValueError("file source hash differs: " + relative)
                 raw = _transform(raw, spec.get("transforms", []), relative)
+                if side == 'BP' and relative.startswith('entities/') and relative.endswith('.json'):
+                    definition = json.loads(raw)
+                    if definition.get('minecraft:entity', {}).get('description', {}).get('identifier') == 'minecraft:player':
+                        if behavior_player is not None:
+                            raise ValueError('competing behavior minecraft:player definitions: '
+                                             + behavior_player + ' and ' + pack_id)
+                        behavior_player = pack_id
                 if sha256(raw) != spec.get("output_sha256", spec.get("sha256")):
                     raise ValueError("file output hash differs: " + relative)
                 source_hashes[relative] = {"source_sha256": source_hash, "output_sha256": sha256(raw)}

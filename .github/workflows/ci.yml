@@ -38,4 +38,17 @@ jobs:
           persist-credentials: false
       - name: Reproduce current G203 companion
         run: python tools/build_grilling_input.py --source .grilling-current --descriptor adapters/cookery-1.6.4-grilling-2.8.203.json --output "$RUNNER_TEMP/Grilling-2.8.203.zip"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: burnt-tea-dev/kaleidoscope-grilling-unofficial
+          ref: a35a7a7adf0fcef41340fea8119c5166560c2ce8
+          path: .grilling-next
+          persist-credentials: false
+      - name: Reproduce G206 and adapt exact clean author inputs locally
+        run: |
+          python tools/build_grilling_input.py --source .grilling-next --descriptor adapters/cookery-1.6.4-grilling-2.8.206-command-context.json --output "$RUNNER_TEMP/Grilling-2.8.206.mcaddon"
+          curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9104/552/Kaleidoscope%20Immersive%20Eating%20v1.1.0.mcaddon' --output "$RUNNER_TEMP/ie.mcaddon"
+          curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9317/31/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' --output "$RUNNER_TEMP/cookery.mcaddon"
+          python tools/install_player_presentation.py --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --grilling-source .grilling-next --output "$RUNNER_TEMP/ie-g206.mcaddon"
+          python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --descriptor adapters/cookery-1.6.4-grilling-2.8.206-command-context.json --output "$RUNNER_TEMP/cookery-g206.mcaddon"
       - run: python tools/build_release.py --output dist

@@ -23,15 +23,13 @@ upgrading.
 - [Owned-port adapters](docs/PORT-ADAPTERS.md)
 - [Validation limits](docs/VALIDATION.md)
 
-The family assembler retains the pinned G203 and G205 recipes. The G205 inputs
-are Tavern 0.6.194, Grilling 2.8.205 and World Liquor 0.1.180. The newest local
-Cookery route is the 0.8.0 command-context descriptor, which builds Cookery
-1.6.20005 and requires Bedrock 1.26.60 for its behavior pack. It retains the
-guide decoder, original welcome and author pack IDs. The 0.7.0 descriptor
-still reproduces Cookery 1.6.20004.
-The 0.6.0 startup descriptor remains available and reproduces Cookery
-1.6.20003. These local archives are source candidates, not public Releases or
-full-family/client acceptance; see the adapter and assembly instructions.
+The current toolkit source candidate adds G206's selected-player presentation
+adapter. It builds user-local Cookery1.6.20006 and IE1.1.20002 using original
+author inputs; the original welcome remains. Public and server integration call
+the same canonical Grilling player composer. See [owned-port adapters](docs/PORT-ADAPTERS.md).
+The G203 and G205 descriptors remain immutable for reproducing earlier local
+outputs. Current source candidates are not a public Release or rendered/client
+acceptance. See each pinned descriptor and validation record.
 
 Author archives, complete author modules, worlds, private integration history,
 server configuration and credentials are not distributed here. Obtain Cookery

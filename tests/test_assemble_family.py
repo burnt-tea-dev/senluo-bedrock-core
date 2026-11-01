@@ -143,6 +143,20 @@ class AssembleFamilyTests(unittest.TestCase):
                         manifest = json.loads(nested.read("manifest.json"))
                         self.assertEqual(manifest["header"]["uuid"], "bp-uuid" if "-bp." in filename else "rp-uuid")
 
+    def test_rejects_two_behavior_player_definitions_before_publishing_output(self):
+        with tempfile.TemporaryDirectory() as td:
+            recipe, recipe_path, inputs, output = self.setup_case(Path(td))
+            pack = recipe['packs'][0]
+            player = json.dumps({'minecraft:entity': {'description': {'identifier': 'minecraft:player'}}})
+            for name in ('entities/player.json', 'entities/another_player.json'):
+                pack['files'][name] = {'kind': 'generated', 'content': player,
+                                       'sha256': digest(player.encode())}
+                pack['expected_tree']['files'][name] = digest(player.encode())
+            pack['expected_tree']['sha256'] = assembler._tree_fingerprint(pack['expected_tree']['files'])
+            with self.assertRaisesRegex(ValueError, 'competing behavior minecraft:player'):
+                assembler.assemble(recipe, recipe_path, inputs, output)
+            self.assertFalse(output.exists())
+
     def test_pack_reader_reuses_outer_index_and_one_nested_archive(self):
         outer, _, _, config, script = self.fixture()
         with tempfile.TemporaryDirectory() as td:

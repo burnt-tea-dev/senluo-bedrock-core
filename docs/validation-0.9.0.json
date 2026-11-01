@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "observed_at": "2026-11-01T11:33:59.081479+00:00",
+  "scope": "Owned T194/G206/W180 plus user-local Cookery1.6.20006 and IE1.1.20002; public ten-side assembly on retained stopped save. Not current full55 LIVE admission or client acceptance.",
+  "engine": "1.26.60.6",
+  "toolkit_version": "0.9.0",
+  "sdk_version": "0.1.0",
+  "grilling_source": "a35a7a7adf0fcef41340fea8119c5166560c2ce8",
+  "paired_versions": {
+    "cookery": [
+      1,
+      6,
+      20006
+    ],
+    "immersive_eating": [
+      1,
+      1,
+      20002
+    ]
+  },
+  "gate_b": {
+    "verdict": "pass",
+    "receipt_sha256": "473e889f0e701cb22b38d74ef92da42374cc58bab9a675b3684acfcefaca3de7",
+    "gameplay_save_flows": 6,
+    "sustained_owned_slowdowns": 0,
+    "one_off_startup_spikes_remain": true,
+    "readback_zero_drift": true
+  },
+  "public_private_selected_player_rp_equal": true,
+  "first_person_controller_semantically_equal": true,
+  "unchanged_ie_author_files": 344,
+  "sole_behavior_player_owner": "Grilling",
+  "welcome": "original chat and author welcome script retained; BP context1.26.60 fixes measured first-send delay",
+  "optional_tacz": {
+    "source_preview_outputs": 88,
+    "source_preview_properties": 28,
+    "installable_in_selected_descriptor": false,
+    "full_family_and_client_verified": false
+  },
+  "full55_admission": false,
+  "actual_rollback": false,
+  "client": false,
+  "production_ready": false,
+  "pending_client_acceptance": true
+}

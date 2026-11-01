@@ -115,3 +115,39 @@ python3 tools/install_cookery_from_descriptor.py \
 
 Keep the generated archive and receipt outside this repository. This source
 build does not prove full-family, saved-world or client acceptance.
+
+## G206 selected player presentation
+
+G206 transports both hands through four player properties and public player
+variables. The selected complete player must apply its presentation extension;
+replacing only the Grilling archive leaves the new attachables without readers.
+
+Use the exact public Grilling source checkout pinned in
+[`ie-grilling-2.8.206.json`](../adapters/ie-grilling-2.8.206.json), and obtain the
+original IE1.1.0 archive separately. The local tool calls Grilling's canonical
+`tools/compose_held_player.py`; the server integration uses the same composer.
+
+```sh
+python tools/build_grilling_input.py --source /path/to/grilling-source \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.206-command-context.json \
+  --output /new/Grilling-2.8.206.mcaddon
+python tools/install_player_presentation.py --ie /inputs/original-ie.mcaddon \
+  --grilling /new/Grilling-2.8.206.mcaddon \
+  --grilling-source /path/to/grilling-source --output /new/ie-g206.mcaddon
+```
+
+The output is a user-local IE1.1.20002 pair. It retains the author's pack and
+module UUIDs, scripts, assets and save ownership. Grilling remains the sole BP player owner. It
+extends the original RP player, combines the existing first-person arm
+controller in place, advances both manifest/module versions and pins Grilling.
+Only the BP minimum engine context advances to1.26.60. Select this IE pair above
+Grilling in both pack lists; retain the other required original inputs.
+
+The canonical Grilling composer can produce a28-property TACZ source preview.
+This installer currently supports the selected LIVE combination without TACZ.
+A complete TACZ installation also needs one behavior-player owner and verified
+left-arm animation routing; these are separate from merging the two player JSON
+files. The optional TACZ source preview is not admitted by this descriptor.
+Original and generated author archives never belong in public Releases.
+Source checks do not establish real first-person, food, sound or multiplayer
+acceptance.
