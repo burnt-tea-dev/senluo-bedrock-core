@@ -26,6 +26,7 @@
     "adapters/owned-t194-g206-w180-cookery-player.json",
     "adapters/owned-t194-g206-w180-tacz-test.json",
     "adapters/tacz-1.0.3-grilling-2.8.206.json",
+    "adapters/tacz-1.0.3-startup.json",
     "docs/COOKERY.md",
     "docs/FAMILY-ASSEMBLY.md",
     "docs/PORT-ADAPTERS.md",
@@ -33,6 +34,7 @@
     "docs/VALIDATION.md",
     "docs/validation-0.1.0.json",
     "docs/validation-0.10.0.json",
+    "docs/validation-0.11.0.json",
     "docs/validation-0.8.0.json",
     "docs/validation-0.9.0.json",
     "package.json",
@@ -51,6 +53,7 @@
     "tests/test_player_presentation.py",
     "tests/test_port_adapters.py",
     "tests/test_tacz_adapter.py",
+    "tests/test_tacz_startup.py",
     "tools/assemble_family.py",
     "tools/build_grilling_input.py",
     "tools/build_owned_family_recipe.py",
@@ -59,7 +62,8 @@
     "tools/install_cookery.py",
     "tools/install_cookery_from_descriptor.py",
     "tools/install_player_presentation.py",
-    "tools/install_tacz.py"
+    "tools/install_tacz.py",
+    "tools/tacz_startup.py"
   ],
   "rule": "Only these reviewed source/SDK/tool files are distributable. Original and generated author archives are never release assets."
 }

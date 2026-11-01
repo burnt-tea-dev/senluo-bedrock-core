@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "id": "senluo-core:owned-t194-g206-w180-tacz-test-profile",
-  "toolkit_version": "0.10.0",
+  "toolkit_version": "0.11.0",
   "recipe_version": "1.0.0",
-  "scope": "Optional test profile: owned three ports plus local Cookery20006, IE20002 and adapted TACZ1.0.20003. Composed28-field player is the reviewed effective owner above unchanged G2064-field source. Requires isolated saved-world and real client testing; never enables TACZ on LIVE automatically.",
+  "scope": "Optional test profile: owned three ports plus local Cookery20006, IE20002 and adapted TACZ1.0.20004. Composed28-field player is the reviewed effective owner above unchanged G2064-field source. Requires isolated saved-world and real client testing; never enables TACZ on LIVE automatically.",
   "inputs": {
     "tavern": {
       "filename": "Kaleidoscope_Tavern_Unofficial_0.6.194_baseline1.mcaddon",
@@ -31,8 +31,8 @@
       "distribution": "user-local-only-original-author-input-required"
     },
     "tacz": {
-      "filename": "tacz-g206-r3.mcaddon",
-      "sha256": "dc1a946afd9e26d22ae9500c3fdd974d5b2a1f9e996697a7c3196208606813eb",
+      "filename": "tacz-g206-startup20004.mcaddon",
+      "sha256": "7d3d9654278f62c4b200f172cd6a77808368a37893b1ebbf191e81e5f521d263",
       "distribution": "user-local-only-original-author-input-required"
     }
   },
@@ -286,7 +286,7 @@
       "version": [
         1,
         0,
-        20003
+        20004
       ],
       "side": "BP",
       "modules": [
@@ -295,7 +295,7 @@
           "version": [
             1,
             0,
-            20003
+            20004
           ]
         },
         {
@@ -303,7 +303,7 @@
           "version": [
             1,
             0,
-            20003
+            20004
           ]
         }
       ]
@@ -315,7 +315,7 @@
       "version": [
         1,
         0,
-        20003
+        20004
       ],
       "side": "RP",
       "modules": [
@@ -324,7 +324,7 @@
           "version": [
             1,
             0,
-            20003
+            20004
           ]
         }
       ]

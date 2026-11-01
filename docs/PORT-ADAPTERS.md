@@ -165,13 +165,13 @@ python tools/install_tacz.py --tacz /inputs/original-tacz.mcaddon \
   --grilling-source /path/to/grilling-source --output /new/tacz-g206.mcaddon
 ```
 
-The local output is a paired TACZ1.0.20003 with original UUIDs and script APIs.
+The local output is a paired TACZ1.0.20004 with original UUIDs and script APIs.
 It contains the complete28-property player, Grilling's public held variables,
 85 left-arm animation repairs, the repaired original53-bone model, the shared
 IE/G first-person controller and a normal-skeleton offhand route. The legacy
 push flags become the equivalent modern block-only push component; two AWP
-`panel` typos become `pane`. Original scripts, textures, other bones and metadata
-are retained. Source tests are separate from real gun, hand, sound and eating
+`panel` typos become `pane`. Original gameplay logic, textures, other bones and metadata
+are retained; startup string preparation is described below. Source tests are separate from real gun, hand, sound and eating
 acceptance.
 
 Use [`owned-t194-g206-w180-tacz-test.json`](../adapters/owned-t194-g206-w180-tacz-test.json)
@@ -187,3 +187,27 @@ The minimum engine for the adapted TACZ pair is1.26.60. Its original
 `@minecraft/server`1.18.0 and `@minecraft/server-ui`1.3.0 requirements remain;
 the GameTest module used by isolated validation is not part of the output.
 Keep a complete stopped-world backup before switching player definitions.
+
+## TACZ startup table preparation
+
+Toolkit0.11 prepares13 fixed string-table rotations from the exact author input
+before writing the local pair. The [obfuscator documentation](https://github.com/javascript-obfuscator/javascript-obfuscator#stringarrayrotate)
+describes this as a fixed generated shift; its RC4 decoders otherwise repeat
+substantial startup work. The recipe pins each script preimage, both changed
+byte spans, rotation, table count and exact output hash. The tool never executes
+author scripts. Original decoders, imports, event subscriptions and gameplay
+code outside those two spans remain byte identical.
+
+The reviewed preparation preserves6016 encoded table entries and all5673
+unique literal decoder calls checked against the original post-bootstrap
+state. This equivalence check does not replace the actual engine performance
+gate, saved-world checks or client gun/eating evidence. The failed20003
+performance record remains [unchanged](validation-0.10.0.json).
+
+On BDS1.26.60.6, the public12 saved-world first-load/restart run passed all
+six gameplay/save flows and read all28 properties in each flow. Sustained
+Watchdog Slowdowns were zero in both complete windows, compared with78 in the
+retained20003 failure. Original player records and world property keys/types
+were unchanged, with zero installed drift. This is public12 evidence only;
+private57, actual TACZ rollback, rendered gameplay, audio and real viewers remain
+unverified. See [the0.11 validation record](validation-0.11.0.json).

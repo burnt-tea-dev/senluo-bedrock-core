@@ -15,6 +15,7 @@ from export_ie_grilling_compat import export_controller
 from install_cookery import _atomic_new, _read_zip, _safe_name, sha256
 from install_player_presentation import advance_manifest, compose_players
 from assemble_family import read_definition
+from tacz_startup import prepare_scripts
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DESCRIPTOR = ROOT / 'adapters/tacz-1.0.3-grilling-2.8.206.json'
@@ -150,6 +151,11 @@ def apply_archive(tacz, ie, grilling, source, descriptor):
         composed, composition = compose_players(source, player, descriptor, tacz)
         originals = {name: raw for name, (_, raw) in entries.items()}
         files, receipt = adapt_files(originals, composed, controller, descriptor)
+        startup = prepare_scripts(originals)
+        files.update(startup)
+        receipt['changed_files'].update({name: sha256(raw) for name, raw in startup.items()})
+        receipt['preserved_author_files'] -= len(startup)
+        receipt['startup_script_count'] = len(startup)
         output = io.BytesIO()
         with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as target:
             for name, raw in files.items():
