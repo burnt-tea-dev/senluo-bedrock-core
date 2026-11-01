@@ -120,5 +120,68 @@
       "candidate_archive_sha256": "ba7008ef2786d01a871cd960aa7014d25e5bd2a2471b3960bc8085c714f56575"
     },
     "status": "source reproducible; public Release, full-family admission, and client acceptance pending"
+  },
+  "0.6.0": {
+    "sdk_version": "0.1.0",
+    "toolkit_version": "0.6.0",
+    "scope": "Separate Core-owned G205 Cookery startup receiver adapter stage; legacy descriptors and SDK unchanged. Local Cookery 1.6.20003; G205 source input unchanged.",
+    "payloads": {
+      ".github/workflows/ci.yml": "4d2b829bc191917669bb92aea7659f6d4201551304f2db18a0bb567d314db4fd",
+      ".gitignore": "1eac8fcf42455bb942bc4498d06e04b34359b14ba8180e3f4b869fb72abab396",
+      ".repo-target.json": "dc995552df1ef531214678b320aeaf5160f10ea70780732b685e16d1bfaedfe1",
+      "AGENTS.md": "470edeb6f4934abd8c5c93b61deff0ececb8788edf419730fc43b4c4288d83bd",
+      "LICENSE": "58315e3981805465363ced3824298e61564bab9946d23d16c2df5a1395b9c99a",
+      "PUBLICATION.json": "7aae10e526d98618b7c9370e254f07c45d19e6abdef0951413ccf5cd3798210d",
+      "README.md": "23105b0d284c1d3d4c260e7d9b292340f9e352b397d779141d19ac045b4908a3",
+      "adapters/cookery-1.6.4-grilling-2.8.203.json": "3231e7d72e8d23187e654ed6277d91432b4b297976ea8670f7726b062a44904b",
+      "adapters/cookery-1.6.4-grilling-2.8.205-guide-startup.json": "b4b148376460f41dfcfbf15f31a6a65bb2b03dea8685e6c7d1ee4efe0b3c1f27",
+      "adapters/cookery-1.6.4-grilling-2.8.205.json": "f3dc14a14410d7541492aadaf5ff7c720f8f2dbae4c1dc72207a11c1da37da53",
+      "adapters/cookery-1.6.4.json": "90b2024e09e0a4a2abf5305d457cac206fb11b28a12bea25ff131e475d7012f5",
+      "adapters/ie-grilling-2.8.203.json": "95ba2bafda3e75d68e60202849aa389356e22bc3123abc1ba398ede19585dd5e",
+      "adapters/ie-grilling-2.8.205.json": "e99fb4a8a10c05918f0cf5596055365650a7b2ede01ed41d2e1abc4cb9585344",
+      "adapters/owned-t194-g203-w180.json": "43d5e000affe3716266ca42078fa6014368f463a2145f160048036eccd6aa32b",
+      "adapters/owned-t194-g205-w180.json": "e07fd22af71e613a59536801359841d9f00cde14db20c26557fc0f938c05b386",
+      "adapters/owned-t194-g205-w180-cookery-startup.json": "7ebd42338927d6edfe67c94d1283da18f98aa66e2bbee3e98284a08f822a02f8",
+      "docs/COOKERY.md": "6f9ae3d60452a784e7728d24bb8ce3875ba74ca1a8cb04149e46d96974d3fbb1",
+      "docs/FAMILY-ASSEMBLY.md": "12ae4ca933b379a0743257609b639cda93c9b79675ea69e89fe9bbfe81444ccf",
+      "docs/PORT-ADAPTERS.md": "da508a7ee7e828e82d8831e931f9ab722253a49c3f9cd7bb18c7d5bcdc31e7a2",
+      "docs/SDK.md": "9c710c8f0b5718612c3e6ee26a2d31c698a41e69d23f88bab70f94d784da7654",
+      "docs/VALIDATION.md": "930dfe00b2ef5b0b97130054d4c3553ae672586a4b7278c59661d47792dafb9c",
+      "docs/validation-0.1.0.json": "a3161d6ce19452f9a73fdad70e95931ddedb84d4a61764bd65624b56331c63fd",
+      "package.json": "70787b851e5aafa6cdf4c49c5779276cc3cd597ad468b236045e980e34472a42",
+      "sdk.json": "9a38c4e697b46f34d2694c48f22bcd467eaf1748a2701c1cbdeaa032ae33f610",
+      "src/host_api/cookery-guide-startup.js": "08cd854cc20952cf42532b1adb2c906727ee88fc42ae2c4ae265a1a34ce4ca13",
+      "src/host_api/event_router.js": "666bc03cdd7bc93a9843feba71de5b0c48e5f1b5173c6529d6beeb43308227b9",
+      "src/host_api/food_api_core.js": "63794a5c86263a058f1424119cd3a5445db7a70fc64bb9d32c6a11fc9a160542",
+      "tests/sdk.test.mjs": "e5314133346cc2eabf83b02c2715e3ac1389207dc08f447dc059e4ef7c00cd50",
+      "tests/test_assemble_family.py": "afcbeda83fdbc095e79fcd22d78e365adbd457f812b065aab92d4b2e5486cce8",
+      "tests/test_build_owned_family_recipe.py": "8b2c02cd5234d830b120b59045cb1a3ffb8482dca1149c9bc86abe7078eb8471",
+      "tests/test_install_cookery.py": "7a0c2aa06c8177cfeb85675445db72b6cd10058250973e505977ea175281abc0",
+      "tests/test_port_adapters.py": "382a96e6b67da5d690cdd0f003cb7662c90c3a7318e987ae75f7f4e9f53f37ce",
+      "tools/assemble_family.py": "61661272b5c242fdb9a5a6c3565b4f1b69ca6e453e2ea9e4bd56cdd2c7c7bae4",
+      "tools/build_grilling_input.py": "5477834038d22d31936a7a281ee74d2841b3c567a29fbab36f4271c2d0ec4a9f",
+      "tools/build_owned_family_recipe.py": "e24e0bafd54a232c4a02242a46f78877f45b138ca3881f27fe78693ccf8140f2",
+      "tools/build_release.py": "4a5b4c2b6a1eff9a4e98449fc5681c4bd46cfbc03491fce73975aabb08fa1220",
+      "tools/export_ie_grilling_compat.py": "6d57acdd5845e2f06971d1f530cccb811781d6f99ccfd4a1c34d0842d559584b",
+      "tools/install_cookery.py": "ea0fec65caae7318451db8926f8873e5c05fde07a82e10a28beca59012b23856",
+      "tools/install_cookery_from_descriptor.py": "f1bb6e48d9af8d72b72b720c8fb7ade4fec3702a10fa698770e42fe90a885906"
+    },
+    "cookery_version": [
+      1,
+      6,
+      20003
+    ],
+    "grilling_version": [
+      2,
+      8,
+      205
+    ],
+    "grilling_source": {
+      "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+      "commit": "83026c0bb41fa6574e50a9b5a61cfb3b473bc59c",
+      "git_tree": "482a11c348d87c0963a7df8500d2bbeb9c33b1d4",
+      "candidate_archive_sha256": "ba7008ef2786d01a871cd960aa7014d25e5bd2a2471b3960bc8085c714f56575"
+    },
+    "status": "source reproducible; private QA generated; public Release and full-family/client acceptance pending"
   }
 }

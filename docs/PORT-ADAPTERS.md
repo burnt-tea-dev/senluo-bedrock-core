@@ -90,3 +90,7 @@ Grilling controller bytes match G203 exactly; its generated controller hash is
 therefore unchanged. It adds no Grilling or Immersive Eating gameplay change.
 Use it only with the matching original Immersive Eating archive and G205
 Grilling input. This is still a local source candidate, not client acceptance.
+
+## Cookery guide startup receiver (G205)
+
+Use `adapters/cookery-1.6.4-grilling-2.8.205-guide-startup.json` with the normal installer command and `tools/install_cookery_from_descriptor.py`. This runs the existing G205 adapter first, then applies a separate Core-owned stage pinned to exact Cookery receiver preimages/postimages and the Core helper hash. It produces local version 1.6.20003 while retaining the author pack/module UUIDs and data keys. The existing G205 descriptor still reproduces 1.6.20002. Do not distribute the generated Cookery archive.
