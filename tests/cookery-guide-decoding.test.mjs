@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createCookeryReadyBroadcaster,createCookeryGuideWorkQueue,createCookeryDisplayWorkQueue,parseCookeryGuideJson} from '../src/host_api/cookery-guide-decoding.js';
+import {createCookeryRecipeOrder,createCookeryReadyBroadcaster,createCookeryGuideWorkQueue,createCookeryDisplayWorkQueue,parseCookeryGuideJson} from '../src/host_api/cookery-guide-decoding.js';
 
 function parseInSlices(text,onYield=()=>{}){
  const parser=parseCookeryGuideJson(text);let step;
@@ -97,4 +97,24 @@ test('native display job preserves order and continues after malformed or reject
  work.enqueue('{"id":"late"}');assert.equal(jobs.length,2);
  while(!jobs[1].next().done){}
  assert.equal(seen.at(-1),'late');
+});
+
+const nativeOrder=map=>[...map].sort(([a],[b])=>a.localeCompare(b)).map(([,value])=>value);
+test('incremental updates preserve native locale ordering, stable equal keys and recipe references',()=>{
+ const index=createCookeryRecipeOrder(),map=new Map();index.values(map);
+ for(const key of ['wok|Tea:source|food:z','wok|tea-source|food:a','wok|tea_source|food:12','wok|tea:source|food:a','wok|tea:source|food:2']){
+  index.set(map,key,Object.freeze({key,metadata:{quality:3}}));assert.deepEqual(index.values(map),nativeOrder(map));
+ }
+ const key=[...map.keys()][1],replacement={key,metadata:{quality:7}};index.set(map,key,replacement);
+ assert.deepEqual(index.values(map),nativeOrder(map));assert(index.values(map).includes(replacement));
+ const prefilled=new Map([['b',{id:2}],['a',{id:1}]]);assert.deepEqual(index.values(prefilled),nativeOrder(prefilled));index.set(prefilled,'a',{id:3});assert.deepEqual(index.values(prefilled),nativeOrder(prefilled));
+});
+test('registration bursts use bounded comparisons and an unchanged index does no sorting',()=>{
+ const original=String.prototype.localeCompare;let comparisons=0;String.prototype.localeCompare=function(...args){comparisons++;return original.apply(this,args);};
+ try{
+  const index=createCookeryRecipeOrder(),map=new Map();index.values(map);
+  for(let i=999;i>=0;i--){index.set(map,'wok|fixture|food:'+String(i).padStart(4,'0'),{id:i});index.values(map);}
+  assert(comparisons<20000);const before=comparisons;for(let n=0;n<100;n++)index.values(map);assert.equal(comparisons,before);
+  assert.equal(index.values(map).length,1000);assert.deepEqual(index.values(map).map(r=>r.id),Array.from({length:1000},(_,n)=>n));
+ }finally{String.prototype.localeCompare=original;}
 });

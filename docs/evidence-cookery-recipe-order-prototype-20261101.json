@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "observed_at": "2026-11-01T14:03:38+00:00",
+  "scope": "Single-variable isolated57-side first-join prototype; not formal family admission or client acceptance",
+  "engine": "1.26.60.6",
+  "measured_cause": {
+    "recipe_index_rebuild_callbacks": 46,
+    "total_ms": 268,
+    "maximum_ms": 85
+  },
+  "control_cookery_sustained_slowdowns": 15,
+  "incremental_order_cookery_sustained_slowdowns": 0,
+  "prototype_world_pack_sources_restored": true,
+  "native_locale_order_and_complete_metadata_retained": true,
+  "real_original_author_local_cli_output_version": [
+    1,
+    6,
+    20007
+  ],
+  "client": false,
+  "production_ready": false,
+  "formal_public_and_current_full_family_gates": "tracked independently; this dated prototype is not their result"
+}

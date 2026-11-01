@@ -1,0 +1,371 @@
+{
+  "schema": 1,
+  "id": "senluo-core:owned-t194-g206-w180-tacz-test-profile",
+  "toolkit_version": "0.12.0",
+  "recipe_version": "1.0.0",
+  "scope": "Owned ports with exact local Cookery20007 incremental recipe ordering, unchanged welcome, native locale order and full recipe metadata. Full-family, native/save/rollback and actual client acceptance remain separately recorded.",
+  "inputs": {
+    "tavern": {
+      "filename": "Kaleidoscope_Tavern_Unofficial_0.6.194_baseline1.mcaddon",
+      "sha256": "03131885ffa8b243146b5dd02db3fdcc60cf217df969a4d7f55f3d47f1c3b0bb",
+      "distribution": "owned-public-source-candidate"
+    },
+    "grilling": {
+      "filename": "Kaleidoscope_Grilling_Unofficial_2.8.206_baseline1.mcaddon",
+      "sha256": "383642abb93340a0aebed477a4fd099836850ee59c1c3737906d1387ed1bc222",
+      "distribution": "owned-public-source-candidate"
+    },
+    "world-liquor": {
+      "filename": "Kaleidoscope_World_Liquor_Unofficial_0.1.180_baseline1.mcaddon",
+      "sha256": "979b9b89702fa809053a20138cca30dc72ca511aa2a49bcfa5d052f761087498",
+      "distribution": "owned-public-source-candidate"
+    },
+    "cookery": {
+      "filename": "cookery-recipe-index-20007.mcaddon",
+      "sha256": "cbbd92fea66f07e30224eae88f9c30523efc49352b717db40e841d3940bf0f5b",
+      "distribution": "user-local-only-original-author-input-required"
+    },
+    "immersive-eating": {
+      "filename": "ie-g206-r2.mcaddon",
+      "sha256": "174f7ecb08db4c9a44e7b2ff4171358902190f4cb341645973b664fa3c411761",
+      "distribution": "user-local-only-original-author-input-required"
+    },
+    "tacz": {
+      "filename": "tacz-g206-startup20004.mcaddon",
+      "sha256": "7d3d9654278f62c4b200f172cd6a77808368a37893b1ebbf191e81e5f521d263",
+      "distribution": "user-local-only-original-author-input-required"
+    }
+  },
+  "packs": [
+    {
+      "id": "tavern-bp",
+      "input": "tavern",
+      "uuid": "f54f37f9-485a-55bf-8f89-6558aca988c5",
+      "version": [
+        0,
+        6,
+        194
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "7ef0dab4-2bd9-5cc6-a84c-a0b6fac17ab1",
+          "version": [
+            0,
+            6,
+            194
+          ]
+        },
+        {
+          "uuid": "733b7540-9264-51f0-9c5b-e834378cb3ae",
+          "version": [
+            0,
+            6,
+            194
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tavern-rp",
+      "input": "tavern",
+      "uuid": "c2990d50-2cf7-59f7-886a-0f2d0240d156",
+      "version": [
+        0,
+        6,
+        194
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "54eba729-c2c9-538c-b7ca-c15aa6f6eb3c",
+          "version": [
+            0,
+            6,
+            194
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grilling-bp",
+      "input": "grilling",
+      "uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+      "version": [
+        2,
+        8,
+        206
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "dcf70052-c592-56e3-84d2-2a9b86abe7ab",
+          "version": [
+            2,
+            8,
+            206
+          ]
+        },
+        {
+          "uuid": "d0bb6818-8187-5d20-8e1f-a2ab7b517795",
+          "version": [
+            2,
+            8,
+            206
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grilling-rp",
+      "input": "grilling",
+      "uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+      "version": [
+        2,
+        8,
+        206
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "e7d592db-f4a0-53ce-8b0a-cab7a0cee8d7",
+          "version": [
+            2,
+            8,
+            206
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world-liquor-bp",
+      "input": "world-liquor",
+      "uuid": "355ffdfc-50e6-5a33-a126-4d78ab955b2b",
+      "version": [
+        0,
+        1,
+        180
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "6fd4fc8c-d15a-5bfb-acc5-6a06ef97e442",
+          "version": [
+            0,
+            1,
+            180
+          ]
+        },
+        {
+          "uuid": "536f813a-e373-57d3-896d-d94ef1d2be77",
+          "version": [
+            0,
+            1,
+            180
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world-liquor-rp",
+      "input": "world-liquor",
+      "uuid": "a610b357-ba70-5a2f-bca5-5a7a8a0fb2a8",
+      "version": [
+        0,
+        1,
+        180
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "d8e5fca6-425d-5995-8d5f-ade781237b41",
+          "version": [
+            0,
+            1,
+            180
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cookery-rp",
+      "input": "cookery",
+      "uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+      "version": [
+        1,
+        6,
+        20007
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "b25e061d-b15a-48c1-a6de-dcc15a9276d4",
+          "version": [
+            1,
+            6,
+            20007
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cookery-bp",
+      "input": "cookery",
+      "uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+      "version": [
+        1,
+        6,
+        20007
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "45b88a1d-d195-42c1-acd2-afd385791439",
+          "version": [
+            1,
+            6,
+            20007
+          ]
+        }
+      ]
+    },
+    {
+      "id": "immersive-eating-rp",
+      "input": "immersive-eating",
+      "uuid": "1cdbdcab-b063-4455-90e3-829de2dc91f5",
+      "version": [
+        1,
+        1,
+        20002
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "42115559-dbc7-43d6-93fd-ff8d9f331eac",
+          "version": [
+            1,
+            1,
+            20002
+          ]
+        }
+      ]
+    },
+    {
+      "id": "immersive-eating-bp",
+      "input": "immersive-eating",
+      "uuid": "4fd46237-7fb4-4340-abe1-cec07ad033db",
+      "version": [
+        1,
+        1,
+        20002
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "545a91e6-9026-42e9-8c49-9e1b9e6140bc",
+          "version": [
+            1,
+            1,
+            20002
+          ]
+        },
+        {
+          "uuid": "ddd098eb-b6d0-4c6f-a724-31562b6e3205",
+          "version": [
+            1,
+            1,
+            20002
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tacz-bp",
+      "input": "tacz",
+      "uuid": "4f2a831e-9d12-4c6b-96e5-22a83b9f1a01",
+      "version": [
+        1,
+        0,
+        20004
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "7b8c9d0e-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+          "version": [
+            1,
+            0,
+            20004
+          ]
+        },
+        {
+          "uuid": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+          "version": [
+            1,
+            0,
+            20004
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tacz-rp",
+      "input": "tacz",
+      "uuid": "9d8e7f6a-5b4c-3d2e-1f0a-9b8c7d6e5f4a",
+      "version": [
+        1,
+        0,
+        20004
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "3f4e5d6c-7b8a-9012-3456-7890abcdef12",
+          "version": [
+            1,
+            0,
+            20004
+          ]
+        }
+      ]
+    }
+  ],
+  "order": {
+    "BP": [
+      "tacz-bp",
+      "immersive-eating-bp",
+      "world-liquor-bp",
+      "tavern-bp",
+      "grilling-bp",
+      "cookery-bp"
+    ],
+    "RP": [
+      "tacz-rp",
+      "immersive-eating-rp",
+      "world-liquor-rp",
+      "tavern-rp",
+      "grilling-rp",
+      "cookery-rp"
+    ]
+  },
+  "candidate_provenance": {
+    "grilling_repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+    "grilling_commit": "a35a7a7adf0fcef41340fea8119c5166560c2ce8",
+    "grilling_git_tree": "4ee84fdf3c607d61103426c3231988373bcc027d",
+    "grilling_input_archive_sha256": "383642abb93340a0aebed477a4fd099836850ee59c1c3737906d1387ed1bc222",
+    "status": "source candidate; not a public Release; full-family and client acceptance remain pending"
+  },
+  "behavior_player_override": {
+    "owner": "tacz-bp",
+    "definitions": {
+      "tacz-bp": {
+        "path": "entities/player.json",
+        "sha256": "1481c316b702afcb009d332136ff6340d983c539963dcc19dbb0536eab8064d3"
+      },
+      "grilling-bp": {
+        "path": "entities/player.json",
+        "sha256": "589df66236c178c5456f7bd8de8cc247d0fc94482aa628ed51d699dca8fb856d"
+      }
+    }
+  }
+}
