@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "scope": "Optional public12 TACZ startup preparation; full private57, actual TACZ rollback and client acceptance remain separate",
+  "engine": "1.26.60.6",
+  "sdk_version": "0.1.0",
+  "toolkit_version": "0.11.0",
+  "tacz_version": [
+    1,
+    0,
+    20004
+  ],
+  "tacz_archive_sha256": "7d3d9654278f62c4b200f172cd6a77808368a37893b1ebbf191e81e5f521d263",
+  "source_verification": {
+    "scripts": 13,
+    "encoded_table_entries": 6016,
+    "literal_lookup_pairs_equal": 5673,
+    "changed_spans_per_script": 2,
+    "all_other_source_bytes_retained": true,
+    "targeted_tests": 5
+  },
+  "native_verdict": "in_progress",
+  "previous_native_performance": "TACZ20003 failed78 sustained Slowdowns; validation-0.10.0.json retained",
+  "complete_private57_tested": false,
+  "actual_tacz_rollback_tested": false,
+  "client": false,
+  "production_ready": false,
+  "public_release_approved": false,
+  "pending_client_acceptance": true
+}

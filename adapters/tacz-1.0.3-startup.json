@@ -1,0 +1,230 @@
+{
+  "schema": 1,
+  "id": "senluo-core:tacz-1.0.3-startup-tables",
+  "archive_sha256": "1b78db6269be419eb2593c981df4beb88f7f9e0509c59221077ae2e965d86486",
+  "reference": "https://github.com/javascript-obfuscator/javascript-obfuscator#stringarrayrotate",
+  "verification": "Pure decoder functions only; original post-bootstrap versus prepared table: 5673 unique literal lookup pairs across 6016 table entries. All source outside the two reviewed spans is retained. Engine acceptance is separate.",
+  "scripts": [
+    {
+      "sha256": "b444cbff57c580da5ff30965352f6913b185bb2b14ce9ed3784c5cb02bfad2d6",
+      "output_sha256": "026a2f6d6e4b2702c99090374e39cce3e7274287e25655819ced10e3dc8b5fc9",
+      "strings": 34,
+      "offset": 8,
+      "rotate_span": [
+        24,
+        760
+      ],
+      "table_span": [
+        795,
+        1647
+      ],
+      "literal_calls": 26,
+      "decoded_calls_sha256": "7384dacc124f451901d85f09dbb69deaa529e31136826c044d8a2e50b8a71a8e",
+      "path": "TACZBehavi/scripts/events/AriSiaNanaonanDidieuMonyet.js"
+    },
+    {
+      "sha256": "a4b23e23957382508312d4110272e59f42d92dfeecf596043de1a59b1194eb18",
+      "output_sha256": "ca576d30a55ac04654673f677763a65070aed9af89e30185131ceb02e903e4a7",
+      "strings": 28,
+      "offset": 1,
+      "rotate_span": [
+        24,
+        763
+      ],
+      "table_span": [
+        2904,
+        3594
+      ],
+      "literal_calls": 18,
+      "decoded_calls_sha256": "78f69551fae27cf3d1e6b7cd4ce2bde8578a6e00e523e1f7436e0ce70c0f47f1",
+      "path": "TACZBehavi/scripts/events/ImagineStealingTS.js"
+    },
+    {
+      "sha256": "da6c1cef7d759e0dcc6bb2b1dd0eb0cf91fd7166b56e2a2e140c9bda7212a105",
+      "output_sha256": "b57b77f150b020198338e096f3db624442a8693eb450cffc7469c1900d34e56c",
+      "strings": 1517,
+      "offset": 374,
+      "rotate_span": [
+        0,
+        616
+      ],
+      "table_span": [
+        122137,
+        214037
+      ],
+      "literal_calls": 1511,
+      "decoded_calls_sha256": "4154ec8bb65b147b744f008947b87bbaae4c24281b3b78dbb63b7299a5d52dca",
+      "path": "TACZBehavi/scripts/events/MeWhenUmmCodeStealingILikeCodeStealing.js"
+    },
+    {
+      "sha256": "2d2d2798de44000a4085bd088d418905abe0c3c39b16aa1133cbae05447ddd2d",
+      "output_sha256": "08b0ece09959a53e0b2fc8b60febe3da2ba7b0e6be7618a24aecaeb9dda86669",
+      "strings": 291,
+      "offset": 144,
+      "rotate_span": [
+        14452,
+        15189
+      ],
+      "table_span": [
+        2164,
+        14395
+      ],
+      "literal_calls": 41,
+      "decoded_calls_sha256": "9eca0e58574df8d140f141c03245baadb0691299f3e254e200e1cdd9199f3ee0",
+      "path": "TACZBehavi/scripts/events/ShamelessStealer.js"
+    },
+    {
+      "sha256": "a97d9dba1f4d3fae79a9d1ccc2af9507b6fa85f92ff06115aff99de64ee70972",
+      "output_sha256": "cff0939419e6062b99dcce31c98ec3e6d008ec3e52669bb6bc88178b5f28fcfc",
+      "strings": 92,
+      "offset": 45,
+      "rotate_span": [
+        2096,
+        2780
+      ],
+      "table_span": [
+        59,
+        2039
+      ],
+      "literal_calls": 85,
+      "decoded_calls_sha256": "a70a36530436a4da2afef4ea046c04cded7a6096eb2afcd06435af5b671d8f2b",
+      "path": "TACZBehavi/scripts/events/Win308.js"
+    },
+    {
+      "sha256": "97bce634a9eb36ca2106a83869e36c344e0ca1e2e47ccbb086e8fecad8b38da1",
+      "output_sha256": "7287c5a9681550799b92652faa0fa595841ad50efd6c77e18eca7dd5757a9669",
+      "strings": 90,
+      "offset": 8,
+      "rotate_span": [
+        1791,
+        2446
+      ],
+      "table_span": [
+        35,
+        1710
+      ],
+      "literal_calls": 81,
+      "decoded_calls_sha256": "3904acf432fb23fca6229f4554dd2af84a3f3cf96790cde704fab5b6cc99d1a0",
+      "path": "TACZBehavi/scripts/events/anjingSiaKehedHideungModarWaeSia.js"
+    },
+    {
+      "sha256": "aef30a6a4277e50eaab226e21cf845bd2bccb3b585824cb0ab18326b22abf833",
+      "output_sha256": "72f9b3f34162834d6c4be3b2edd263b5d05339f1ef576b47cd27c83c4d85b0a1",
+      "strings": 79,
+      "offset": 54,
+      "rotate_span": [
+        24,
+        723
+      ],
+      "table_span": [
+        802,
+        3230
+      ],
+      "literal_calls": 72,
+      "decoded_calls_sha256": "fee8e2334237870a08e92268744482ac361027caad487bef4612c340f8ff47f5",
+      "path": "TACZBehavi/scripts/events/armorDetection.js"
+    },
+    {
+      "sha256": "cbbcc5bf9f8bbd457660cb891acf5e73ba9b2975ab8b90b73481065d96cba2a5",
+      "output_sha256": "1e0bc421ee0a732837fec10db0d15f389dfdcb6c9104c531a5c8a78956cda4a3",
+      "strings": 86,
+      "offset": 76,
+      "rotate_span": [
+        24,
+        629
+      ],
+      "table_span": [
+        1722,
+        3581
+      ],
+      "literal_calls": 81,
+      "decoded_calls_sha256": "5b1a92622356f96127e944befa55e51a54c9a8eb33f673441b83eb7d0525d9b3",
+      "path": "TACZBehavi/scripts/events/buahBuahApaYangBisaDigorengJawabanNyaJillKawir.js"
+    },
+    {
+      "sha256": "370bc4b8fe2a3252a7931762d0fa8958d83d3656abacabb5ae6ae611a7ea2648",
+      "output_sha256": "23fbb8a7ee1945c03bf06595b2cdbfce1a1fac2289c6cb68a3e74d832197be1b",
+      "strings": 44,
+      "offset": 6,
+      "rotate_span": [
+        1099,
+        1755
+      ],
+      "table_span": [
+        59,
+        1042
+      ],
+      "literal_calls": 35,
+      "decoded_calls_sha256": "ec8f149b5e05531d079803f53cc3f3f4660e34c647c3042dc1564f803fb4064c",
+      "path": "TACZBehavi/scripts/events/bulletCache.js"
+    },
+    {
+      "sha256": "79bfce19968179e6dff07d5a201c0c57dcf430e4c6583f31932a204271f51944",
+      "output_sha256": "e88ba6f33301d808ea8f882d1077f2574faf1905265bf1155be163ab5a211876",
+      "strings": 567,
+      "offset": 254,
+      "rotate_span": [
+        0,
+        697
+      ],
+      "table_span": [
+        8623,
+        33343
+      ],
+      "literal_calls": 557,
+      "decoded_calls_sha256": "e6f902effad87174ecc78975b3e7814b7069497f9a08b5be539d8069b64b39ca",
+      "path": "TACZBehavi/scripts/events/horegJatimKocak.js"
+    },
+    {
+      "sha256": "6408ca11acdc90d198a30d38dd343e51f0a989c6dbf45ec0e6ab24adb0114727",
+      "output_sha256": "4f630b37ddbe6cfdb8a518b7fb6bbd71f775fe5bc740d00235bd6d986bf1947d",
+      "strings": 2919,
+      "offset": 159,
+      "rotate_span": [
+        24,
+        676
+      ],
+      "table_span": [
+        7132,
+        70458
+      ],
+      "literal_calls": 2914,
+      "decoded_calls_sha256": "2f1a7d5a1d973d02967045f78102d2f986a13e7e04eb22274398ea4e0a4982a7",
+      "path": "TACZBehavi/scripts/events/kodePembesarPensilSejawirTimur.js"
+    },
+    {
+      "sha256": "3d3455ffafdcec32ca15398246027981abfb6e45775b9fadef45734e935512f7",
+      "output_sha256": "d2181e7a10624ceb622ea3270009d034ffac6991c02163f8a70885703cacf302",
+      "strings": 36,
+      "offset": 0,
+      "rotate_span": [
+        24,
+        759
+      ],
+      "table_span": [
+        3659,
+        4464
+      ],
+      "literal_calls": 26,
+      "decoded_calls_sha256": "0c2cb953ad20dfab14385e97768daa1a8bb8303de0970d154bba0706a5b57e14",
+      "path": "TACZBehavi/scripts/events/kyS.js"
+    },
+    {
+      "sha256": "5d43c35902fc1680a3c6fd72f04e8c6132e797ffada1c5541ddf8ce50bb15f18",
+      "output_sha256": "5f43eec2d8ede03e1f8169ad4a299945d64efedbc5e927b21809398111229ec7",
+      "strings": 233,
+      "offset": 8,
+      "rotate_span": [
+        4388,
+        5005
+      ],
+      "table_span": [
+        35,
+        4307
+      ],
+      "literal_calls": 226,
+      "decoded_calls_sha256": "6db4843f1311f8d0b59a851fef6ef3503358a94c5a82e41faba200fed7317dc0",
+      "path": "TACZBehavi/scripts/events/projectileHitEntity.js"
+    }
+  ]
+}
