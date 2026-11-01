@@ -10,6 +10,7 @@ import hashlib
 import io
 import json
 import os
+import re
 from pathlib import Path, PurePosixPath
 import shutil
 import tempfile
@@ -28,6 +29,20 @@ def file_sha256(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def read_definition(raw):
+    # Bedrock accepts comments and trailing commas. Inspect definitions without
+    # rewriting the author's bytes, including strings containing comment marks.
+    text = raw.decode('utf-8-sig')
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        text = re.sub(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/',
+                      lambda match: match[0] if match[0].startswith('"') else '', text, flags=re.S)
+        text = re.sub(r'"(?:\\.|[^"\\])*"|,\s*([}\]])',
+                      lambda match: match[0] if match[0].startswith('"') else match[1], text)
+        return json.loads(text)
 
 
 def _pointer_parent(doc, pointer):
@@ -207,6 +222,29 @@ def _tree_fingerprint(files: dict[str, str]) -> str:
     return sha256(canonical)
 
 
+def selected_behavior_player(players, declaration, world_order):
+    if not players:
+        if declaration is not None:
+            raise ValueError('Behavior player override has no source definitions')
+        return None
+    if declaration is None:
+        if len(players) != 1:
+            raise ValueError('competing behavior minecraft:player definitions')
+        return players[0]
+    actual = {row['pack_id']: {key: row[key] for key in ('path', 'sha256')} for row in players}
+    if (len(actual) != len(players) or len(players) != 2
+            or set(declaration) != {'owner', 'definitions'}
+            or declaration['definitions'] != actual):
+        raise ValueError('Behavior player override differs from reviewed definition hashes')
+    selected = next((row for row in players if row['pack_id'] == declaration['owner']), None)
+    if selected is None:
+        raise ValueError('Behavior player override owner is missing')
+    priorities = {row['pack_id']: index for index, row in enumerate(world_order)}
+    if any(priorities[selected['uuid']] > priorities[row['uuid']] for row in players):
+        raise ValueError('Behavior player override owner must have highest priority')
+    return selected
+
+
 def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) -> dict:
     if recipe.get("schema") != 1:
         raise ValueError("unsupported recipe schema")
@@ -222,7 +260,7 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
     output.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix="." + output.name + ".", dir=output.parent))
     pack_receipts = []
-    behavior_player = None
+    behavior_players = []
     world_lists = {"BP": [], "RP": []}
     archive_reader = None
     try:
@@ -284,12 +322,10 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                     raise ValueError("file source hash differs: " + relative)
                 raw = _transform(raw, spec.get("transforms", []), relative)
                 if side == 'BP' and relative.startswith('entities/') and relative.endswith('.json'):
-                    definition = json.loads(raw)
+                    definition = read_definition(raw)
                     if definition.get('minecraft:entity', {}).get('description', {}).get('identifier') == 'minecraft:player':
-                        if behavior_player is not None:
-                            raise ValueError('competing behavior minecraft:player definitions: '
-                                             + behavior_player + ' and ' + pack_id)
-                        behavior_player = pack_id
+                        behavior_players.append({'pack_id': pack_id, 'uuid': pack_uuid,
+                            'path': relative, 'sha256': sha256(raw)})
                 if sha256(raw) != spec.get("output_sha256", spec.get("sha256")):
                     raise ValueError("file output hash differs: " + relative)
                 source_hashes[relative] = {"source_sha256": source_hash, "output_sha256": sha256(raw)}
@@ -352,6 +388,8 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                 if not isinstance(desired, list) or set(desired) != set(by_id) or len(desired) != len(by_id):
                     raise ValueError("order must list each pack id once for " + side)
                 world_lists[side] = [by_id[item] for item in desired]
+        behavior_player = selected_behavior_player(behavior_players,
+            recipe.get('behavior_player_override'), world_lists['BP'])
         for name, key in (("world_behavior_packs.json", "BP"), ("world_resource_packs.json", "RP")):
             _atomic_new(stage / name, (json.dumps(world_lists[key], ensure_ascii=False, indent=2) + "\n").encode())
         aggregate_name = "family.mcaddon"
@@ -382,7 +420,8 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                    "inputs": {key: {"filename": v["filename"], "sha256": v["sha256"]} for key, v in verified.items()},
                    "packs": pack_receipts, "aggregate": {"filename": aggregate_name,
                        "sha256": aggregate_sha256, "bytes": aggregate_bytes,
-                       "members": aggregate_members}, "order": order}
+                       "members": aggregate_members}, "order": order,
+                   "behavior_player_definition": behavior_player}
         _atomic_new(stage / "receipt.json", (json.dumps(receipt, ensure_ascii=False, indent=2) + "\n").encode())
         output.parent.mkdir(parents=True, exist_ok=True)
         os.rename(stage, output)

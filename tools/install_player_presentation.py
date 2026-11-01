@@ -14,10 +14,26 @@ import tempfile
 import zipfile
 
 from export_ie_grilling_compat import export_controller
-from install_cookery import _atomic_new, _read_zip, sha256
+from install_cookery import _atomic_new, _read_zip, _safe_name, sha256
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DESCRIPTOR = ROOT / 'adapters/ie-grilling-2.8.206.json'
+
+
+def modern_tacz_player(raw):
+    """Translate the pinned TACZ legacy push flags to G's modern schema."""
+    value = json.loads(raw)
+    components = value['minecraft:entity']['components']
+    legacy = components.get('minecraft:pushable')
+    if (legacy != {'is_pushable': False, 'is_pushable_by_piston': True}
+            or components.get('minecraft:pushable_by_block') != {}
+            or 'minecraft:pushable_by_entity' in components):
+        raise ValueError('TACZ push rules differ from the reviewed native conversion')
+    # Since1.26.10, block/entity pushing use separate components. The selected
+    # G player already has exactly TACZ's block-only rule. The legacy component
+    # is rejected in format1.26.30 and invalidates the whole composed player.
+    del components['minecraft:pushable']
+    return (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
 
 
 def compose_players(source, player, descriptor, tacz=None):
@@ -43,7 +59,20 @@ def compose_players(source, player, descriptor, tacz=None):
             command.extend(['--tacz', str(Path(tacz).resolve())])
         subprocess.run(command, check=True, capture_output=True, text=True)
         receipt = json.loads((output / 'receipt.json').read_bytes())
-        files = {name: (output / name).read_bytes() for name in receipt['outputs']}
+        files = {}
+        for name, expected in receipt['outputs'].items():
+            if not _safe_name(name) or not name.startswith(('BP/', 'RP/')):
+                raise ValueError('Unsafe player-composer output path')
+            raw = (output / name).read_bytes()
+            if sha256(raw) != expected:
+                raise ValueError('Player-composer output hash differs: ' + name)
+            files[name] = raw
+        if tacz is not None:
+            receipt['canonical_composer_outputs'] = receipt['outputs'].copy()
+            name = 'BP/entities/player.json'
+            files[name] = modern_tacz_player(files[name])
+            receipt['outputs'][name] = sha256(files[name])
+            receipt['native_compatibility'] = 'Legacy TACZ pushable converted to the existing modern block-only push rule; all28 properties and other components retained.'
         return files, receipt
 
 

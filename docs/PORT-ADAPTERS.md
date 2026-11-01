@@ -151,3 +151,39 @@ files. The optional TACZ source preview is not admitted by this descriptor.
 Original and generated author archives never belong in public Releases.
 Source checks do not establish real first-person, food, sound or multiplayer
 acceptance.
+
+## Optional TACZ test profile
+
+Toolkit0.10 adds a separate local installer for the reviewed TACZ1.0.3 input.
+It uses the original author archive and the same G206 source pinned by the IE
+adapter. Obtain the original TACZ archive from its author; it is never a public
+Core release asset.
+
+```sh
+python tools/install_tacz.py --tacz /inputs/original-tacz.mcaddon \
+  --ie /inputs/original-ie.mcaddon --grilling /new/Grilling-2.8.206.mcaddon \
+  --grilling-source /path/to/grilling-source --output /new/tacz-g206.mcaddon
+```
+
+The local output is a paired TACZ1.0.20003 with original UUIDs and script APIs.
+It contains the complete28-property player, Grilling's public held variables,
+85 left-arm animation repairs, the repaired original53-bone model, the shared
+IE/G first-person controller and a normal-skeleton offhand route. The legacy
+push flags become the equivalent modern block-only push component; two AWP
+`panel` typos become `pane`. Original scripts, textures, other bones and metadata
+are retained. Source tests are separate from real gun, hand, sound and eating
+acceptance.
+
+Use [`owned-t194-g206-w180-tacz-test.json`](../adapters/owned-t194-g206-w180-tacz-test.json)
+only as an optional isolated test profile. Disable the raw TACZ pair; place the
+adapted pair above Grilling and IE. The assembler checks the exact hashes of
+both BP player definitions and refuses an unreviewed duplicate or reversed
+priority. The composed TACZ player is the selected effective owner; unchanged
+G206 supplies the lower-priority four-property definition. Private full-family
+testing must also put the adapted TACZ RP above its private player overlay.
+This profile does not automatically enable TACZ on LIVE.
+
+The minimum engine for the adapted TACZ pair is1.26.60. Its original
+`@minecraft/server`1.18.0 and `@minecraft/server-ui`1.3.0 requirements remain;
+the GameTest module used by isolated validation is not part of the output.
+Keep a complete stopped-world backup before switching player definitions.

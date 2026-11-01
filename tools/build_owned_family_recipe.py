@@ -60,6 +60,8 @@ def build_recipe(descriptor, inputs_dir):
               'packs': [found[row['id']] for row in selected], 'order': descriptor['order']}
     if 'toolkit_version' in descriptor:
         recipe['toolkit_version'] = descriptor['toolkit_version']
+    if 'behavior_player_override' in descriptor:
+        recipe['behavior_player_override'] = descriptor['behavior_player_override']
     return recipe
 
 
