@@ -6,14 +6,59 @@ The recipe is the reviewed allowlist: it names every input, source member,
 output file, source hash, final hash, pack identity and load order.
 The toolkit source release follows the independent `package.json` version;
 the SDK version in `sdk.json` and its release history remain separate.
-The owned-port descriptor in `adapters/owned-t194-g203-w180.json` retains the
-Tavern 0.6.194, Grilling 2.8.203, World Liquor 0.1.180 and local Cookery
-combination. `adapters/owned-t194-g205-w180.json` records a separate G205 source
-candidate from the pinned public-source commit. It is not a public Release or
-full-family admission. Both descriptors cover only these three owned ports and
-the required Cookery API; other third-party gameplay and optional Immersive
-Eating are outside this set. A tool or pack file alone does not prove rendered
-gameplay matches LIVE.
+## Current G206 installation
+
+Use the owned Tavern 0.6.194, Grilling 2.8.206 and World Liquor 0.1.180
+archives named by
+[`owned-t194-g206-w180-cookery-recipe-index.json`](../adapters/owned-t194-g206-w180-cookery-recipe-index.json).
+Obtain clean Cookery 1.6.4 (file 9317031) and Immersive Eating 1.1.0 from
+their authors. Keep original and locally adapted author files private.
+Toolkit 0.12.1 is a documentation update; these adapters and their local
+output hashes are unchanged from 0.12.0. The SDK remains 0.1.0.
+
+Build from a clean Grilling checkout at
+`a35a7a7adf0fcef41340fea8119c5166560c2ce8`. Use the published Grilling archive
+as the input when available; this source command reproduces its pinned bytes:
+
+```sh
+python3 tools/build_grilling_input.py \
+  --source /path/to/grilling \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.206-recipe-index.json \
+  --output /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.206_baseline1.mcaddon
+python3 tools/install_cookery_from_descriptor.py \
+  --cookery /path/to/original-cookery-1.6.4.mcaddon \
+  --grilling /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.206_baseline1.mcaddon \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.206-recipe-index.json \
+  --output /path/to/local-inputs/cookery-recipe-index-20007.mcaddon
+python3 tools/install_player_presentation.py \
+  --ie /path/to/original-immersive-eating-1.1.0.mcaddon \
+  --grilling /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.206_baseline1.mcaddon \
+  --grilling-source /path/to/grilling \
+  --descriptor adapters/ie-grilling-2.8.206.json \
+  --output /path/to/local-inputs/ie-g206-r2.mcaddon
+python3 tools/build_owned_family_recipe.py \
+  --descriptor adapters/owned-t194-g206-w180-cookery-recipe-index.json \
+  --inputs /path/to/local-inputs --output /path/to/new-recipe.json
+python3 tools/assemble_family.py \
+  --recipe /path/to/new-recipe.json --inputs /path/to/local-inputs \
+  --output /path/to/new-family-output
+```
+
+Put the exact Tavern and World Liquor archives into that same input directory.
+The descriptor verifies all five complete input hashes. Cookery becomes local
+1.6.20007 and IE becomes local 1.1.20002; these are not author releases. Select
+both sides of all five pairs in the generated load order. BDS 1.26.60.6 and
+the Beta APIs experiment are required. The three owned ports and their required
+glue define public parity; other LIVE addons are outside this download.
+
+Back up the stopped world and validate a separate save copy before installation.
+Keep the generated receipts. Never copy a diagnostic database into LIVE.
+Native/save checks and real client acceptance remain separate.
+
+## Historical recipes
+
+The G203/G205 examples below reproduce older pinned combinations. Use their
+original toolkit source, rather than the current helper with an older identity.
 
 ## Owned-port input recipe
 
@@ -79,7 +124,7 @@ pins the exact local Cookery archive hash. Neither descriptor is a claim that G2
 Release, full-family admission, BDS acceptance, or client acceptance. Keep the
 local Cookery archive and assembled family output out of this repository.
 
-For the current incremental-decoding source candidate, build the user-local
+For the historical 0.7.0 incremental-decoding source candidate, build the user-local
 Cookery input with
 `adapters/cookery-1.6.4-grilling-2.8.205-guide-decoding.json`. It produces local
 Cookery `[1, 6, 20004]`. Keep the 0.6 startup archive and recipe above intact.

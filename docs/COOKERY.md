@@ -1,5 +1,13 @@
 # Local Cookery adapter
 
+For the current G206 / Cookery 1.6.20007 installation, follow the
+[current family commands](FAMILY-ASSEMBLY.md#current-g206-installation).
+That route keeps the welcome message and both startup repairs.
+The examples below document earlier pinned adapters; use their matching
+original toolkit source to reproduce them.
+
+## Historical SDK and G201 installation
+
 This tool builds a user-local Cookery archive from the clean Cookery 1.6.4
 release and the pinned Grilling release. The release descriptor pins both
 archives, the Grilling declaration and every SDK helper. The adapter reads the
