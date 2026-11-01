@@ -32,6 +32,7 @@ class OwnedFamilyRecipeTests(unittest.TestCase):
                 archive.writestr(name, body)
         descriptor = {
             'schema': 1, 'id': 'test:owned', 'recipe_version': '1.0.0',
+            'toolkit_version': '0.7.0',
             'inputs': {'owned': {'filename': source.name,
                                  'sha256': hashlib.sha256(source.read_bytes()).hexdigest()}},
             'packs': [
@@ -51,6 +52,7 @@ class OwnedFamilyRecipeTests(unittest.TestCase):
             root = Path(td)
             descriptor, entries, _ = self.fixture(root)
             recipe = builder.build_recipe(descriptor, root)
+            self.assertEqual(recipe['toolkit_version'], '0.7.0')
             recipe_path = root / 'recipe.json'
             recipe_path.write_text(json.dumps(recipe))
             output = root / 'assembled'

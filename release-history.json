@@ -183,5 +183,42 @@
       "candidate_archive_sha256": "ba7008ef2786d01a871cd960aa7014d25e5bd2a2471b3960bc8085c714f56575"
     },
     "status": "source reproducible; private QA generated; public Release and full-family/client acceptance pending"
+  },
+  "0.7.0": {
+    "sdk_version": "0.1.0",
+    "toolkit_version": "0.7.0",
+    "scope": "Adds a Core-owned incremental guide JSON decoder and a new local Cookery 1.6.20004 descriptor. Keeps the 0.6 startup helper, descriptor, legacy recipe and SDK 0.1.0 unchanged.",
+    "payloads": {
+      "PUBLICATION.json": "d2d0832ebc930807b9b7b1177c9ef7790f1ca109c9a7a85832ed639b0d693496",
+      "README.md": "7499f42a72bfd0e3fcfeb4a9791d51c3305d8decd93d5b574b111b1c99a0f9eb",
+      "adapters/cookery-1.6.4-grilling-2.8.205-guide-decoding.json": "4e9bcaf238267cff163b4c640b9d873ff02765c85f1bbc221c753ee2c084a40b",
+      "docs/COOKERY.md": "5bd3ad56b499c24fe372377820847db16fb6cda91bf1f36574b0b7e4a7f9a852",
+      "docs/FAMILY-ASSEMBLY.md": "63756b290e22ce87327cd84f86051024bf75a49f5e7b8bee27855a567b068177",
+      "docs/PORT-ADAPTERS.md": "09650e78891efb0fcaa6fb29fabcf1cced4f122de1015a7ae616c5820f5a66fb",
+      "package.json": "a4768ea7a5e23896e69b1d7c1ff9cb71c07085b7260af6fe94547e96174b9658",
+      "src/host_api/cookery-guide-decoding.js": "6110dcf400fe92d384e9589036fb1d8d9c35c076e819ffb2851bf8c88ce48433",
+      "tests/cookery-guide-decoding.test.mjs": "439e815cdbb6f1cddc7ff67d1baa0bfb5c65933c915474d88641e7e5826460fa",
+      "tests/test_build_owned_family_recipe.py": "8b1266d152086d91017c451345b2243173c5cba124392ab98776b391a2c92e92",
+      "tools/build_owned_family_recipe.py": "5c6b968db776457736ecccf5df95d81d9555d5fda815679a286d048fbaeb2100",
+      "tests/test_port_adapters.py": "8260cfc5f7635eef1f2fc09ff5d0d9671207a74fa3ea2f5c59dc118a55fe7cd5",
+      "adapters/owned-t194-g205-w180-cookery-decoding.json": "9eefdf122302c6fd373b8163144cd36e70c836a656195b4b737efed60829f99a"
+    },
+    "cookery_version": [
+      1,
+      6,
+      20004
+    ],
+    "grilling_version": [
+      2,
+      8,
+      205
+    ],
+    "grilling_source": {
+      "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+      "commit": "83026c0bb41fa6574e50a9b5a61cfb3b473bc59c",
+      "git_tree": "482a11c348d87c0963a7df8500d2bbeb9c33b1d4",
+      "candidate_archive_sha256": "ba7008ef2786d01a871cd960aa7014d25e5bd2a2471b3960bc8085c714f56575"
+    },
+    "status": "source candidate; local archive and eight-pack recipe are private outputs; full-family and client acceptance remain separate."
   }
 }

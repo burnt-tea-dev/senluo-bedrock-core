@@ -23,13 +23,13 @@ upgrading.
 - [Owned-port adapters](docs/PORT-ADAPTERS.md)
 - [Validation limits](docs/VALIDATION.md)
 
-The family assembler retains the pinned G203 recipe and adds a source-candidate
-recipe for Tavern 0.6.194, Grilling 2.8.205 and World Liquor 0.1.180 plus the
-local Cookery adapter. G205 is reproducible from a pinned public source commit,
-but is not a public Release or full-family admission. The G205 Cookery adapter
-reuses the reviewed helpers; legacy descriptor stays at 1.6.20002; the separate startup descriptor builds
-it produced the same archive bytes as G203. Full-family and client acceptance
-for G205 remain pending; see the assembly instructions.
+The family assembler retains the pinned G203 and G205 recipes. The G205 inputs
+are Tavern 0.6.194, Grilling 2.8.205 and World Liquor 0.1.180. The newest local
+Cookery route is the 0.7.0 guide-decoding descriptor, which builds Cookery
+1.6.20004 while keeping the author's pack IDs and existing receiver patches.
+The 0.6.0 startup descriptor remains available and reproduces Cookery
+1.6.20003. These local archives are source candidates, not public Releases or
+full-family/client acceptance; see the adapter and assembly instructions.
 
 Author archives, complete author modules, worlds, private integration history,
 server configuration and credentials are not distributed here. Obtain Cookery
@@ -40,4 +40,7 @@ The SDK and newly written tools are BSD-3-Clause; see [LICENSE](LICENSE).
 Gameplay helpers supplied by the separate Grilling addon retain that project's
 notices. Locally adapted author content retains its original license and credits.
 
-The separate G205 startup descriptor applies a Core-owned, hash-pinned Cookery receiver repair after the original G205 adapter. It builds local Cookery 1.6.20003, preserves author UUIDs/data keys, and does not modify the Grilling input. Its output is user-local only.
+The guide-decoding descriptor applies the same Core-owned receiver repair and
+copies a separately versioned incremental JSON decoder. It builds local
+Cookery 1.6.20004 and leaves the G205 input unchanged. Its output is user-local
+only.
