@@ -121,6 +121,12 @@ def adapt_files(originals, composed, controller, descriptor):
         raw = advance_manifest(originals[name], pin['output_version'], pair, companion,
                                descriptor['behavior_min_engine_version'])
         value = json.loads(raw)
+        if side == 'RP':
+            # The complete family uses the engine's PBR resource stack. The
+            # locally adapted pair must declare it before family admission.
+            capabilities = value.setdefault('capabilities', [])
+            if 'pbr' not in capabilities:
+                capabilities.append('pbr')
         ie = {'uuid': descriptor['immersive_eating'][side.lower() + '_uuid'],
               'version': descriptor['output_version'].copy()}
         previous = [row for row in value['dependencies'] if row.get('uuid') == ie['uuid']]
