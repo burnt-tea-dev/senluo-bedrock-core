@@ -62,11 +62,11 @@ Left-arm curves retain constant keyframes and use a separate animation weight.
 The four pistol walk aliases use the author's existing common pistol pose;
 casing and smoke aliases resolve to existing author particles. The dead G36
 third-person slide reference is removed: no missing sliding pose is invented.
-The current family recipe uses TACZ 1.0.20009; explicit historical recipes retain
+The current family recipe uses TACZ 1.0.20010; explicit historical recipes retain
 their recorded older outputs. Client rendering/audio and complete saved-world
 validation must still pass before use; a successful local build is not acceptance.
 
-Toolkit 0.19 retains the TACZ HUD/form controls and keeps oil-pot
+Toolkit 0.20 retains the TACZ HUD/form controls and keeps oil-pot
 animation weights free of actor queries during skin previews. The current local
 TACZ installer requires `--source-assets /path/to/source-assets` (the existing
 `--source-sounds` flag is also accepted). The current descriptor pins the seven
@@ -83,3 +83,7 @@ CAR15/PKM/Tabukar sound registrations with no corresponding item definitions are
 retired; no replacement gun, sound stub or new gameplay is introduced. Original
 source audio was restored for the supported AKM, MP5, G3, P90 and minigun cues.
 Native rendering, listening, complete-family saves and rollback remain separate.
+
+TACZ20010 also corrects the missing `textures/nothing` reference in82 held-item
+attachables to the author-shipped `textures/ikon/empty` transparent pixel. The
+existing gun geometry, render controllers, animation and pixel files are retained.

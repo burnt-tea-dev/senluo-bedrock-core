@@ -87,11 +87,11 @@ jobs:
           PY_SOUND_INPUTS
       - name: Reproduce TACZ with the corrected canonical animation composer
         run: python tools/install_tacz.py --tacz "$RUNNER_TEMP/tacz.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --grilling-source .grilling-composer --source-sounds "$RUNNER_TEMP/source-sounds" --output "$RUNNER_TEMP/tacz-g206.mcaddon"
-      - name: Real author projectile callback rejects removed targets and retains damage
+      - name: Real author projectile callback and attachable texture regression
         env:
           TACZ_ORIGINAL_ARCHIVE: ${{ runner.temp }}/tacz.mcaddon
           TACZ_ADAPTED_ARCHIVE: ${{ runner.temp }}/tacz-g206.mcaddon
-        run: python -m unittest discover -s tests -p test_tacz_adapter.py -k real_hit_callback -v
+        run: python -m unittest discover -s tests -p test_tacz_adapter.py -k real_ -v
       - name: Verify real archives under Linux and Windows ZIP defaults
         run: python tools/verify_archive_portability.py --grilling-source .grilling-next --composer-source .grilling-composer --source-sounds "$RUNNER_TEMP/source-sounds" --cookery "$RUNNER_TEMP/cookery.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --tacz "$RUNNER_TEMP/tacz.mcaddon"
       - run: python tools/build_release.py --output dist

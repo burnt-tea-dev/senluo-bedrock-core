@@ -9,7 +9,7 @@ import unittest
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from install_tacz import adapt_files, apply_archive, repair_ui, repair_sound_definitions, source_sound_files, _source_files, repair_projectile_hit, FP, OFFHAND_FP
+from install_tacz import adapt_files, apply_archive, repair_ui, repair_sound_definitions, repair_attachable_textures, source_sound_files, _source_files, repair_projectile_hit, FP, OFFHAND_FP
 from assemble_family import read_definition
 
 
@@ -18,6 +18,43 @@ def encoded(value):
 
 
 class TaczAdapterTests(unittest.TestCase):
+    @unittest.skipUnless(os.environ.get('TACZ_ORIGINAL_ARCHIVE'), 'Real author archives are supplied by the clean-input CI stage')
+    def test_real_attachables_use_the_shipped_transparent_texture(self):
+        prefix = 'TACZResour/'
+        with zipfile.ZipFile(os.environ['TACZ_ORIGINAL_ARCHIVE']) as original, zipfile.ZipFile(os.environ['TACZ_ADAPTED_ARCHIVE']) as fixed:
+            self.assertNotIn(prefix + 'textures/nothing.png', original.namelist())
+            self.assertEqual(fixed.read(prefix + 'textures/ikon/empty.png'), original.read(prefix + 'textures/ikon/empty.png'))
+            affected = []
+            for path in original.namelist():
+                if not path.startswith(prefix + 'attachables/') or not path.endswith('.json'):
+                    continue
+                before, after = read_definition(original.read(path)), read_definition(fixed.read(path))
+                description = before['minecraft:attachable']['description']
+                if description['textures'].get('default') == 'textures/nothing':
+                    affected.append(description['identifier'])
+                    description['textures']['default'] = 'textures/ikon/empty'
+                    self.assertEqual(after, before)
+                    target = after['minecraft:attachable']['description']['textures']['default']
+                    self.assertIn(prefix + target + '.png', fixed.namelist())
+                else:
+                    self.assertEqual(fixed.read(path), original.read(path))
+            self.assertEqual(len(affected), 82)
+            self.assertTrue({'krep:g17', 'krep:g17_emp', 'krep:g18', 'krep:g18_emp'} <= set(affected))
+
+    def test_attachable_texture_repair_preserves_geometry_animation_and_pixels(self):
+        original = {'minecraft:attachable': {'description': {'identifier': 'krep:g17',
+                    'textures': {'default': 'textures/nothing', 'enchanted': 'textures/misc/enchanted_item_glint'},
+                    'geometry': {'default': 'geometry.itemscale'}, 'animations': {'hold': 'animation.itemscale'}}}}
+        inputs = {'RP/attachables/g17.json': encoded(original),
+                  'RP/textures/ikon/empty.png': b'author transparent pixels'}
+        changed = repair_attachable_textures(inputs, 'RP/', {'texture_path_corrections': {'textures/nothing': 'textures/ikon/empty'}})
+        self.assertEqual(set(changed), {'RP/attachables/g17.json'})
+        output = read_definition(changed['RP/attachables/g17.json'])
+        self.assertEqual(output['minecraft:attachable']['description']['textures']['default'], 'textures/ikon/empty')
+        output['minecraft:attachable']['description']['textures']['default'] = 'textures/nothing'
+        self.assertEqual(output, original)
+        self.assertEqual(read_definition(inputs['RP/attachables/g17.json']), original)
+
     @unittest.skipUnless(os.environ.get('TACZ_ORIGINAL_ARCHIVE'), 'Real author archives are supplied by the clean-input CI stage')
     def test_real_hit_callback_preserves_damage_and_skips_removed_targets(self):
         with tempfile.TemporaryDirectory() as temporary:
