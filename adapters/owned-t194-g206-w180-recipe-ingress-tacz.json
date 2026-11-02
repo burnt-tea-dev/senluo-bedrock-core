@@ -2,8 +2,8 @@
   "schema": 1,
   "id": "senluo-core:owned-t194-g206-w180-recipe-ingress-tacz",
   "toolkit_version": "0.20.0",
-  "recipe_version": "t194-g206-w180-cookery20008-tacz20009-r1",
-  "scope": "Optional local TACZ20009 family: original pre-SkinPack gun appearance, invalid hit-target repair, prior UI/audio/animation fixes retained. Full-family, same-save, rollback and actual client gates remain separate.",
+  "recipe_version": "t194-g206-w180-cookery20008-tacz20010-r1",
+  "scope": "Optional local TACZ20010 family: missing held-item texture references resolve to the original transparent asset. Original gun appearance, invalid hit-target, UI/audio/animation repairs are retained. Full-family, same-save, rollback and actual client gates remain separate.",
   "inputs": {
     "tavern": {
       "filename": "Kaleidoscope_Tavern_Unofficial_0.6.194_baseline1.mcaddon",
