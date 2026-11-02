@@ -12,9 +12,9 @@ Local installer + your original Cookery archive ──→ your adapted local arc
 ```
 
 The current installation uses Tavern 0.6.194, Grilling 2.8.206 and World
-Liquor 0.1.180. Toolkit 0.16.0 retains the current G206 and Immersive Eating adapters: local
-Cookery 1.6.20008 and Immersive Eating 1.1.20002. It preserves welcome chat
-and native recipe ordering while avoiding repeated full recipe sorts.
+Liquor 0.1.180. Toolkit 0.22.0 selects local Cookery 1.6.20009 and
+Immersive Eating 1.1.20002. Cookery uses the same owned station display
+bookkeeping as the server, alongside the existing welcome and recipe repairs.
 Start with [the current family installation](docs/FAMILY-ASSEMBLY.md#current-g206-installation).
 Pack/module UUIDs, item IDs and save ownership are retained. Back up a stopped
 world and test a copy before upgrading.
@@ -42,17 +42,18 @@ notices. Locally adapted author content retains its original license and credits
 
 Earlier descriptors and their validation records remain as history. Reproduce
 older Cookery decoding outputs with their original toolkit source; the 0.12
-helper intentionally rejects those immutable older helper pins. The optional TACZ route now builds local 1.0.20007 with the resource stack PBR
+helper intentionally rejects those immutable older helper pins. The optional TACZ route now builds local 1.0.20010 with the resource stack PBR
 capability, while retaining 24 gun properties alongside Grilling's four. Use
-[the current TACZ family recipe](adapters/owned-t194-g206-w180-recipe-ingress-tacz.json). It requires
+[the current TACZ family recipe](adapters/owned-t194-g206-w180-station-performance-tacz.json). It requires
 its own full-family, saved-world, rollback and client evidence. Toolkit 0.12
 releases and their TACZ20004 recipes remain historical outputs.
 
-Cookery recipe registration now processes at most four incoming messages per tick, with a one-millisecond target. Original registration validation, FIFO replacement order, every recipe and welcome chat remain. The synchronous exported registration function is unchanged. Use [the current Cookery descriptor](adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json) and [optional TACZ family descriptor](adapters/owned-t194-g206-w180-recipe-ingress-tacz.json). Native and client acceptance remain separate from installer verification.
+Cookery recipe registration now processes at most four incoming messages per tick, with a one-millisecond target. Original registration validation, FIFO replacement order, every recipe and welcome chat remain. The synchronous exported registration function is unchanged. Use [the current Cookery descriptor](adapters/cookery-1.6.4-grilling-2.8.206-station-performance.json) and [optional TACZ family descriptor](adapters/owned-t194-g206-w180-station-performance-tacz.json). Native and client acceptance remain separate from installer verification.
 
-The source and family builder defaults select the current G206/Cookery20008 installation. Historical G201/G203 and prior Cookery recipes remain available through an explicit `--descriptor`.
+The source and family builder defaults select the current G206/Cookery20009 installation. Historical G201/G203 and prior Cookery recipes remain available through an explicit `--descriptor`.
 
-Archive writers use canonical ZIP metadata on both Windows and Linux. The G206, Cookery20008, IE20002 and SDK0.1.0 archive bytes remain unchanged. The current TACZ output is pinned by its descriptor; older TACZ20005 recipes remain historical.
+Archive writers use canonical ZIP metadata on both Windows and Linux. G206, IE20002 and SDK0.1.0 retain their archive bytes; the added station
+adapter has the fresh Cookery20009 paired identity. The current TACZ output is pinned by its descriptor; older TACZ20005 recipes remain historical.
 
 Toolkit 0.17 fixes TACZ client resource errors. Use the exact `composer_source` commit
 in [the current TACZ descriptor](adapters/tacz-1.0.3-grilling-2.8.206.json) as
@@ -87,3 +88,9 @@ Native rendering, listening, complete-family saves and rollback remain separate.
 TACZ20010 also corrects the missing `textures/nothing` reference in82 held-item
 attachables to the author-shipped `textures/ikon/empty` transparent pixel. The
 existing gun geometry, render controllers, animation and pixel files are retained.
+
+The portable station helper avoids rewriting unchanged native displays and
+saved JSON. Cooking still advances every original loaded tick. It rechecks
+loaded or removed replicas and reads actual saved properties before writes.
+Cookery-only lantern/tray geometry, basin and ChineseFood mold repairs are
+outside the three-port integration scope. No author files are published here.
