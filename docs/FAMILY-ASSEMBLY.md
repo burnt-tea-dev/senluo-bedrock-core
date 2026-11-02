@@ -6,39 +6,39 @@ The recipe is the reviewed allowlist: it names every input, source member,
 output file, source hash, final hash, pack identity and load order.
 The toolkit source release follows the independent `package.json` version;
 the SDK version in `sdk.json` and its release history remain separate.
-## Current G207 installation
+## Current G208 installation
 
-Use the owned Tavern 0.6.194, Grilling 2.8.207 and World Liquor 0.1.180
+Use the owned Tavern 0.6.194, Grilling 2.8.208 and World Liquor 0.1.180
 archives named by
-[`owned-t194-g207-w180-cookery-station-performance.json`](../adapters/owned-t194-g207-w180-cookery-station-performance.json).
+[`owned-t194-g208-w180-cookery-station-performance.json`](../adapters/owned-t194-g208-w180-cookery-station-performance.json).
 Obtain clean Cookery 1.6.4 (file 9317031) and Immersive Eating 1.1.0 from
 their authors. Keep original and locally adapted author files private.
-Toolkit 0.23.0 selects G207 and the Cookery20010 station adapter by default.
+Toolkit 0.24.0 selects G208 and the Cookery20011 station adapter by default.
 SDK0.1.0 and historical explicit recipes remain unchanged. Omitting `--descriptor`
 selects the current recipe; the explicit arguments below identify the inputs.
 
 Build from a clean Grilling checkout at
-`cf4a7db56313147c323af969709bb8976bf55a76`. Use the published Grilling archive
+`f25130a3ac143910f89fe6d533a26c79e27accc7`. Use the published Grilling archive
 as the input when available; this source command reproduces its pinned bytes:
 
 ```sh
 python3 tools/build_grilling_input.py \
   --source /path/to/grilling \
-  --descriptor adapters/cookery-1.6.4-grilling-2.8.207-station-performance.json \
-  --output /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.207_baseline1.mcaddon
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.208-station-performance.json \
+  --output /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.208_baseline1.mcaddon
 python3 tools/install_cookery_from_descriptor.py \
   --cookery /path/to/original-cookery-1.6.4.mcaddon \
-  --grilling /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.207_baseline1.mcaddon \
-  --descriptor adapters/cookery-1.6.4-grilling-2.8.207-station-performance.json \
-  --output /path/to/local-inputs/cookery-station-performance-20010.mcaddon
+  --grilling /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.208_baseline1.mcaddon \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.208-station-performance.json \
+  --output /path/to/local-inputs/cookery-station-performance-20011.mcaddon
 python3 tools/install_player_presentation.py \
   --ie /path/to/original-immersive-eating-1.1.0.mcaddon \
-  --grilling /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.207_baseline1.mcaddon \
+  --grilling /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.208_baseline1.mcaddon \
   --grilling-source /path/to/grilling \
-  --descriptor adapters/ie-grilling-2.8.207.json \
-  --output /path/to/local-inputs/ie-g207-r1.mcaddon
+  --descriptor adapters/ie-grilling-2.8.208.json \
+  --output /path/to/local-inputs/ie-g208-r1.mcaddon
 python3 tools/build_owned_family_recipe.py \
-  --descriptor adapters/owned-t194-g207-w180-cookery-station-performance.json \
+  --descriptor adapters/owned-t194-g208-w180-cookery-station-performance.json \
   --inputs /path/to/local-inputs --output /path/to/new-recipe.json
 python3 tools/assemble_family.py \
   --recipe /path/to/new-recipe.json --inputs /path/to/local-inputs \
@@ -47,7 +47,7 @@ python3 tools/assemble_family.py \
 
 Put the exact Tavern and World Liquor archives into that same input directory.
 The descriptor verifies all five complete input hashes. Cookery becomes local
-1.6.20010 and IE becomes local 1.1.20003; these are not author releases. Select
+1.6.20011 and IE becomes local 1.1.20004; these are not author releases. Select
 both sides of all five pairs in the generated load order. BDS 1.26.60.6 and
 the Beta APIs experiment are required. The three owned ports and their required
 glue define public parity; other LIVE addons are outside this download.
