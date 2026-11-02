@@ -166,6 +166,7 @@ def apply_archive(tacz, ie, grilling, source, descriptor):
         with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as target:
             for name, raw in files.items():
                 info = zipfile.ZipInfo(name, (2026, 9, 29, 0, 0, 0))
+                info.create_system = 3  # Canonical ZIP metadata is independent of the builder OS.
                 info.compress_type = zipfile.ZIP_DEFLATED
                 info.external_attr = 0o100644 << 16
                 target.writestr(info, raw)

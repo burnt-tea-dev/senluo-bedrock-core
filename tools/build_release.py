@@ -66,6 +66,7 @@ def archive(files):
     with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as writer:
         for name in sorted(files):
             info = zipfile.ZipInfo(name, (2026, 1, 1, 0, 0, 0))
+            info.create_system = 3  # Canonical ZIP metadata is independent of the builder OS.
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
             writer.writestr(info, (ROOT / name).read_bytes())

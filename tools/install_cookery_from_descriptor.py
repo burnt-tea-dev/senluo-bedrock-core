@@ -65,7 +65,9 @@ def apply_post_adapter(output, descriptor):
     destination = prefix + post["helper_destination"]
     if not _safe_name(destination) or destination in files:
         raise ValueError("unsafe or existing post-adapter helper destination")
-    files[destination] = (zipfile.ZipInfo(destination), helper)
+    info = zipfile.ZipInfo(destination)
+    info.create_system = 3
+    files[destination] = (info, helper)
     out = io.BytesIO()
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as target:
         for name, (info, raw) in files.items(): target.writestr(info, raw)

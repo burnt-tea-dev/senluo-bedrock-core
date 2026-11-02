@@ -956,5 +956,29 @@
       "tests/test_current_installation.py": "a8552ba66a70c7b9cfeb4ad99b213cb855631eaab9c64773b3687ecf34825f0f",
       "adapters/owned-t194-g206-w180-cookery-recipe-ingress.json": "3b4f65ed952db08f41faf094be3b4f28017dc875f8907ec92d50ca9ca050b2fd"
     }
+  },
+  "0.16.0": {
+    "sdk_version": "0.1.0",
+    "toolkit_version": "0.16.0",
+    "scope": "Canonical ZIP platform metadata makes Windows local installer archives reproduce existing Linux-pinned bytes. G206, Cookery20008, IE20002, TACZ20005, SDK payloads and gameplay outputs are unchanged.",
+    "cookery_version": [
+      1,
+      6,
+      20008
+    ],
+    "generated_cookery_sha256": "cfe4abc3988468aac653a85fb37de467046d4a8649fc71b88a745083a8d340b2",
+    "payloads": {
+      "package.json": "ab9a79a52e6dac66ef10a668b64691e37931ceb21b511215c45ef0e21ec789aa",
+      "README.md": "dd1f6feb87613f87ac6cd5dc02f5fba97faac2c430f0cfd92111cca8467241d5",
+      "PUBLICATION.json": "45446739a20201f9797a5f3c622aae0d6f78d5f65cf71da9c0ed72f1f81278ca",
+      ".github/workflows/ci.yml": "6893e9a792e21d0367e0db823efb640d1f8efd4217430a838f674cf2f1a14b85",
+      "tools/build_grilling_input.py": "01d739c2d79419e65b9961531d373169d2e2185f5570627fa5a03937cb7b57aa",
+      "tools/install_tacz.py": "a5f1d266b67249c32c9470a9d15cec95f7f90ec8e3ae91e4efd77143fdc66905",
+      "tools/build_release.py": "40304e4f521ce55d83871301137ffd8c825482ac7d2c5e538591808fe9124c9a",
+      "tools/install_player_presentation.py": "eca72b8a88d3e951267c57a0ed0cf3cd0141c991054e7dd5519ed1cb2a06b67f",
+      "tools/install_cookery.py": "0edb74046a7e830b685e276091bcef0c6985472e71604fde364138253461778e",
+      "tools/install_cookery_from_descriptor.py": "a874e92018c18a9b17ee0ec9a5f3cd98c23c01dc708c4e0fb68cb005cdbce344",
+      "tools/verify_archive_portability.py": "a2aa05a6796bdc04d8d8467662254565759c00d54b448e7c80b328213847c083"
+    }
   }
 }

@@ -74,7 +74,8 @@
     "tests/cookery-recipe-ingress.test.mjs",
     "adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json",
     "adapters/owned-t194-g206-w180-recipe-ingress-tacz.json",
-    "adapters/owned-t194-g206-w180-cookery-recipe-ingress.json"
+    "adapters/owned-t194-g206-w180-cookery-recipe-ingress.json",
+    "tools/verify_archive_portability.py"
   ],
   "rule": "Only these reviewed source/SDK/tool files are distributable. Original and generated author archives are never release assets."
 }

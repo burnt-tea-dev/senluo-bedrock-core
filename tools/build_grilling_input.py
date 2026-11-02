@@ -46,6 +46,7 @@ def build(source, descriptor=None):
     with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for name, raw in payloads.items():
             info = zipfile.ZipInfo(name, (2026, 9, 29, 0, 0, 0))
+            info.create_system = 3  # Canonical ZIP metadata is independent of the builder OS.
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
             archive.writestr(info, raw)
