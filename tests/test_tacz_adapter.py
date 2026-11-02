@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from install_tacz import adapt_files, apply_archive, FP, OFFHAND_FP
+from install_tacz import adapt_files, apply_archive, repair_ui, repair_sound_definitions, source_sound_files, FP, OFFHAND_FP
 from assemble_family import read_definition
 
 
@@ -16,6 +16,59 @@ def encoded(value):
 
 
 class TaczAdapterTests(unittest.TestCase):
+    def test_sound_reference_repair_keeps_volume_and_retires_only_declared_orphans(self):
+        original = {'reload': {'category': 'player', 'sounds': [
+            {'name': 'sounds/wrong/reload', 'volume': 0.7, 'pitch': [0.9, 1.1]}, 'sounds/kept']},
+            'unfinished.weapon': {'sounds': ['sounds/not_shipped']}}
+        result = json.loads(repair_sound_definitions(encoded(original), {
+            'sound_path_corrections': {'sounds/wrong/reload': 'sounds/right/reload'},
+            'retired_unused_sound_events': ['unfinished.weapon']}))
+        self.assertEqual(result, {'reload': {'category': 'player', 'sounds': [
+            {'name': 'sounds/right/reload', 'volume': 0.7, 'pitch': [0.9, 1.1]}, 'sounds/kept']}})
+
+    def test_source_sound_requires_the_pinned_original_bytes(self):
+        from hashlib import sha256
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / 'sounds/original.ogg'
+            source.parent.mkdir()
+            source.write_bytes(b'original author audio')
+            descriptor = {'tacz': {'prefixes': {'RP': 'Author RP/'}},
+                          'restored_sound_files': {'sounds/original.ogg': {
+                              'sha256': sha256(source.read_bytes()).hexdigest()}}}
+            self.assertEqual(source_sound_files(root, descriptor), {
+                'Author RP/sounds/original.ogg': b'original author audio'})
+            source.write_bytes(b'different audio')
+            with self.assertRaisesRegex(ValueError, 'Original author sound differs'):
+                source_sound_files(root, descriptor)
+            with self.assertRaisesRegex(ValueError, 'requires --source-sounds'):
+                source_sound_files(None, descriptor)
+
+    def test_ui_preserves_layout_and_uses_native_control_properties(self):
+        layout = {'type': 'panel', 'offset': [0, '50%-68px'], 'controls': [{'stack': {'type': 'stack_panel'}}]}
+        button = {'$button_text': '#form_button_text', 'color': '$button_color', 'bindings': [{'binding_name': '#button_enabled'}]}
+        form = {'long_form': {'controls': [{'long_form@common_dialogs.main_panel_no_buttons': {
+            'bindings': [{'binding_name': '#title_text'}, {'source_property_name': "((#title_text - 'Main') and (#title_text - 'Custom dial') = #title_text)"}]}}]},
+            'button': {'controls': [{'form_button@common_buttons.light_text_button': button}]}}
+        originals = {'RP/ui/hud_screen.json': encoded({'hud_actionbar_text': layout}),
+                     'RP/ui/server_form.json': encoded(form)}
+        before = copy.deepcopy(originals)
+        result = repair_ui(originals, 'RP/')
+        self.assertEqual(originals, before)
+        hud = json.loads(result['RP/ui/hud_screen.json'])
+        self.assertEqual(hud['namespace'], 'hud')
+        self.assertEqual(hud['hud_actionbar_text'], {**layout, 'type': 'image', 'texture': 'textures/ikon/empty'})
+        fixed = json.loads(result['RP/ui/server_form.json'])
+        control = fixed['button']['controls'][0]['form_button@common_buttons.light_text_button']
+        self.assertNotIn('color', control)
+        self.assertEqual(control, {k: v for k, v in {**button, '$default_text_color': '$button_color'}.items() if k != 'color'})
+        expression = fixed['long_form']['controls'][0]['long_form@common_dialogs.main_panel_no_buttons']['bindings'][1]['source_property_name']
+        # Execute the produced predicate for all special titles and an ordinary form.
+        js = expression.replace('#title_text', 'title').replace('not ', '!').replace(' and ', ' && ').replace(' = ', ' === ')
+        code = "const f=Function('title','return '+process.argv[1]);process.stdout.write(JSON.stringify(['Custom dial','Custom triple','grip13','Main','Tavern','Custom dial extra'].map(f)));"
+        self.assertEqual(json.loads(subprocess.check_output(['node', '-e', code, js], text=True)),
+                         [False, False, False, False, True, True])
+
     def fixture(self):
         descriptor = {'toolkit_version': 'test', 'behavior_min_engine_version': [1, 26, 60],
                       'output_version': [1, 1, 20002],

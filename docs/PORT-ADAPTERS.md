@@ -238,3 +238,26 @@ third-person route is removed while keeping the existing hold pose, movement
 state and transitions. A new third-person sliding pose has not been restored.
 This does not address other addons' HUD, geometry, crafting or voxel-shape errors.
 Native client rendering, audio and saved-world acceptance remain separate gates.
+
+## TACZ client-resource batch (toolkit 0.18)
+
+Current TACZ20007 uses the same original TACZ/IE and Grilling206 runtime inputs.
+The canonical composer pin advances to Grilling PR335. Its oil-pot predicates
+run in the existing entity update, while preview animation weights read local
+variables initialized to zero. Native property schemas and save identities stay
+unchanged.
+
+The author HUD keeps its layout and transparent background using the native
+image control type. Form titles use boolean comparisons, and button text color
+uses the native `$default_text_color` variable. The missing block catalog format
+is explicit.
+
+Obtain the exact seven original source sounds listed in the current descriptor,
+then pass `--source-sounds` to `install_tacz.py` and
+`verify_archive_portability.py`. Each supplied file must match its pinned SHA256;
+source repository, commit and Git blob identity are retained in the descriptor.
+The source files remain local and are never in the toolkit publication allowlist.
+The installer corrects14 distinct path references, restores7 files and retires23
+broken registrations for unimplemented guns. Existing sound volume/pitch and
+animation event times are retained. Listening and rendered client acceptance are
+not inferred from these resource checks.

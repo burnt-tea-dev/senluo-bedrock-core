@@ -24,6 +24,74 @@ OFFHAND_FP = 'controller.render.kg_tacz.offhand_first_person'
 OFFHAND = "q.is_item_equipped('off_hand')"
 
 
+def repair_ui(originals, prefix):
+    """Correct the existing author controls using current native UI types."""
+    changed = {}
+    hud_path = prefix + 'ui/hud_screen.json'
+    if hud_path in originals:
+        hud = read_definition(originals[hud_path])
+        hud['namespace'] = 'hud'
+        # Native hud_actionbar_text is an image and contributes its texture
+        # during pack merging. A panel override leaves an invalid property.
+        # The author's existing transparent pixel keeps this background clear.
+        hud['hud_actionbar_text']['type'] = 'image'
+        hud['hud_actionbar_text']['texture'] = 'textures/ikon/empty'
+        changed[hud_path] = (json.dumps(hud, ensure_ascii=False, indent=2) + '\n').encode()
+    form_path = prefix + 'ui/server_form.json'
+    if form_path in originals:
+        form = read_definition(originals[form_path])
+        default = form['long_form']['controls'][0]['long_form@common_dialogs.main_panel_no_buttons']
+        # Each title comparison must be boolean before applying `and`.
+        default['bindings'][1]['source_property_name'] = '(' + ' and '.join(
+            "(not (#title_text = '" + title + "'))"
+            for title in ('Custom dial', 'Custom triple', 'grip13', 'Main')) + ')'
+
+        def buttons(value):
+            if isinstance(value, list):
+                for child in value:
+                    buttons(child)
+            elif isinstance(value, dict):
+                for name, child in value.items():
+                    if name == 'form_button@common_buttons.light_text_button' and 'color' in child:
+                        child['$default_text_color'] = child.pop('color')
+                    buttons(child)
+
+        buttons(form)
+        changed[form_path] = (json.dumps(form, ensure_ascii=False, indent=2) + '\n').encode()
+    return changed
+
+
+def repair_sound_definitions(raw, descriptor):
+    definitions = read_definition(raw)
+    retired = set(descriptor.get('retired_unused_sound_events', []))
+    corrections = descriptor.get('sound_path_corrections', {})
+    result = {name: copy.deepcopy(row) for name, row in definitions.items() if name not in retired}
+    for row in result.values():
+        for index, sound in enumerate(row.get('sounds', [])):
+            if isinstance(sound, str):
+                row['sounds'][index] = corrections.get(sound, sound)
+            elif sound['name'] in corrections:
+                sound['name'] = corrections[sound['name']]
+    return (json.dumps(result, ensure_ascii=False, indent=2) + '\n').encode()
+
+
+def source_sound_files(directory, descriptor):
+    result = {}
+    for name, pin in descriptor.get('restored_sound_files', {}).items():
+        if directory is None:
+            raise ValueError('This TACZ descriptor requires --source-sounds from the pinned original author blobs')
+        if not _safe_name(name) or not name.startswith('sounds/'):
+            raise ValueError('Unsafe source sound path')
+        path = Path(directory) / name
+        if path.is_symlink() or any(parent.is_symlink() for parent in path.parents):
+            raise ValueError('Source sound path is linked')
+        raw = path.read_bytes()
+        if sha256(raw) != pin['sha256']:
+            raise ValueError('Original author sound differs: ' + name)
+        result[descriptor['tacz']['prefixes']['RP'] + name] = raw
+    return result
+
+
 def offhand_controller(controller):
     result = copy.deepcopy(controller)
     rows = result.get('part_visibility', [])
@@ -81,6 +149,10 @@ def adapt_files(originals, composed, controller, descriptor):
     description.setdefault('particle_effects', {}).update({
         'krep.shell': 'krep:762shell', 'krep.g3shell': 'krep:762shell',
         'krep.muzzlesmoke': 'krep:muzzlesmoke'})
+    retired = set(descriptor.get('retired_unused_sound_events', []))
+    if retired:
+        description['sound_effects'] = {name: target for name, target in description['sound_effects'].items()
+                                        if target not in retired}
     client['minecraft:client_entity']['description']['render_controllers'].append({
         OFFHAND_FP: "v.is_first_person && !q.is_spectator && v.holding_all_guns && " + OFFHAND})
     changed[client_path] = (json.dumps(client, ensure_ascii=False, indent=2) + '\n').encode()
@@ -153,6 +225,15 @@ def adapt_files(originals, composed, controller, descriptor):
         if not previous:
             value['dependencies'].append(ie)
         changed[name] = (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
+    changed.update(repair_ui(originals, roots['RP']))
+    sound_path = roots['RP'] + 'sounds/sound_definitions.json'
+    if sound_path in originals:
+        changed[sound_path] = repair_sound_definitions(originals[sound_path], descriptor)
+    blocks_path = roots['RP'] + 'blocks.json'
+    if blocks_path in originals:
+        catalog = read_definition(originals[blocks_path])
+        catalog['format_version'] = '1.1.0'
+        changed[blocks_path] = (json.dumps(catalog, ensure_ascii=False, indent=2) + '\n').encode()
     result.update(changed)
     return result, {'changed_files': {name: sha256(raw) for name, raw in changed.items()},
                     'removed_paths': [old_player], 'behavior_player_path': player,
@@ -161,7 +242,7 @@ def adapt_files(originals, composed, controller, descriptor):
                     'required_priority': 'Adapted TACZ BP/RP above Grilling and the selected IE adapter; raw TACZ pair disabled'}
 
 
-def apply_archive(tacz, ie, grilling, source, descriptor):
+def apply_archive(tacz, ie, grilling, source, descriptor, source_sounds=None):
     tacz, ie, grilling = Path(tacz), Path(ie), Path(grilling)
     if sha256(tacz.read_bytes()) != descriptor['tacz']['archive_sha256']:
         raise ValueError('TACZ archive differs from reviewed source')
@@ -175,6 +256,12 @@ def apply_archive(tacz, ie, grilling, source, descriptor):
         composed, composition = compose_players(source, player, descriptor, tacz)
         originals = {name: raw for name, (_, raw) in entries.items()}
         files, receipt = adapt_files(originals, composed, controller, descriptor)
+        restored = source_sound_files(source_sounds, descriptor)
+        if any(name in originals for name in restored):
+            raise ValueError('Restored source sound must fill an absent author file')
+        files.update(restored)
+        receipt['changed_files'].update({name: sha256(raw) for name, raw in restored.items()})
+        receipt['restored_original_sounds'] = list(restored)
         startup = prepare_scripts(originals)
         files.update(startup)
         receipt['changed_files'].update({name: sha256(raw) for name, raw in startup.items()})
@@ -207,12 +294,13 @@ def main(argv=None):
     for name in ('tacz', 'ie', 'grilling', 'grilling-source', 'output'):
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--descriptor', type=Path, default=DEFAULT_DESCRIPTOR)
+    parser.add_argument('--source-sounds', type=Path)
     args = parser.parse_args(argv)
     receipt_path = Path(str(args.output) + '.receipt.json')
     if args.output.exists() or receipt_path.exists():
         parser.error('Choose a new output and receipt path')
     descriptor = json.loads(args.descriptor.read_bytes())
-    payload, receipt = apply_archive(args.tacz, args.ie, args.grilling, args.grilling_source, descriptor)
+    payload, receipt = apply_archive(args.tacz, args.ie, args.grilling, args.grilling_source, descriptor, args.source_sounds)
     _atomic_new(args.output, payload)
     _atomic_new(receipt_path, (json.dumps(receipt, ensure_ascii=False, indent=2) + '\n').encode())
     print(json.dumps({'output': str(args.output), 'sha256': sha256(payload),
