@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def verify(source, original_cookery, original_ie, original_tacz, composer_source=None, source_sounds=None):
     descriptor = json.loads(cookery.DEFAULT_DESCRIPTOR.read_bytes())
-    family = json.loads((ROOT / 'adapters/owned-t194-g206-w180-recipe-ingress-tacz.json').read_bytes())
+    family = json.loads((ROOT / 'adapters/owned-t194-g206-w180-station-performance-tacz.json').read_bytes())
     expected = {key: family['inputs'][key]['sha256'] for key in ('grilling', 'cookery', 'immersive-eating', 'tacz')}
     reference = None
     rows = {}
@@ -35,6 +35,7 @@ def verify(source, original_cookery, original_ie, original_tacz, composer_source
                 gpath.write_bytes(g)
                 first, _ = install_cookery.apply_archive(original_cookery, gpath, descriptor)
                 adapted, _, _ = cookery.apply_post_adapter(first, descriptor)
+                adapted, _, _ = cookery.apply_station_adapter(adapted, descriptor)
                 ie, _ = eating.apply_archive(original_ie, gpath, source, json.loads(eating.DEFAULT_DESCRIPTOR.read_bytes()))
                 guns, _ = tacz.apply_archive(original_tacz, original_ie, gpath, composer_source or source, json.loads(tacz.DEFAULT_DESCRIPTOR.read_bytes()), source_sounds)
                 sdk = build_release.archive(build_release.sdk_files(json.loads((ROOT / 'sdk.json').read_bytes())))

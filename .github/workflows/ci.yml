@@ -51,7 +51,14 @@ jobs:
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9317/31/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' --output "$RUNNER_TEMP/cookery.mcaddon"
           python tools/install_player_presentation.py --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --grilling-source .grilling-next --output "$RUNNER_TEMP/ie-g206.mcaddon"
           python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --output "$RUNNER_TEMP/cookery-g206.mcaddon"
-      - name: Reproduce the exact local optional TACZ pair
+      - name: Verify the real Cookery station adapter
+        # The ordinary test run above has no author inputs; this stage runs
+        # the integration tests against the archives that were just verified.
+        env:
+          COOKERY_ORIGINAL_ARCHIVE: ${{ runner.temp }}/cookery.mcaddon
+          GRILLING_ADAPTED_ARCHIVE: ${{ runner.temp }}/Grilling-2.8.206.mcaddon
+        run: python -m unittest discover -s tests -p test_cookery_station_adapter.py -v
+      - name: Obtain the exact local optional TACZ input
         run: |
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/7854/487/TACZ%20SkinPack%20by%20Kopystka%20Localization%20Studio.mcaddon' --output "$RUNNER_TEMP/tacz.mcaddon"
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683

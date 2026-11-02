@@ -9,7 +9,7 @@ import zipfile
 from install_cookery import _atomic_new, _safe_name, _tree_fingerprint, apply_archive, sha256
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DESCRIPTOR = ROOT / "adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json"
+DEFAULT_DESCRIPTOR = ROOT / "adapters/cookery-1.6.4-grilling-2.8.206-station-performance.json"
 
 
 def apply_post_adapter(output, descriptor):
@@ -74,6 +74,14 @@ def apply_post_adapter(output, descriptor):
     return out.getvalue(), {path: post["postimages"][path] for path in allowed}, sha256(helper)
 
 
+def apply_station_adapter(output, descriptor):
+    """Share the server's disposable display cache without changing cooking ticks."""
+    station = descriptor.get("station_adapter")
+    if station is None:
+        return output, {}, None
+    return apply_post_adapter(output, {**descriptor, "post_adapter": station})
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cookery", required=True, type=Path)
@@ -109,6 +117,20 @@ def main(argv=None):
         receipt["final_changed_paths"][post["helper_destination"]] = {"sha256": helper_sha256}
     else:
         receipt["post_adapter"] = None
+    if "station_adapter" in descriptor:
+        output, changed, helper_sha256 = apply_station_adapter(output, descriptor)
+        station = descriptor["station_adapter"]
+        receipt["station_adapter"] = {
+            "helper_path": station["helper_path"], "helper_sha256": helper_sha256,
+            "helper_destination": station["helper_destination"],
+            "preimages": station["preimages"], "postimages": changed}
+        receipt.setdefault("final_changed_paths", dict(receipt.get("changed_paths", {}))).update(
+            {path: {"sha256": digest} for path, digest in changed.items()})
+        receipt["final_changed_paths"][station["helper_destination"]] = {"sha256": helper_sha256}
+        with zipfile.ZipFile(io.BytesIO(output)) as archive:
+            final_files = {info.filename: archive.read(info) for info in archive.infolist()}
+        receipt["output_tree"] = _tree_fingerprint(final_files)
+        receipt["output_file_count"] = len(final_files)
     receipt["output_sha256"] = sha256(output)
     receipt["final_stage1_output_sha256"] = stage1_output_sha256
     _atomic_new(args.output, output)

@@ -1,6 +1,6 @@
 # Local Cookery adapter
 
-For the current G206 / Cookery 1.6.20007 installation, follow the
+For the current G206 / Cookery 1.6.20009 installation, follow the
 [current family commands](FAMILY-ASSEMBLY.md#current-g206-installation).
 That route keeps the welcome message and both startup repairs.
 The examples below document earlier pinned adapters; use their matching
@@ -109,4 +109,13 @@ It retains the0.8 receiver/decoder and original welcome, uses the reviewed
 G206 helpers, and advances the paired local Cookery identity to1.6.20006.
 Use the selected-player adapter alongside it; see [port adapters](PORT-ADAPTERS.md).
 
-The current local adapter descriptor is [Cookery recipe ingress](../adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json). It queues only incoming `register_recipe` Script Events; direct calls to the exported registration API stay synchronous. A callback processes at most four messages with a one-millisecond target; individual recipe validation remains indivisible. Recipes become available as their original registrations finish. No world or player data is added or migrated. Legacy descriptors remain reproducible.
+The current local adapter descriptor is [Cookery station performance](../adapters/cookery-1.6.4-grilling-2.8.206-station-performance.json). It queues only incoming `register_recipe` Script Events; direct calls to the exported registration API stay synchronous. A callback processes at most four messages with a one-millisecond target; individual recipe validation remains indivisible. Recipes become available as their original registrations finish. No world or player data is added or migrated. Legacy descriptors remain reproducible.
+
+Toolkit0.22 adds the portable station helper used by the server. It avoids
+unchanged display item commands, transforms and saved-property writes, while
+retaining original processing ticks, recipes, effects and complete state.
+The helper has no recurring global timer or saved cache; load/spawn events and
+the source synchronizer reconcile replicas. The generated pair is1.6.20009;
+pack/module UUIDs and save ownership stay with Cookery. This covers the shared
+port integration, not unrelated Cookery/ChineseFood author repairs. Native
+loading, saved-world/rollback and actual client evidence remain separate.
