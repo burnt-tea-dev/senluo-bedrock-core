@@ -754,5 +754,106 @@
       "tools/install_tacz.py": "c7a685e71d31c4a004ac32747ce8a509d65b0d2492f2dfe31cb62128fc67e39d",
       "tools/tacz_startup.py": "3927412eb87edd2b5ca7bff48dd24ff719ceb10e3279f3b3141bc509a69264ff"
     }
+  },
+  "0.14.0": {
+    "sdk_version": "0.1.0",
+    "toolkit_version": "0.14.0",
+    "scope": "Bound incoming Cookery recipe Script Events without changing original validation, quantities, recipes, FIFO replacement or synchronous direct registration. Fresh paired Cookery20008; TACZ20005, G206 and IE20002 retained. Human acceptance is separate.",
+    "cookery_version": [
+      1,
+      6,
+      20008
+    ],
+    "generated_cookery_sha256": "cfe4abc3988468aac653a85fb37de467046d4a8649fc71b88a745083a8d340b2",
+    "cookery_manifest_identities": {
+      "Kaleidoscope Cookery v1.6.4 [BP]/manifest.json": {
+        "uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+        "header_version": [
+          1,
+          6,
+          20008
+        ],
+        "min_engine_version": [
+          1,
+          26,
+          60
+        ],
+        "modules": [
+          {
+            "uuid": "45b88a1d-d195-42c1-acd2-afd385791439",
+            "type": "script",
+            "version": [
+              1,
+              6,
+              20008
+            ]
+          }
+        ],
+        "dependencies": [
+          {
+            "uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+            "version": [
+              1,
+              6,
+              20008
+            ]
+          },
+          {
+            "module_name": "@minecraft/server",
+            "version": "2.7.0"
+          },
+          {
+            "module_name": "@minecraft/server-ui",
+            "version": "2.0.0"
+          }
+        ]
+      },
+      "Kaleidoscope Cookery v1.6.4 [RP]/manifest.json": {
+        "uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+        "header_version": [
+          1,
+          6,
+          20008
+        ],
+        "min_engine_version": [
+          1,
+          26,
+          1
+        ],
+        "modules": [
+          {
+            "uuid": "b25e061d-b15a-48c1-a6de-dcc15a9276d4",
+            "type": "resources",
+            "version": [
+              1,
+              6,
+              20008
+            ]
+          }
+        ],
+        "dependencies": [
+          {
+            "uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+            "version": [
+              1,
+              6,
+              20008
+            ]
+          }
+        ]
+      }
+    },
+    "payloads": {
+      "src/host_api/cookery-recipe-ingress.js": "d378220fe2560d292ab1797884516686bc29841341a2f8133894320faf75d7cd",
+      "tests/cookery-recipe-ingress.test.mjs": "90fea8bbf05d131c7c6437dd98098f237a99c5207018a3097ca815e2ad93958a",
+      "adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json": "b274104739267975a8b142530204ab70bfc7ec8de5a65941cc83d682f694ebd6",
+      "adapters/owned-t194-g206-w180-recipe-ingress-tacz.json": "3a8444dbb8a959861e7b4057a49cba4040b4b2a0818d362990d1b74b3212d1af",
+      "package.json": "fc9d6768d9b7dad3e9467cad02c16f1edd7a903889f7118fc84bcd43a91cc07c",
+      "README.md": "4724dacaa6ed9de978f39fcfdc03d67f7a22f1f38239e414f993c80e13fd8899",
+      "docs/COOKERY.md": "a314144d02a93d01b98fa3d8b00cfa84620afcf462b7052f7696a71a1a84789c",
+      ".github/workflows/ci.yml": "fdfeb945d9c8fceffda44dc9b5481f542181a352df6e95eb7beddd1742f57819",
+      "tools/install_cookery_from_descriptor.py": "6a8c833b20473ba338a5543f862e75f28d04b9ecaba02da2cfd2e2f629a461ea",
+      "PUBLICATION.json": "eb084ccb2437f1b4783719053e287c1c0c1d4453fbaba5ff9ffc13f1fd46d952"
+    }
   }
 }
