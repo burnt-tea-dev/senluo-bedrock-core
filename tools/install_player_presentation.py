@@ -7,6 +7,7 @@ the exact canonical Grilling source used by the server integration.
 import argparse
 import io
 import json
+import math
 from pathlib import Path
 import subprocess
 import sys
@@ -100,6 +101,104 @@ def advance_manifest(raw, version, paired_uuids, companion, minimum=None):
     else:
         dependencies.append(companion)
     return (json.dumps(manifest, ensure_ascii=False, indent=2) + '\n').encode()
+
+
+def advance_reviewed_dependencies(raw, *, expected_sha256, expected_version,
+                                  version, latest_version, paired_uuids, rebindings, companion):
+    """Advance an immutable adapter's explicitly reviewed dependency edges.
+
+    This opt-in path is for a new diagnostic identity, not an in-place repair.
+    Ordinary advance_manifest callers retain their conflicting-edge rejection.
+    Callers must additionally pin and verify the complete input archive/body and
+    obtain latest_version from the current reviewed identity registry.
+    """
+    if sha256(raw) != expected_sha256:
+        raise ValueError('Dependency rebind manifest preimage differs')
+    if (not isinstance(paired_uuids, (set, frozenset)) or len(paired_uuids) != 2
+            or any(not isinstance(uid, str) or not uid for uid in paired_uuids)):
+        raise ValueError('Dependency rebind requires exactly two paired UUIDs')
+    for value in (expected_version, version, latest_version):
+        if (not isinstance(value, list) or len(value) != 3
+                or any(type(n) is not int or n < 0 or n > 65535 for n in value)):
+            raise ValueError('Dependency rebind requires three integer version components')
+    if tuple(latest_version) < tuple(expected_version) or tuple(version) <= tuple(latest_version):
+        raise ValueError('Dependency rebind version must exceed the reviewed registry floor')
+    def unique_object(pairs):
+        value = {}
+        for key, item in pairs:
+            if key in value:
+                raise ValueError('Duplicate manifest JSON key: ' + key)
+            value[key] = item
+        return value
+
+    def reject_constant(value):
+        raise ValueError('Non-finite manifest JSON constant: ' + value)
+
+    def finite_float(value):
+        number = float(value)
+        if not math.isfinite(number):
+            raise ValueError('Non-finite manifest JSON number')
+        return number
+
+    manifest = json.loads(raw, object_pairs_hook=unique_object,
+                          parse_constant=reject_constant, parse_float=finite_float)
+    if (not isinstance(manifest, dict) or not isinstance(manifest.get('header'), dict)
+            or not isinstance(manifest['header'].get('uuid'), str)
+            or not isinstance(manifest.get('modules'), list)
+            or any(not isinstance(m, dict) for m in manifest['modules'])
+            or not isinstance(manifest.get('dependencies'), list)
+            or any(not isinstance(row, dict) for row in manifest['dependencies'])):
+        raise ValueError('Invalid dependency rebind manifest structure')
+    if (manifest['header'].get('version') != expected_version
+            or manifest['header']['uuid'] not in paired_uuids
+            or not manifest.get('modules')
+            or any(m.get('version') != expected_version for m in manifest['modules'])):
+        raise ValueError('Dependency rebind source identity differs')
+    if not isinstance(rebindings, list) or not rebindings:
+        raise ValueError('Dependency rebind requires explicit reviewed edges')
+    if (not isinstance(companion, dict) or set(companion) != {'uuid', 'version'}
+            or not isinstance(companion['uuid'], str)):
+        raise ValueError('Invalid dependency rebind companion')
+    dependencies = manifest.get('dependencies', [])
+    if any('uuid' in row and not isinstance(row['uuid'], str) for row in dependencies):
+        raise ValueError('Invalid dependency UUID type')
+    source_versions = [manifest['header']['version']] + [m['version'] for m in manifest['modules']]
+    source_versions += [row.get('version') for row in dependencies if 'uuid' in row]
+    if any(not isinstance(value, list) or len(value) != 3
+           or any(type(n) is not int or n < 0 or n > 65535 for n in value)
+           for value in source_versions):
+        raise ValueError('Invalid source manifest version components')
+    other_uuid = next(uid for uid in paired_uuids if uid != manifest['header']['uuid'])
+    paired_rows = [row for row in dependencies if row.get('uuid') in paired_uuids]
+    if paired_rows != [{'uuid': other_uuid, 'version': expected_version}]:
+        raise ValueError('Dependency rebind paired edge preimage differs')
+    seen = set()
+    for binding in rebindings:
+        if not isinstance(binding, dict) or set(binding) != {'before', 'after'}:
+            raise ValueError('Invalid dependency rebind record')
+        before, after = binding['before'], binding['after']
+        if (not isinstance(before, dict) or not isinstance(after, dict)
+                or set(before) != {'uuid', 'version'} or set(after) != {'uuid', 'version'}
+                or not isinstance(before['uuid'], str) or not isinstance(after['uuid'], str)
+                or before['uuid'] != after['uuid'] or before['uuid'] in paired_uuids
+                or before['uuid'] in seen):
+            raise ValueError('Dependency rebind must preserve a unique external UUID')
+        for value in (before['version'], after['version']):
+            if (not isinstance(value, list) or len(value) != 3
+                    or any(type(n) is not int or n < 0 or n > 65535 for n in value)):
+                raise ValueError('Dependency rebind requires three integer version components')
+        if tuple(after['version']) <= tuple(before['version']):
+            raise ValueError('Dependency rebind requires an increasing external version')
+        indices = [i for i, row in enumerate(dependencies) if row.get('uuid') == before['uuid']]
+        if len(indices) != 1 or dependencies[indices[0]] != before:
+            raise ValueError('Dependency rebind edge preimage differs')
+        dependencies[indices[0]] = {'uuid': after['uuid'], 'version': after['version'].copy()}
+        seen.add(before['uuid'])
+    # Do not silently add an unreviewed companion through the ordinary helper.
+    if [row for row in dependencies if row.get('uuid') == companion['uuid']] != [companion]:
+        raise ValueError('Dependency rebind companion is not already reviewed')
+    encoded = (json.dumps(manifest, ensure_ascii=False, indent=2, allow_nan=False) + '\n').encode()
+    return advance_manifest(encoded, version, paired_uuids, companion)
 
 
 def apply_archive(ie, grilling, source, descriptor, tacz=None):
