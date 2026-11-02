@@ -10,13 +10,12 @@ the SDK version in `sdk.json` and its release history remain separate.
 
 Use the owned Tavern 0.6.194, Grilling 2.8.206 and World Liquor 0.1.180
 archives named by
-[`owned-t194-g206-w180-cookery-recipe-index.json`](../adapters/owned-t194-g206-w180-cookery-recipe-index.json).
+[`owned-t194-g206-w180-cookery-recipe-ingress.json`](../adapters/owned-t194-g206-w180-cookery-recipe-ingress.json).
 Obtain clean Cookery 1.6.4 (file 9317031) and Immersive Eating 1.1.0 from
 their authors. Keep original and locally adapted author files private.
-Toolkit 0.12.2 corrects the source and family builder defaults to this same
-G206 installation. These adapters and their local output hashes are unchanged
-from 0.12.0. The SDK remains 0.1.0. Omitting `--descriptor` selects the current
-recipe; the explicit arguments below make the selected inputs unambiguous.
+Toolkit 0.15.0 selects G206 and the bounded-recipe Cookery20008 adapter by default.
+SDK0.1.0 and historical explicit recipes remain unchanged. Omitting `--descriptor`
+selects the current recipe; the explicit arguments below identify the inputs.
 
 Build from a clean Grilling checkout at
 `a35a7a7adf0fcef41340fea8119c5166560c2ce8`. Use the published Grilling archive
@@ -25,12 +24,12 @@ as the input when available; this source command reproduces its pinned bytes:
 ```sh
 python3 tools/build_grilling_input.py \
   --source /path/to/grilling \
-  --descriptor adapters/cookery-1.6.4-grilling-2.8.206-recipe-index.json \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json \
   --output /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.206_baseline1.mcaddon
 python3 tools/install_cookery_from_descriptor.py \
   --cookery /path/to/original-cookery-1.6.4.mcaddon \
   --grilling /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.206_baseline1.mcaddon \
-  --descriptor adapters/cookery-1.6.4-grilling-2.8.206-recipe-index.json \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json \
   --output /path/to/local-inputs/cookery-recipe-index-20007.mcaddon
 python3 tools/install_player_presentation.py \
   --ie /path/to/original-immersive-eating-1.1.0.mcaddon \
@@ -39,7 +38,7 @@ python3 tools/install_player_presentation.py \
   --descriptor adapters/ie-grilling-2.8.206.json \
   --output /path/to/local-inputs/ie-g206-r2.mcaddon
 python3 tools/build_owned_family_recipe.py \
-  --descriptor adapters/owned-t194-g206-w180-cookery-recipe-index.json \
+  --descriptor adapters/owned-t194-g206-w180-cookery-recipe-ingress.json \
   --inputs /path/to/local-inputs --output /path/to/new-recipe.json
 python3 tools/assemble_family.py \
   --recipe /path/to/new-recipe.json --inputs /path/to/local-inputs \

@@ -12,16 +12,12 @@ Local installer + your original Cookery archive ──→ your adapted local arc
 ```
 
 The current installation uses Tavern 0.6.194, Grilling 2.8.206 and World
-Liquor 0.1.180. Toolkit 0.12.2 contains the unchanged 0.12.0 adapters: local
-Cookery 1.6.20007 and Immersive Eating 1.1.20002. It preserves welcome chat
+Liquor 0.1.180. Toolkit 0.15.0 retains the current G206 and Immersive Eating adapters: local
+Cookery 1.6.20008 and Immersive Eating 1.1.20002. It preserves welcome chat
 and native recipe ordering while avoiding repeated full recipe sorts.
 Start with [the current family installation](docs/FAMILY-ASSEMBLY.md#current-g206-installation).
 Pack/module UUIDs, item IDs and save ownership are retained. Back up a stopped
 world and test a copy before upgrading.
-
-Toolkit 0.12.2 aligns the Grilling source builder and family recipe builder
-defaults with this current installation. Historical recipes require an explicit
-`--descriptor`; their pinned inputs and output checks remain unchanged.
 
 - [SDK contract and source ownership](docs/SDK.md)
 - [Cookery local installation](docs/COOKERY.md)
@@ -46,7 +42,12 @@ notices. Locally adapted author content retains its original license and credits
 
 Earlier descriptors and their validation records remain as history. Reproduce
 older Cookery decoding outputs with their original toolkit source; the 0.12
-helper intentionally rejects those immutable older helper pins. The optional
-TACZ route uses local 1.0.20004, retains 24 gun properties alongside Grilling's
-four, and has its own client acceptance. It is not selected for LIVE merely
-because its local archive can be built.
+helper intentionally rejects those immutable older helper pins. The optional TACZ route now builds local 1.0.20005 with the resource stack PBR
+capability, while retaining 24 gun properties alongside Grilling's four. Use
+[the TACZ20005 recipe](adapters/owned-t194-g206-w180-tacz-pbr.json). It requires
+its own full-family, saved-world, rollback and client evidence. Toolkit 0.12
+releases and their TACZ20004 recipes remain historical outputs.
+
+Cookery recipe registration now processes at most four incoming messages per tick, with a one-millisecond target. Original registration validation, FIFO replacement order, every recipe and welcome chat remain. The synchronous exported registration function is unchanged. Use [the current Cookery descriptor](adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json) and [optional TACZ family descriptor](adapters/owned-t194-g206-w180-recipe-ingress-tacz.json). Native and client acceptance remain separate from installer verification.
+
+The source and family builder defaults select the current G206/Cookery20008 installation. Historical G201/G203 and prior Cookery recipes remain available through an explicit `--descriptor`.

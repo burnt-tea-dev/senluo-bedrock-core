@@ -131,7 +131,7 @@ class CurrentInstallationTests(unittest.TestCase):
         historical = copy.deepcopy(current)
         historical['id'] = 'synthetic:historical-selection'
         reads = {
-            ROOT / 'adapters/owned-t194-g206-w180-cookery-recipe-index.json': current,
+            ROOT / 'adapters/owned-t194-g206-w180-cookery-recipe-ingress.json': current,
             ROOT / 'adapters/owned-t194-g203-w180.json': historical,
         }
         return current, historical, entries, archive, reads

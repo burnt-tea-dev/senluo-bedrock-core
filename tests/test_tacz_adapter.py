@@ -87,6 +87,8 @@ class TaczAdapterTests(unittest.TestCase):
             self.assertEqual(manifest['header']['version'], [1, 0, 20002])
             self.assertEqual(manifest['modules'][0]['uuid'], uid + '-module')
             self.assertEqual(manifest['modules'][0]['version'], [1, 0, 20002])
+            self.assertEqual(manifest['header']['min_engine_version'], [1, 26, 60])
+            self.assertEqual(manifest.get('capabilities', []), ['pbr'] if side == 'RP' else [])
             self.assertIn({'module_name': '@minecraft/server', 'version': '1.18.0'}, manifest['dependencies'])
             self.assertIn({'uuid': 'g-' + side.lower(), 'version': [2, 8, 206]}, manifest['dependencies'])
             self.assertIn({'uuid': 'ie-' + side.lower(), 'version': [1, 1, 20002]}, manifest['dependencies'])
