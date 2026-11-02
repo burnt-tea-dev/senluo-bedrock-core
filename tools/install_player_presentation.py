@@ -38,7 +38,7 @@ def modern_tacz_player(raw):
 
 def compose_players(source, player, descriptor, tacz=None):
     source = Path(source).resolve()
-    pin = descriptor['grilling']['source']
+    pin = descriptor.get('composer_source', descriptor['grilling']['source'])
     def git(*args):
         return subprocess.check_output(['git', *args], cwd=source, text=True).strip()
     if (git('rev-parse', 'HEAD') != pin['commit']
@@ -73,6 +73,7 @@ def compose_players(source, player, descriptor, tacz=None):
             files[name] = modern_tacz_player(files[name])
             receipt['outputs'][name] = sha256(files[name])
             receipt['native_compatibility'] = 'Legacy TACZ pushable converted to the existing modern block-only push rule; all28 properties and other components retained.'
+        receipt['composer_source'] = pin
         return files, receipt
 
 

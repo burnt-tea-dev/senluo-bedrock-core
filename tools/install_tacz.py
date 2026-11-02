@@ -72,6 +72,15 @@ def adapt_files(originals, composed, controller, descriptor):
             raise ValueError('Missing reviewed TACZ resource preimage: ' + target)
         changed[target] = raw
     client = json.loads(changed[client_path])
+    description = client['minecraft:client_entity']['description']
+    # The author ships no animation.humanoid.slide. Retire that dead TP
+    # reference; the existing G36 hold pose and movement transitions remain.
+    description.get('animations', {}).pop('slide', None)
+    # Use actual author particle definitions: G3 ejects the existing 7.62
+    # casing and the muzzle-smoke resource is named muzzlesmoke, not nothin.
+    description.setdefault('particle_effects', {}).update({
+        'krep.shell': 'krep:762shell', 'krep.g3shell': 'krep:762shell',
+        'krep.muzzlesmoke': 'krep:muzzlesmoke'})
     client['minecraft:client_entity']['description']['render_controllers'].append({
         OFFHAND_FP: "v.is_first_person && !q.is_spectator && v.holding_all_guns && " + OFFHAND})
     changed[client_path] = (json.dumps(client, ensure_ascii=False, indent=2) + '\n').encode()
@@ -79,6 +88,15 @@ def adapt_files(originals, composed, controller, descriptor):
     # this merged 28-field owner above the unchanged four-field source pack.
     # The filename is not an entity identity or a persisted save key.
     result = {name: raw for name, raw in originals.items() if name != old_player}
+    for name, raw in originals.items():
+        if not name.startswith(roots['RP'] + 'animation_controllers/') or not name.endswith('.json'):
+            continue
+        document = read_definition(changed.get(name, raw))
+        slide = document.get('animation_controllers', {}).get('controller.animation.g36.tp')
+        if slide is not None:
+            rows = slide['states']['slide']['animations']
+            rows.remove({'slide': 'v.g36'})
+            changed[name] = (json.dumps(document, ensure_ascii=False, indent=2) + '\n').encode()
     merged_controller = json.loads(controller)['render_controllers'][FP]
     controller_paths = []
     for name, raw in originals.items():

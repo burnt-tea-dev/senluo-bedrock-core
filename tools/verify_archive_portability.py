@@ -21,7 +21,7 @@ import install_tacz as tacz
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def verify(source, original_cookery, original_ie, original_tacz):
+def verify(source, original_cookery, original_ie, original_tacz, composer_source=None):
     descriptor = json.loads(cookery.DEFAULT_DESCRIPTOR.read_bytes())
     family = json.loads((ROOT / 'adapters/owned-t194-g206-w180-recipe-ingress-tacz.json').read_bytes())
     expected = {key: family['inputs'][key]['sha256'] for key in ('grilling', 'cookery', 'immersive-eating', 'tacz')}
@@ -36,7 +36,7 @@ def verify(source, original_cookery, original_ie, original_tacz):
                 first, _ = install_cookery.apply_archive(original_cookery, gpath, descriptor)
                 adapted, _, _ = cookery.apply_post_adapter(first, descriptor)
                 ie, _ = eating.apply_archive(original_ie, gpath, source, json.loads(eating.DEFAULT_DESCRIPTOR.read_bytes()))
-                guns, _ = tacz.apply_archive(original_tacz, original_ie, gpath, source, json.loads(tacz.DEFAULT_DESCRIPTOR.read_bytes()))
+                guns, _ = tacz.apply_archive(original_tacz, original_ie, gpath, composer_source or source, json.loads(tacz.DEFAULT_DESCRIPTOR.read_bytes()))
                 sdk = build_release.archive(build_release.sdk_files(json.loads((ROOT / 'sdk.json').read_bytes())))
                 outputs = {'grilling': g, 'cookery': adapted, 'immersive-eating': ie, 'tacz': guns, 'sdk': sdk}
                 hashes = {name: hashlib.sha256(raw).hexdigest() for name, raw in outputs.items()}
@@ -49,7 +49,7 @@ def verify(source, original_cookery, original_ie, original_tacz):
                     raise ValueError('Platform-dependent archive bytes')
                 rows[platform] = hashes
     return {'platform_zip_defaults': rows, 'all_archives_byte_identical': True,
-            'pinned_game_archives_unchanged': True, 'native_loading': False, 'client': False}
+            'archives_match_current_descriptor': True, 'native_loading': False, 'client': False}
 
 
 def main():
@@ -58,8 +58,9 @@ def main():
     parser.add_argument('--cookery', type=Path, required=True)
     parser.add_argument('--ie', type=Path, required=True)
     parser.add_argument('--tacz', type=Path, required=True)
+    parser.add_argument('--composer-source', type=Path)
     args = parser.parse_args()
-    print(json.dumps(verify(args.grilling_source, args.cookery, args.ie, args.tacz)))
+    print(json.dumps(verify(args.grilling_source, args.cookery, args.ie, args.tacz, args.composer_source)))
 
 
 if __name__ == '__main__':

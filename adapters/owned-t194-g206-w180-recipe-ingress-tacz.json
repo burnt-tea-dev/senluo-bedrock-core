@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "id": "senluo-core:owned-t194-g206-w180-recipe-ingress-tacz",
-  "toolkit_version": "0.14.0",
-  "recipe_version": "t194-g206-w180-cookery20008-tacz20005-r1",
-  "scope": "Optional local owned-family assembly with bounded Cookery recipe ingress and the existing TACZ20005/G206/IE20002 compatibility. Independently obtain all author inputs; client acceptance remains pending.",
+  "toolkit_version": "0.17.0",
+  "recipe_version": "t194-g206-w180-cookery20008-tacz20006-r1",
+  "scope": "Optional local family with TACZ20006 numeric cubic curves, authored pistol walking poses and valid casing/smoke resources. Grilling206, Cookery20008 and IE20002 archives retained. Native client and saved-world acceptance are separate.",
   "inputs": {
     "tavern": {
       "filename": "Kaleidoscope_Tavern_Unofficial_0.6.194_baseline1.mcaddon",
@@ -31,8 +31,8 @@
       "distribution": "user-local-only-original-author-input-required"
     },
     "tacz": {
-      "filename": "tacz-g206-pbr20005.mcaddon",
-      "sha256": "a1cfb76e388ba411f6622b7a3f628053f7881bace4433324afb5bd73faa2dcd1",
+      "filename": "tacz-client20006.mcaddon",
+      "sha256": "de7576c81f3c44dace2cb82b8e6737cea37e9444ad2a75d3ada4ffd60404cc06",
       "distribution": "user-local-only-original-author-input-required"
     }
   },
@@ -286,7 +286,7 @@
       "version": [
         1,
         0,
-        20005
+        20006
       ],
       "side": "BP",
       "modules": [
@@ -295,7 +295,7 @@
           "version": [
             1,
             0,
-            20005
+            20006
           ]
         },
         {
@@ -303,7 +303,7 @@
           "version": [
             1,
             0,
-            20005
+            20006
           ]
         }
       ]
@@ -315,7 +315,7 @@
       "version": [
         1,
         0,
-        20005
+        20006
       ],
       "side": "RP",
       "modules": [
@@ -324,7 +324,7 @@
           "version": [
             1,
             0,
-            20005
+            20006
           ]
         }
       ]

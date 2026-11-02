@@ -42,7 +42,7 @@ notices. Locally adapted author content retains its original license and credits
 
 Earlier descriptors and their validation records remain as history. Reproduce
 older Cookery decoding outputs with their original toolkit source; the 0.12
-helper intentionally rejects those immutable older helper pins. The optional TACZ route now builds local 1.0.20005 with the resource stack PBR
+helper intentionally rejects those immutable older helper pins. The optional TACZ route now builds local 1.0.20006 with the resource stack PBR
 capability, while retaining 24 gun properties alongside Grilling's four. Use
 [the TACZ20005 recipe](adapters/owned-t194-g206-w180-tacz-pbr.json). It requires
 its own full-family, saved-world, rollback and client evidence. Toolkit 0.12
@@ -53,3 +53,15 @@ Cookery recipe registration now processes at most four incoming messages per tic
 The source and family builder defaults select the current G206/Cookery20008 installation. Historical G201/G203 and prior Cookery recipes remain available through an explicit `--descriptor`.
 
 Archive writers use canonical ZIP metadata on both Windows and Linux. The pinned G206, Cookery20008, IE20002, TACZ20005 and SDK0.1.0 archive bytes remain unchanged.
+
+Toolkit 0.17 fixes TACZ client resource errors. Use the exact `composer_source` commit
+in [the current TACZ descriptor](adapters/tacz-1.0.3-grilling-2.8.206.json) as
+`install_tacz.py --grilling-source`. This is the animation tool source; the separately
+pinned Grilling 2.8.206 archive and its runtime source remain unchanged.
+Left-arm curves retain constant keyframes and use a separate animation weight.
+The four pistol walk aliases use the author's existing common pistol pose;
+casing and smoke aliases resolve to existing author particles. The dead G36
+third-person slide reference is removed: no missing sliding pose is invented.
+The current family recipe uses TACZ 1.0.20006; explicit historical recipes retain
+their recorded older outputs. Client rendering/audio and complete saved-world
+validation must still pass before use; a successful local build is not acceptance.

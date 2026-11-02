@@ -54,7 +54,14 @@ jobs:
       - name: Reproduce the exact local optional TACZ pair
         run: |
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/7854/487/TACZ%20SkinPack%20by%20Kopystka%20Localization%20Studio.mcaddon' --output "$RUNNER_TEMP/tacz.mcaddon"
-          python tools/install_tacz.py --tacz "$RUNNER_TEMP/tacz.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --grilling-source .grilling-next --output "$RUNNER_TEMP/tacz-g206.mcaddon"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: burnt-tea-dev/kaleidoscope-grilling-unofficial
+          ref: a12a9cf35578d9db9c84f72130e707f54442b6ff
+          path: .grilling-composer
+          persist-credentials: false
+      - name: Reproduce TACZ with the corrected canonical animation composer
+        run: python tools/install_tacz.py --tacz "$RUNNER_TEMP/tacz.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --grilling-source .grilling-composer --output "$RUNNER_TEMP/tacz-g206.mcaddon"
       - name: Verify real archives under Linux and Windows ZIP defaults
-        run: python tools/verify_archive_portability.py --grilling-source .grilling-next --cookery "$RUNNER_TEMP/cookery.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --tacz "$RUNNER_TEMP/tacz.mcaddon"
+        run: python tools/verify_archive_portability.py --grilling-source .grilling-next --composer-source .grilling-composer --cookery "$RUNNER_TEMP/cookery.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --tacz "$RUNNER_TEMP/tacz.mcaddon"
       - run: python tools/build_release.py --output dist
