@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def verify(source, original_cookery, original_ie, original_tacz, composer_source=None, source_sounds=None):
     descriptor = json.loads(cookery.DEFAULT_DESCRIPTOR.read_bytes())
-    family = json.loads((ROOT / 'adapters/owned-t194-g208-w180-station-performance-tacz.json').read_bytes())
+    family = json.loads((ROOT / 'adapters/owned-t194-g212-w180-station-performance-tacz.json').read_bytes())
     expected = {key: family['inputs'][key]['sha256'] for key in ('grilling', 'cookery', 'immersive-eating', 'tacz')}
     reference = None
     rows = {}

@@ -1,0 +1,221 @@
+{
+  "schema": 1,
+  "id": "senluo-core:tacz-1.0.3-grilling-2.8.212",
+  "toolkit_version": "0.25.0",
+  "immersive_eating": {
+    "archive_sha256": "81575e63b40e2db4f58f0ab37b2aaa1854ff6ad564ba15e0acefa1f63c2f2fbf",
+    "version": [
+      1,
+      1,
+      0
+    ],
+    "player_entity_path": "Kaleidoscope Immersive Eating v1.1.0 [RP]/entity/player.entity.json",
+    "player_entity_sha256": "d7de539e2690611d704bfaf50b8a92662c1356ed86e5fe1171e5dfcbce99fe48",
+    "controller_path": "Kaleidoscope Immersive Eating v1.1.0 [RP]/render_controllers/kie_player_first_person.render_controllers.json",
+    "controller_sha256": "c274378763b41bb755040ed9bfceb644b67839a8288cccf944bde0da6b345e27",
+    "rp_uuid": "1cdbdcab-b063-4455-90e3-829de2dc91f5",
+    "bp_uuid": "4fd46237-7fb4-4340-abe1-cec07ad033db"
+  },
+  "grilling": {
+    "archive_sha256": "2a3e79a889156d147c332c53fbc0fd368672d44c49c76f8b633fc59129dc20cd",
+    "controller_path": "RP/render_controllers/java_eating_player.render_controllers.json",
+    "controller_sha256": "e4e0d81b4712a60621db2b0db0ae03f30d9097a8bc2937680c71387c76dfb419",
+    "source": {
+      "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+      "commit": "aa8a07ad223c993c05b0d356615d38e990148588",
+      "git_tree": "27218efec1960c1eb4c33226e5c72d36bdafaabf",
+      "resource_tree_sha256": "fee9c0ed2920ec81c7027a962f00ec488972f57008ada1257b151b23d5fbf30e",
+      "resource_file_count": 2865
+    },
+    "bp_uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+    "rp_uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+    "version": [
+      2,
+      8,
+      212
+    ]
+  },
+  "output_path": "render_controllers/ie_grilling_first_person.render_controllers.json",
+  "output_sha256": "fb86eda52a0871b8824f6deba2011976651062675ac776e5b9e68e29a6e980ce",
+  "distribution": "User-local adapted TACZ pair with the reviewed merged behavior player and Grilling/IE client routes. Requires the selected IE compatibility pair and priority contract; no client acceptance claimed.",
+  "output_version": [
+    1,
+    1,
+    20005
+  ],
+  "behavior_min_engine_version": [
+    1,
+    26,
+    60
+  ],
+  "tacz": {
+    "archive_sha256": "1b78db6269be419eb2593c981df4beb88f7f9e0509c59221077ae2e965d86486",
+    "distribution": "optional separately obtained author input; never embedded in public tools",
+    "id": "senluo-core:tacz-1.0.3-grilling-2.8.212",
+    "bp_uuid": "4f2a831e-9d12-4c6b-96e5-22a83b9f1a01",
+    "rp_uuid": "9d8e7f6a-5b4c-3d2e-1f0a-9b8c7d6e5f4a",
+    "version": [
+      1,
+      0,
+      3
+    ],
+    "output_version": [
+      1,
+      0,
+      20014
+    ],
+    "prefixes": {
+      "BP": "TACZBehavi/",
+      "RP": "TACZResour/"
+    }
+  },
+  "composer_source": {
+    "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+    "commit": "aa8a07ad223c993c05b0d356615d38e990148588",
+    "git_tree": "27218efec1960c1eb4c33226e5c72d36bdafaabf",
+    "scope": "Canonical UI-safe oil pre_animation and existing numeric TACZ animation composition; no author scripts distributed."
+  },
+  "restored_sound_files": {
+    "sounds/akm/overins.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/ak47/ak47_inspect_over.ogg",
+      "git_blob_sha1": "76a30a9e6313b0bfbc1f350582e58cbc328b406b",
+      "sha256": "2aaac3d4990a4b0591acf277fa3ca00acd065f8aaa9edddbf092bfdc76531a26"
+    },
+    "sounds/akm/raisegrabins.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/ak47/ak47_inspect_raise_grab.ogg",
+      "git_blob_sha1": "ca2bc2b9bc8b29008ffc8a80ac8f4c1310e32b9d",
+      "sha256": "e01ba0b2bfc72daf36385a0d680555ab65c6ca0bf883ba782b804538cf6425d5"
+    },
+    "sounds/minigun/rotate2ins.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/minigun/minigun_inspect_rotate2.ogg",
+      "git_blob_sha1": "7313e20d6c4af11f355d518773de5ef38509250f",
+      "sha256": "8e87d1466f1942f1e6af5d9f7c46d59b50e310f397051a152bc2f6e502a11161"
+    },
+    "sounds/mp5/clothtac.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/hk_mp5a5/hk_mp5a5_reload_cloth.ogg",
+      "git_blob_sha1": "b5d1fb112549a8e2aeeb8fab05f19c403b5b76e4",
+      "sha256": "e143953440f830ba07a0d42611504fc35d69ce0a2fd354ee79914c64c2d3b9ee"
+    },
+    "sounds/mp5/drop.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/hk_mp5a5/hk_mp5a5_reload_empty_mag_drop.ogg",
+      "git_blob_sha1": "e281a0ac83ce2017bf30b24ba031eb77b7e76fbb",
+      "sha256": "fccc20061a5ba6ae13d21bad2690fb3098bd4920c81ee8561107a8c4bfc3bd02"
+    },
+    "sounds/g3/magdrop.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/hk_g3/hk_g3_reload_empty_magdrop.ogg",
+      "git_blob_sha1": "3473717fc35744905337b6a1292cb712bb967faf",
+      "sha256": "f46cf33ef31894d850543971c61bdfc1f5d0a5469f2d562735d85f0b1041a862"
+    },
+    "sounds/p90/raisetac.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/p90/p90_reload_raise.ogg",
+      "git_blob_sha1": "f00cf64acbf328ba1ae58fbe3b7c3b194faad7d5",
+      "sha256": "6950c7ce99bc45e297112413a8afe8c0ef58e250a379959d18d19458cc9982ee"
+    }
+  },
+  "restored_sound_source": {
+    "repository": "MCModderAnchor/TACZ",
+    "commit": "19f14c8e6bee1e3d95209776094ae361b133a1c5",
+    "tree": "ee9e316e92c9a9eebcaaa8f9c0b1be582a6491ac"
+  },
+  "sound_path_corrections": {
+    "sounds/m249/bruenmk9_raise": "sounds/m249/m249_draw",
+    "sounds/evolys/m249_reload_empty_load_belt": "sounds/m249/m249_reload_empty_load_belt",
+    "sounds/m1014/cloth_move_3": "sounds/qbz1911/cloth_move_3",
+    "sounds/qbz1911/qbz191_cloth_move_4": "sounds/qbz1911/cloth_move_4",
+    "sounds/qbz1911/qbz_191_inspect_mid": "sounds/qbz95/qbz_95_inspect_mid",
+    "sounds/qbz1911/qbz_191_reload_empty_fast_rotate": "sounds/qbz95/qbz_95_reload_empty_fast_rotate",
+    "sounds/m107/draw": "sounds/m107/m107_draw",
+    "sounds/g36/magoutins": "sounds/g36/magout",
+    "sounds/akm/raiseshouldertac": "sounds/akm/raiseshoulder",
+    "sounds/awp/rechamberin": "sounds/awp/rechamberinbolt",
+    "sounds/awp/rechamberout": "sounds/awp/rechamberoutbolt",
+    "sounds/scarh/draw": "sounds/scarh/raise",
+    "sounds/hk416/suppressorloop": "sounds/hk416/suppressloop",
+    "sounds/vector/emptyshake": "sounds/vector/shake"
+  },
+  "retired_unused_sound_events": [
+    "car15.shoot",
+    "car15.glshoot",
+    "car15.magless",
+    "car15.maghit",
+    "car15.magin",
+    "car15.ch2",
+    "car15.bolt",
+    "car15.maggrab",
+    "car15.glinsert",
+    "car15.glslide1",
+    "car15.glslide2",
+    "pkm.bolt2",
+    "pkm.magless",
+    "pkm.topcover1",
+    "pkm.topcover2",
+    "pkm.bullet",
+    "pkm.bolt1",
+    "pkm.magin",
+    "tabukar.shoot",
+    "tabukar.kokang2",
+    "tabukar.magless",
+    "tabukar.kokang1",
+    "tabukar.magin"
+  ],
+  "restored_texture_files": {
+    "textures/gun/akm.png": {
+      "source": "TACZResour/textures/gun/akm.png",
+      "sha256": "991769830db977ae475fd362dc19935e8a5278ba5b91b7380697f54aed45f895",
+      "preimage_sha256": "c25b0ea900698476ceb696c575178852cc808927f3cb5dff4c702e040099ab22"
+    },
+    "textures/gun/g17.png": {
+      "source": "TACZResour/textures/gun/g17.png",
+      "sha256": "12aff4c4468b3e6340e772f08dd081c48335c0e728151943cf2b6f5cf7b3f2f4",
+      "preimage_sha256": "78943cc31f95ce090938b4d8075132dfef36650c401e81a4bdf5372adececc57"
+    },
+    "textures/gun/uzi.png": {
+      "source": "TACZResour/textures/gun/uzi.png",
+      "sha256": "22e33c2dc4154ddf641ea854f4025406d220f9a271a3d26037d18716884f08cc",
+      "preimage_sha256": "cdb3909213979f152d4b08fcbd2a5c1ab512c0308d2aacfbac43e67705d1586d"
+    },
+    "textures/gun/type81.png": {
+      "source": "TACZResour/textures/gun/type81.png",
+      "sha256": "883ac9e4196c90fd9a8ff61fb6f87b7e11c1b01a4a19c43cf2986bd46854c36a",
+      "preimage_sha256": "a5f6cc12a1345e67bacdf907ce5a7f3ec32dd711b5e9fa91643d8ec37231246f"
+    }
+  },
+  "cosmetic_scope": {
+    "removed": "Kopystka gun skins for Glock17, AKM, UZI and Type81 only; source author identifies these four guns",
+    "source": "https://www.curseforge.com/minecraft-bedrock/addons/tacz-mod-translated-edition-skin-pack",
+    "preserved": "Item icons, all animation/controller files, gun and ammo identifiers, recipes, damage and save ownership. Restore original pre-SkinPack models together with their matching textures; cosmetic bones/UVs intentionally return to the unskinned edition."
+  },
+  "projectile_hit_repair": {
+    "path": "TACZBehavi/scripts/events/projectileHitEntity.js",
+    "prepared_sha256": "5f43eec2d8ede03e1f8169ad4a299945d64efedbc5e927b21809398111229ec7",
+    "output_sha256": "b197aca69ce7336cd7bf0b84a2a317b392b35454cd362bc399e79ba107308fec",
+    "scope": "Check target validity once at the native hit-event boundary before matches/health access. Damage and armor calculation remain unchanged. Uses declared @minecraft/server1.18.0 isValid() method."
+  },
+  "restored_model_files": {
+    "models/entity/27a1ctw7ap/dyqqqpp131/np85kx5ubr/hmz6iv15s8/goiMcVMQKJFlTKq1.json": {
+      "source": "TACZResour/models/entity/27a1ctw7ap/dyqqqpp131/np85kx5ubr/hmz6iv15s8/goiMcVMQKJFlTKq1.json",
+      "sha256": "b2ce5dbc2183c28a493fd733df230d7919f52b4dc7e99ccfb2cfe55d073a66f4",
+      "preimage_sha256": "730ece20131c0546a6d0cc4e6dc3b5e399421122219e6b716b191603143de6df"
+    },
+    "models/entity/ivw63ij45j/qorqn25qfo/i85ys4xmgj/HY9Xy3vbUihBBycQ.json": {
+      "source": "TACZResour/models/entity/ivw63ij45j/qorqn25qfo/i85ys4xmgj/HY9Xy3vbUihBBycQ.json",
+      "sha256": "ead1402ce76a6bf4b36d57993be86a03fce03387810151febaf6f4c314f26b61",
+      "preimage_sha256": "6021caffae7914950889a83418ffb2c3c874bedfd41ca62932bd2416b1270953"
+    },
+    "models/entity/sk2u74yr5t/5qzs5inu9t/4ah58frpg9/2qe26t81yw/w4qsjy7jy3/x9b7kgv3zd/vj8tv15nb6/podfq98wni/9ponc52jcw/wrkdak7s1n/MbfiAl4YxhhucbdM.json": {
+      "source": "TACZResour/models/entity/sk2u74yr5t/5qzs5inu9t/4ah58frpg9/2qe26t81yw/w4qsjy7jy3/x9b7kgv3zd/vj8tv15nb6/podfq98wni/9ponc52jcw/wrkdak7s1n/MbfiAl4YxhhucbdM.json",
+      "sha256": "7fcf1e2e523b164e31072233742fd4ffe4b7372d7140138691cd113190a25e86",
+      "preimage_sha256": "0a7fe02e9583c8df54f39fe7d8db0e2ab2a421c3c12891fe689c9ee5fdefe926"
+    }
+  },
+  "unskinned_bedrock_source": {
+    "source_url": "https://dl.mcpelife.com/addons/tacz-mod-v1-0-2-translated/TACZ%20mod%20V1.0.2%20TRANSLATED%20EDITION",
+    "archive_sha256": "9688384733c30f52f1a4f2d492d54ab5611d4c26ad2f118258abe2e1042cc5c8",
+    "archive_bytes": 34378491,
+    "official_author_download_verified": false,
+    "scope": "Public mirror of the removed1.0.2 translated Bedrock distribution. Restore only the four advertised reskins and their three altered cosmetic models. No BP or other RP data copied. All original animations/controllers are identical between these source editions. Original item icons are unchanged. No gameplay or save downgrade."
+  },
+  "texture_path_corrections": {
+    "textures/nothing": "textures/ikon/empty"
+  }
+}
