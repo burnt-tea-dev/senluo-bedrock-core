@@ -248,7 +248,9 @@ def apply_archive(cookery: Path, grilling: Path, descriptor: dict) -> tuple[byte
             dest_member = prefixes["cookery_bp"] + dest
             if source not in sdk_additions or dest_member in files:
                 raise ValueError("SDK copy is not allowlisted or destination already exists: " + dest)
-            files[dest_member] = (zipfile.ZipInfo(dest_member), sdk_additions[source])
+            info = zipfile.ZipInfo(dest_member)
+            info.create_system = 3
+            files[dest_member] = (info, sdk_additions[source])
 
         input_tree = _tree_fingerprint(baseline_files,
                                        exclude=set(manifest_paths) | {prefixes["cookery_bp"] + p for p in changed})
