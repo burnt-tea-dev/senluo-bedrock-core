@@ -108,3 +108,5 @@ The G206 source route is pinned by
 It retains the0.8 receiver/decoder and original welcome, uses the reviewed
 G206 helpers, and advances the paired local Cookery identity to1.6.20006.
 Use the selected-player adapter alongside it; see [port adapters](PORT-ADAPTERS.md).
+
+The current local adapter descriptor is [Cookery recipe ingress](../adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json). It queues only incoming `register_recipe` Script Events; direct calls to the exported registration API stay synchronous. A callback processes at most four messages with a one-millisecond target; individual recipe validation remains indivisible. Recipes become available as their original registrations finish. No world or player data is added or migrated. Legacy descriptors remain reproducible.

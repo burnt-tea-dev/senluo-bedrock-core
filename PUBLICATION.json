@@ -68,7 +68,11 @@
     "tools/install_cookery_from_descriptor.py",
     "tools/install_player_presentation.py",
     "tools/install_tacz.py",
-    "tools/tacz_startup.py"
+    "tools/tacz_startup.py",
+    "src/host_api/cookery-recipe-ingress.js",
+    "tests/cookery-recipe-ingress.test.mjs",
+    "adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json",
+    "adapters/owned-t194-g206-w180-recipe-ingress-tacz.json"
   ],
   "rule": "Only these reviewed source/SDK/tool files are distributable. Original and generated author archives are never release assets."
 }
