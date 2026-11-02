@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "id": "senluo-core:owned-t194-g206-w180-recipe-ingress-tacz",
-  "toolkit_version": "0.19.0",
-  "recipe_version": "t194-g206-w180-cookery20008-tacz20009-r1",
-  "scope": "Optional local TACZ20009 family: original pre-SkinPack gun appearance, invalid hit-target repair, prior UI/audio/animation fixes retained. Full-family, same-save, rollback and actual client gates remain separate.",
+  "toolkit_version": "0.20.0",
+  "recipe_version": "t194-g206-w180-cookery20008-tacz20010-r1",
+  "scope": "Optional local TACZ20010 family: missing held-item texture references resolve to the original transparent asset. Original gun appearance, invalid hit-target, UI/audio/animation repairs are retained. Full-family, same-save, rollback and actual client gates remain separate.",
   "inputs": {
     "tavern": {
       "filename": "Kaleidoscope_Tavern_Unofficial_0.6.194_baseline1.mcaddon",
@@ -31,8 +31,8 @@
       "distribution": "user-local-only-original-author-input-required"
     },
     "tacz": {
-      "filename": "tacz-client20009.mcaddon",
-      "sha256": "c0b160c761ab7136902ef783969d04622e9c80c4ca79ae822398b9b86b8bcd18",
+      "filename": "tacz-client20010.mcaddon",
+      "sha256": "7b4c00e818ea36b16b3c8c3996b972d2b6b7752bfda1076db24613a11d8ad2ea",
       "distribution": "user-local-only-original-author-input-required"
     }
   },
@@ -286,7 +286,7 @@
       "version": [
         1,
         0,
-        20009
+        20010
       ],
       "side": "BP",
       "modules": [
@@ -295,7 +295,7 @@
           "version": [
             1,
             0,
-            20009
+            20010
           ]
         },
         {
@@ -303,7 +303,7 @@
           "version": [
             1,
             0,
-            20009
+            20010
           ]
         }
       ]
@@ -315,7 +315,7 @@
       "version": [
         1,
         0,
-        20009
+        20010
       ],
       "side": "RP",
       "modules": [
@@ -324,7 +324,7 @@
           "version": [
             1,
             0,
-            20009
+            20010
           ]
         }
       ]

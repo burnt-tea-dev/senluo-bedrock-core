@@ -75,6 +75,22 @@ def repair_sound_definitions(raw, descriptor):
     return (json.dumps(result, ensure_ascii=False, indent=2) + '\n').encode()
 
 
+def repair_attachable_textures(originals, prefix, descriptor):
+    """Use the author's shipped transparent pixel for hidden held-item meshes."""
+    corrections = descriptor.get('texture_path_corrections', {})
+    changed = {}
+    for path, raw in originals.items():
+        if not path.startswith(prefix + 'attachables/') or not path.endswith('.json'):
+            continue
+        value = read_definition(raw)
+        textures = value['minecraft:attachable']['description']['textures']
+        fixed = {key: corrections.get(texture, texture) for key, texture in textures.items()}
+        if fixed != textures:
+            value['minecraft:attachable']['description']['textures'] = fixed
+            changed[path] = (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
+    return changed
+
+
 def _source_files(directory, descriptor, kind):
     result = {}
     for name, pin in descriptor.get('restored_' + kind + '_files', {}).items():
@@ -248,6 +264,7 @@ def adapt_files(originals, composed, controller, descriptor):
         changed[name] = (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
     changed.update(repair_ui(originals, roots['RP']))
     sound_path = roots['RP'] + 'sounds/sound_definitions.json'
+    changed.update(repair_attachable_textures(originals, roots['RP'], descriptor))
     if sound_path in originals:
         changed[sound_path] = repair_sound_definitions(originals[sound_path], descriptor)
     blocks_path = roots['RP'] + 'blocks.json'
