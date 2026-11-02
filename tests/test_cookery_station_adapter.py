@@ -43,8 +43,8 @@ class RealCookeryStationTests(unittest.TestCase):
         self.assertEqual(changed, descriptor['station_adapter']['postimages'])
         for side in ('BP', 'RP'):
             doc = json.loads(after[descriptor['prefixes'][side] + 'manifest.json'])
-            self.assertEqual(doc['header']['version'], [1, 6, 20011])
-            self.assertTrue(all(row['version'] == [1, 6, 20011] for row in doc['modules']))
+            self.assertEqual(doc['header']['version'], [1, 6, 20012])
+            self.assertTrue(all(row['version'] == [1, 6, 20012] for row in doc['modules']))
         with tempfile.TemporaryDirectory() as td:
             path = Path(td) / 'cookery.mcaddon'
             installer.main(['--cookery', str(cookery), '--grilling', str(grilling), '--output', str(path)])

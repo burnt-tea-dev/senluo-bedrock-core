@@ -41,22 +41,22 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: burnt-tea-dev/kaleidoscope-grilling-unofficial
-          ref: f25130a3ac143910f89fe6d533a26c79e27accc7
+          ref: aa8a07ad223c993c05b0d356615d38e990148588
           path: .grilling-next
           persist-credentials: false
-      - name: Reproduce default G208 and adapt exact clean author inputs locally
+      - name: Reproduce default G212 and adapt exact clean author inputs locally
         run: |
-          python tools/build_grilling_input.py --source .grilling-next --output "$RUNNER_TEMP/Grilling-2.8.208.mcaddon"
+          python tools/build_grilling_input.py --source .grilling-next --output "$RUNNER_TEMP/Grilling-2.8.212.mcaddon"
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9104/552/Kaleidoscope%20Immersive%20Eating%20v1.1.0.mcaddon' --output "$RUNNER_TEMP/ie.mcaddon"
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9317/31/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' --output "$RUNNER_TEMP/cookery.mcaddon"
-          python tools/install_player_presentation.py --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.208.mcaddon" --grilling-source .grilling-next --output "$RUNNER_TEMP/ie-g208.mcaddon"
-          python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.208.mcaddon" --output "$RUNNER_TEMP/cookery-g208.mcaddon"
+          python tools/install_player_presentation.py --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.212.mcaddon" --grilling-source .grilling-next --output "$RUNNER_TEMP/ie-g212.mcaddon"
+          python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.212.mcaddon" --output "$RUNNER_TEMP/cookery-g212.mcaddon"
       - name: Verify the real Cookery station adapter
         # The ordinary test run above has no author inputs; this stage runs
         # the integration tests against the archives that were just verified.
         env:
           COOKERY_ORIGINAL_ARCHIVE: ${{ runner.temp }}/cookery.mcaddon
-          GRILLING_ADAPTED_ARCHIVE: ${{ runner.temp }}/Grilling-2.8.208.mcaddon
+          GRILLING_ADAPTED_ARCHIVE: ${{ runner.temp }}/Grilling-2.8.212.mcaddon
         run: python -m unittest discover -s tests -p test_cookery_station_adapter.py -v
       - name: Obtain the exact local optional TACZ input
         run: |
@@ -65,7 +65,7 @@ jobs:
         run: |
           python - <<'PY_SOUND_INPUTS'
           import hashlib, io, json, os, pathlib, subprocess, urllib.request, zipfile
-          descriptor=json.loads(pathlib.Path('adapters/tacz-1.0.3-grilling-2.8.208.json').read_bytes())
+          descriptor=json.loads(pathlib.Path('adapters/tacz-1.0.3-grilling-2.8.212.json').read_bytes())
           root=pathlib.Path(os.environ['RUNNER_TEMP'])/'source-sounds'
           origin=descriptor['restored_sound_source']
           for name,pin in descriptor['restored_sound_files'].items():
@@ -87,11 +87,11 @@ jobs:
                   target.write_bytes(archive.read(pin['source']))
           PY_SOUND_INPUTS
       - name: Reproduce TACZ with the corrected canonical animation composer
-        run: python tools/install_tacz.py --tacz "$RUNNER_TEMP/tacz.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.208.mcaddon" --grilling-source .grilling-next --source-sounds "$RUNNER_TEMP/source-sounds" --output "$RUNNER_TEMP/tacz-g208.mcaddon"
+        run: python tools/install_tacz.py --tacz "$RUNNER_TEMP/tacz.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.212.mcaddon" --grilling-source .grilling-next --source-sounds "$RUNNER_TEMP/source-sounds" --output "$RUNNER_TEMP/tacz-g212.mcaddon"
       - name: Real author projectile callback and attachable texture regression
         env:
           TACZ_ORIGINAL_ARCHIVE: ${{ runner.temp }}/tacz.mcaddon
-          TACZ_ADAPTED_ARCHIVE: ${{ runner.temp }}/tacz-g208.mcaddon
+          TACZ_ADAPTED_ARCHIVE: ${{ runner.temp }}/tacz-g212.mcaddon
         run: python -m unittest discover -s tests -p test_tacz_adapter.py -k real_ -v
       - name: Verify real archives under Linux and Windows ZIP defaults
         run: python tools/verify_archive_portability.py --grilling-source .grilling-next --composer-source .grilling-next --source-sounds "$RUNNER_TEMP/source-sounds" --cookery "$RUNNER_TEMP/cookery.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --tacz "$RUNNER_TEMP/tacz.mcaddon"

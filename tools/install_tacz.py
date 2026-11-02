@@ -18,7 +18,7 @@ from assemble_family import read_definition
 from tacz_startup import prepare_scripts
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DESCRIPTOR = ROOT / 'adapters/tacz-1.0.3-grilling-2.8.208.json'
+DEFAULT_DESCRIPTOR = ROOT / 'adapters/tacz-1.0.3-grilling-2.8.212.json'
 FP = 'controller.render.player.first_person'
 OFFHAND_FP = 'controller.render.kg_tacz.offhand_first_person'
 OFFHAND = "q.is_item_equipped('off_hand')"

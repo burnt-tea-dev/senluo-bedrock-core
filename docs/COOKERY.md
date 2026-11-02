@@ -1,7 +1,7 @@
 # Local Cookery adapter
 
-For the current G208 / Cookery 1.6.20011 installation, follow the
-[current family commands](FAMILY-ASSEMBLY.md#current-g208-installation).
+For the current G212 / Cookery 1.6.20012 installation, follow the
+[current family commands](FAMILY-ASSEMBLY.md#current-g212-installation).
 That route keeps the welcome message and both startup repairs.
 The examples below document earlier pinned adapters; use their matching
 original toolkit source to reproduce them.
