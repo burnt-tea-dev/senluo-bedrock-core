@@ -17,7 +17,7 @@ from export_ie_grilling_compat import export_controller
 from install_cookery import _atomic_new, _read_zip, _safe_name, sha256
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DESCRIPTOR = ROOT / 'adapters/ie-grilling-2.8.207.json'
+DEFAULT_DESCRIPTOR = ROOT / 'adapters/ie-grilling-2.8.208.json'
 
 
 def modern_tacz_player(raw):
