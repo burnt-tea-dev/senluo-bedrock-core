@@ -57,11 +57,25 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: burnt-tea-dev/kaleidoscope-grilling-unofficial
-          ref: a12a9cf35578d9db9c84f72130e707f54442b6ff
+          ref: 8b0c815141699ed025cec8b8d65221e01c01249f
           path: .grilling-composer
           persist-credentials: false
+      - name: Obtain the exact missing original sound assets
+        run: |
+          python - <<'PY_SOUND_INPUTS'
+          import json, os, pathlib, urllib.request
+          descriptor=json.loads(pathlib.Path('adapters/tacz-1.0.3-grilling-2.8.206.json').read_bytes())
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'source-sounds'
+          origin=descriptor['restored_sound_source']
+          for name,pin in descriptor['restored_sound_files'].items():
+              target=root/name
+              target.parent.mkdir(parents=True,exist_ok=True)
+              url='https://raw.githubusercontent.com/'+origin['repository']+'/'+origin['commit']+'/'+pin['source']
+              with urllib.request.urlopen(url,timeout=60) as response:
+                  target.write_bytes(response.read())
+          PY_SOUND_INPUTS
       - name: Reproduce TACZ with the corrected canonical animation composer
-        run: python tools/install_tacz.py --tacz "$RUNNER_TEMP/tacz.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --grilling-source .grilling-composer --output "$RUNNER_TEMP/tacz-g206.mcaddon"
+        run: python tools/install_tacz.py --tacz "$RUNNER_TEMP/tacz.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.206.mcaddon" --grilling-source .grilling-composer --source-sounds "$RUNNER_TEMP/source-sounds" --output "$RUNNER_TEMP/tacz-g206.mcaddon"
       - name: Verify real archives under Linux and Windows ZIP defaults
-        run: python tools/verify_archive_portability.py --grilling-source .grilling-next --composer-source .grilling-composer --cookery "$RUNNER_TEMP/cookery.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --tacz "$RUNNER_TEMP/tacz.mcaddon"
+        run: python tools/verify_archive_portability.py --grilling-source .grilling-next --composer-source .grilling-composer --source-sounds "$RUNNER_TEMP/source-sounds" --cookery "$RUNNER_TEMP/cookery.mcaddon" --ie "$RUNNER_TEMP/ie.mcaddon" --tacz "$RUNNER_TEMP/tacz.mcaddon"
       - run: python tools/build_release.py --output dist

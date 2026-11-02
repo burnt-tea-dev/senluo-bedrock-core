@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "senluo-core:tacz-1.0.3-grilling-2.8.206",
-  "toolkit_version": "0.17.0",
+  "toolkit_version": "0.18.0",
   "immersive_eating": {
     "archive_sha256": "81575e63b40e2db4f58f0ab37b2aaa1854ff6ad564ba15e0acefa1f63c2f2fbf",
     "version": [
@@ -62,7 +62,7 @@
     "output_version": [
       1,
       0,
-      20006
+      20007
     ],
     "prefixes": {
       "BP": "TACZBehavi/",
@@ -71,8 +71,91 @@
   },
   "composer_source": {
     "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
-    "commit": "a12a9cf35578d9db9c84f72130e707f54442b6ff",
-    "git_tree": "302d609c21a41af38ed9130d0ef733468971664b",
+    "commit": "8b0c815141699ed025cec8b8d65221e01c01249f",
+    "git_tree": "ab4a705345810761c0870b95ad3c149a426ecf00",
     "scope": "Animation composition tooling; Grilling206 archive and its original source pin remain unchanged."
-  }
+  },
+  "restored_sound_files": {
+    "sounds/akm/overins.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/ak47/ak47_inspect_over.ogg",
+      "git_blob_sha1": "76a30a9e6313b0bfbc1f350582e58cbc328b406b",
+      "sha256": "2aaac3d4990a4b0591acf277fa3ca00acd065f8aaa9edddbf092bfdc76531a26"
+    },
+    "sounds/akm/raisegrabins.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/ak47/ak47_inspect_raise_grab.ogg",
+      "git_blob_sha1": "ca2bc2b9bc8b29008ffc8a80ac8f4c1310e32b9d",
+      "sha256": "e01ba0b2bfc72daf36385a0d680555ab65c6ca0bf883ba782b804538cf6425d5"
+    },
+    "sounds/minigun/rotate2ins.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/minigun/minigun_inspect_rotate2.ogg",
+      "git_blob_sha1": "7313e20d6c4af11f355d518773de5ef38509250f",
+      "sha256": "8e87d1466f1942f1e6af5d9f7c46d59b50e310f397051a152bc2f6e502a11161"
+    },
+    "sounds/mp5/clothtac.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/hk_mp5a5/hk_mp5a5_reload_cloth.ogg",
+      "git_blob_sha1": "b5d1fb112549a8e2aeeb8fab05f19c403b5b76e4",
+      "sha256": "e143953440f830ba07a0d42611504fc35d69ce0a2fd354ee79914c64c2d3b9ee"
+    },
+    "sounds/mp5/drop.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/hk_mp5a5/hk_mp5a5_reload_empty_mag_drop.ogg",
+      "git_blob_sha1": "e281a0ac83ce2017bf30b24ba031eb77b7e76fbb",
+      "sha256": "fccc20061a5ba6ae13d21bad2690fb3098bd4920c81ee8561107a8c4bfc3bd02"
+    },
+    "sounds/g3/magdrop.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/hk_g3/hk_g3_reload_empty_magdrop.ogg",
+      "git_blob_sha1": "3473717fc35744905337b6a1292cb712bb967faf",
+      "sha256": "f46cf33ef31894d850543971c61bdfc1f5d0a5469f2d562735d85f0b1041a862"
+    },
+    "sounds/p90/raisetac.ogg": {
+      "source": "src/main/resources/assets/tacz/custom/tacz_default_gun/assets/tacz/tacz_sounds/p90/p90_reload_raise.ogg",
+      "git_blob_sha1": "f00cf64acbf328ba1ae58fbe3b7c3b194faad7d5",
+      "sha256": "6950c7ce99bc45e297112413a8afe8c0ef58e250a379959d18d19458cc9982ee"
+    }
+  },
+  "restored_sound_source": {
+    "repository": "MCModderAnchor/TACZ",
+    "commit": "19f14c8e6bee1e3d95209776094ae361b133a1c5",
+    "tree": "ee9e316e92c9a9eebcaaa8f9c0b1be582a6491ac"
+  },
+  "sound_path_corrections": {
+    "sounds/m249/bruenmk9_raise": "sounds/m249/m249_draw",
+    "sounds/evolys/m249_reload_empty_load_belt": "sounds/m249/m249_reload_empty_load_belt",
+    "sounds/m1014/cloth_move_3": "sounds/qbz1911/cloth_move_3",
+    "sounds/qbz1911/qbz191_cloth_move_4": "sounds/qbz1911/cloth_move_4",
+    "sounds/qbz1911/qbz_191_inspect_mid": "sounds/qbz95/qbz_95_inspect_mid",
+    "sounds/qbz1911/qbz_191_reload_empty_fast_rotate": "sounds/qbz95/qbz_95_reload_empty_fast_rotate",
+    "sounds/m107/draw": "sounds/m107/m107_draw",
+    "sounds/g36/magoutins": "sounds/g36/magout",
+    "sounds/akm/raiseshouldertac": "sounds/akm/raiseshoulder",
+    "sounds/awp/rechamberin": "sounds/awp/rechamberinbolt",
+    "sounds/awp/rechamberout": "sounds/awp/rechamberoutbolt",
+    "sounds/scarh/draw": "sounds/scarh/raise",
+    "sounds/hk416/suppressorloop": "sounds/hk416/suppressloop",
+    "sounds/vector/emptyshake": "sounds/vector/shake"
+  },
+  "retired_unused_sound_events": [
+    "car15.shoot",
+    "car15.glshoot",
+    "car15.magless",
+    "car15.maghit",
+    "car15.magin",
+    "car15.ch2",
+    "car15.bolt",
+    "car15.maggrab",
+    "car15.glinsert",
+    "car15.glslide1",
+    "car15.glslide2",
+    "pkm.bolt2",
+    "pkm.magless",
+    "pkm.topcover1",
+    "pkm.topcover2",
+    "pkm.bullet",
+    "pkm.bolt1",
+    "pkm.magin",
+    "tabukar.shoot",
+    "tabukar.kokang2",
+    "tabukar.magless",
+    "tabukar.kokang1",
+    "tabukar.magin"
+  ]
 }
