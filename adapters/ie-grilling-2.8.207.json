@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "id": "senluo-core:immersive-eating-grilling-player-2.8.207",
+  "toolkit_version": "0.23.0",
+  "immersive_eating": {
+    "archive_sha256": "81575e63b40e2db4f58f0ab37b2aaa1854ff6ad564ba15e0acefa1f63c2f2fbf",
+    "version": [
+      1,
+      1,
+      0
+    ],
+    "player_entity_path": "Kaleidoscope Immersive Eating v1.1.0 [RP]/entity/player.entity.json",
+    "player_entity_sha256": "d7de539e2690611d704bfaf50b8a92662c1356ed86e5fe1171e5dfcbce99fe48",
+    "controller_path": "Kaleidoscope Immersive Eating v1.1.0 [RP]/render_controllers/kie_player_first_person.render_controllers.json",
+    "controller_sha256": "c274378763b41bb755040ed9bfceb644b67839a8288cccf944bde0da6b345e27",
+    "rp_uuid": "1cdbdcab-b063-4455-90e3-829de2dc91f5",
+    "bp_uuid": "4fd46237-7fb4-4340-abe1-cec07ad033db"
+  },
+  "grilling": {
+    "archive_sha256": "8fc297b00a0fbd5e8d83a04a0807f9aeddbc82022e8cdefe2fee8556103debb6",
+    "controller_path": "RP/render_controllers/java_eating_player.render_controllers.json",
+    "controller_sha256": "e4e0d81b4712a60621db2b0db0ae03f30d9097a8bc2937680c71387c76dfb419",
+    "source": {
+      "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+      "commit": "cf4a7db56313147c323af969709bb8976bf55a76",
+      "git_tree": "05484fbedfb4711c685c5c641d03cc0f407eddbc",
+      "resource_tree_sha256": "74488d934ad0e5e2ee3460e24d72b8a577096f84e953c93cbc15913c4172faf3",
+      "resource_file_count": 2865
+    },
+    "bp_uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+    "rp_uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+    "version": [
+      2,
+      8,
+      207
+    ]
+  },
+  "output_path": "render_controllers/ie_grilling_first_person.render_controllers.json",
+  "output_sha256": "fb86eda52a0871b8824f6deba2011976651062675ac776e5b9e68e29a6e980ce",
+  "distribution": "User-local selected IE RP presentation with Grilling as the sole BP player owner. Optional TACZ is source-composition research, not an installable adapter in this descriptor.",
+  "output_version": [
+    1,
+    1,
+    20003
+  ],
+  "behavior_min_engine_version": [
+    1,
+    26,
+    60
+  ],
+  "tacz": {
+    "archive_sha256": "1b78db6269be419eb2593c981df4beb88f7f9e0509c59221077ae2e965d86486",
+    "distribution": "optional separately obtained author input; never embedded in public tools"
+  },
+  "composer_source": {
+    "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+    "commit": "cf4a7db56313147c323af969709bb8976bf55a76",
+    "git_tree": "05484fbedfb4711c685c5c641d03cc0f407eddbc",
+    "scope": "Canonical UI-safe oil pre_animation and existing numeric TACZ animation composition; no author scripts distributed."
+  }
+}
