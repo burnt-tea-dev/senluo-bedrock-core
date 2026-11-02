@@ -59,7 +59,7 @@ def main():
     parser.add_argument('--ie', type=Path, required=True)
     parser.add_argument('--tacz', type=Path, required=True)
     parser.add_argument('--composer-source', type=Path)
-    parser.add_argument('--source-sounds', type=Path)
+    parser.add_argument('--source-assets', '--source-sounds', dest='source_sounds', type=Path)
     args = parser.parse_args()
     print(json.dumps(verify(args.grilling_source, args.cookery, args.ie, args.tacz, args.composer_source, args.source_sounds)))
 

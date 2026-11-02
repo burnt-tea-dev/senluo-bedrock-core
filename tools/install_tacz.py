@@ -75,20 +75,36 @@ def repair_sound_definitions(raw, descriptor):
     return (json.dumps(result, ensure_ascii=False, indent=2) + '\n').encode()
 
 
-def source_sound_files(directory, descriptor):
+def _source_files(directory, descriptor, kind):
     result = {}
-    for name, pin in descriptor.get('restored_sound_files', {}).items():
+    for name, pin in descriptor.get('restored_' + kind + '_files', {}).items():
         if directory is None:
-            raise ValueError('This TACZ descriptor requires --source-sounds from the pinned original author blobs')
-        if not _safe_name(name) or not name.startswith('sounds/'):
-            raise ValueError('Unsafe source sound path')
+            raise ValueError('This TACZ descriptor requires --source-assets (or --source-sounds) from the pinned original author blobs')
+        if not _safe_name(name) or not name.startswith(kind + 's/'):
+            raise ValueError('Unsafe source asset path')
         path = Path(directory) / name
         if path.is_symlink() or any(parent.is_symlink() for parent in path.parents):
-            raise ValueError('Source sound path is linked')
+            raise ValueError('Source asset path is linked')
         raw = path.read_bytes()
         if sha256(raw) != pin['sha256']:
-            raise ValueError('Original author sound differs: ' + name)
+            raise ValueError('Original author ' + kind + ' differs: ' + name)
         result[descriptor['tacz']['prefixes']['RP'] + name] = raw
+    return result
+
+
+def source_sound_files(directory, descriptor):
+    return _source_files(directory, descriptor, 'sound')
+
+
+def repair_projectile_hit(raw, pin):
+    """A queued hit can reference an already removed target in server 1.18."""
+    before = b'if(!_0x357e52||'
+    after = b'if(!_0x357e52||!_0x357e52.isValid()||'
+    if sha256(raw) != pin['prepared_sha256'] or raw.count(before) != 1:
+        raise ValueError('TACZ projectile hit source differs')
+    result = raw.replace(before, after, 1)
+    if sha256(result) != pin['output_sha256']:
+        raise ValueError('TACZ projectile hit repair differs')
     return result
 
 
@@ -211,6 +227,11 @@ def adapt_files(originals, composed, controller, descriptor):
         raw = advance_manifest(originals[name], pin['output_version'], pair, companion,
                                descriptor['behavior_min_engine_version'])
         value = json.loads(raw)
+        if descriptor.get('restored_texture_files'):
+            # Keep the translator credit while dropping the removed cosmetic
+            # pack label. No player skin or geometry is replaced.
+            value['header']['name'] = value['header']['name'].replace('+SkinPack', '').replace('  ', ' ') + ' [original gun textures]'
+            value['header']['description'] = value['header'].get('description', '').replace(' +added SkinPack.', '.')
         if side == 'RP':
             # The complete family uses the engine's PBR resource stack. The
             # locally adapted pair must declare it before family admission.
@@ -267,6 +288,24 @@ def apply_archive(tacz, ie, grilling, source, descriptor, source_sounds=None):
         receipt['changed_files'].update({name: sha256(raw) for name, raw in startup.items()})
         receipt['preserved_author_files'] -= len(startup)
         receipt['startup_script_count'] = len(startup)
+        for kind in ('texture', 'model'):
+            assets = _source_files(source_sounds, descriptor, kind)
+            for name, raw in assets.items():
+                pin = descriptor['restored_' + kind + '_files'][name.removeprefix(descriptor['tacz']['prefixes']['RP'])]
+                if sha256(originals[name]) != pin['preimage_sha256'] or files[name] != originals[name]:
+                    raise ValueError('TACZ cosmetic preimage differs or overlaps player composition: ' + name)
+                files[name] = raw
+            receipt['changed_files'].update({name: sha256(raw) for name, raw in assets.items()})
+            receipt['preserved_author_files'] -= len(assets)
+            receipt['restored_original_' + kind + 's'] = list(assets)
+        if descriptor.get('projectile_hit_repair'):
+            pin = descriptor['projectile_hit_repair']
+            name = pin['path']
+            files[name] = repair_projectile_hit(files[name], pin)
+            if name not in receipt['changed_files']:
+                receipt['preserved_author_files'] -= 1
+            receipt['changed_files'][name] = sha256(files[name])
+            receipt['runtime_repairs'] = ['projectile_hit_invalid_target']
         output = io.BytesIO()
         with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as target:
             for name, raw in files.items():
@@ -294,7 +333,8 @@ def main(argv=None):
     for name in ('tacz', 'ie', 'grilling', 'grilling-source', 'output'):
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--descriptor', type=Path, default=DEFAULT_DESCRIPTOR)
-    parser.add_argument('--source-sounds', type=Path)
+    parser.add_argument('--source-assets', '--source-sounds', dest='source_sounds', type=Path,
+                        help='Pinned original sounds and unskinned gun textures')
     args = parser.parse_args(argv)
     receipt_path = Path(str(args.output) + '.receipt.json')
     if args.output.exists() or receipt_path.exists():

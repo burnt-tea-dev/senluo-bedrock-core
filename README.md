@@ -62,17 +62,21 @@ Left-arm curves retain constant keyframes and use a separate animation weight.
 The four pistol walk aliases use the author's existing common pistol pose;
 casing and smoke aliases resolve to existing author particles. The dead G36
 third-person slide reference is removed: no missing sliding pose is invented.
-The current family recipe uses TACZ 1.0.20007; explicit historical recipes retain
+The current family recipe uses TACZ 1.0.20009; explicit historical recipes retain
 their recorded older outputs. Client rendering/audio and complete saved-world
 validation must still pass before use; a successful local build is not acceptance.
 
-Toolkit 0.18 repairs the existing TACZ HUD/form controls and keeps oil-pot
+Toolkit 0.19 retains the TACZ HUD/form controls and keeps oil-pot
 animation weights free of actor queries during skin previews. The current local
-TACZ installer also requires `--source-sounds /path/to/source-sounds`. Obtain the
-seven original files from `restored_sound_source` and `restored_sound_files` in
-the current TACZ descriptor, preserving each relative `sounds/...` path. The
-installer checks their exact SHA256 before copying them. The pinned CI workflow
-shows the download step. Our public source/SDK archives contain no author audio.
+TACZ installer requires `--source-assets /path/to/source-assets` (the existing
+`--source-sounds` flag is also accepted). The current descriptor pins the seven
+source sounds plus four pre-SkinPack gun textures and three matching cosmetic
+models. The pinned CI workflow shows the separate downloads and exact archive
+and file verification. The cosmetic source is a mirror of the removed Bedrock
+1.0.2 translation, not a currently verified official author download. Only those
+seven cosmetic files are selected; its code is not installed. The 1.0.3 scripts,
+IDs and mechanics remain, with a target-validity repair before native hit queries.
+Public source/SDK archives contain no author audio, textures or models.
 
 Sound path spelling is corrected against the existing author assets. Broken
 CAR15/PKM/Tabukar sound registrations with no corresponding item definitions are

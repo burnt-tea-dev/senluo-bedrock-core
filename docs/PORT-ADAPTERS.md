@@ -241,7 +241,7 @@ Native client rendering, audio and saved-world acceptance remain separate gates.
 
 ## TACZ client-resource batch (toolkit 0.18)
 
-Current TACZ20007 uses the same original TACZ/IE and Grilling206 runtime inputs.
+Toolkit 0.18 produced TACZ20007 using the same original TACZ/IE and Grilling206 runtime inputs.
 The canonical composer pin advances to Grilling PR335. Its oil-pot predicates
 run in the existing entity update, while preview animation weights read local
 variables initialized to zero. Native property schemas and save identities stay
@@ -261,3 +261,26 @@ The installer corrects14 distinct path references, restores7 files and retires23
 broken registrations for unimplemented guns. Existing sound volume/pitch and
 animation event times are retained. Listening and rendered client acceptance are
 not inferred from these resource checks.
+
+## Original TACZ gun appearance and hit lifecycle (toolkit 0.19)
+
+The current descriptor produces TACZ20009. The SkinPack author identifies four
+reskinned guns: Glock17, AKM, UZI and Type81. Restore their four original Bedrock
+textures with the three corresponding pre-SkinPack cosmetic models. Their item
+icons and all138 animation/controller files are unchanged between the source
+editions. The original Bedrock 1.0.2 translation pages have been removed; the
+descriptor explicitly records a public mirror and its exact archive identity,
+without claiming a currently verified official author download. Only the seven
+listed cosmetic files are selected; no old code or manifest enters the output.
+Java gun textures were rejected because their model UVs differ from this port.
+
+Use the source files listed under `restored_sound_files`, `restored_texture_files`
+and `restored_model_files` in one local directory with their relative paths,
+then pass `--source-assets` to the existing installer and portability command.
+The manifest drops the removed SkinPack label while preserving translator credit.
+The selected current 1.0.3 script sources and save identities remain unchanged
+except for one native-boundary target check in the projectile-hit callback.
+An already removed hit entity is skipped before `matches` or health access,
+using `isValid()` from the declared server1.18 API. The actual author-module
+regression reproduces the old failure and compares normal damage after repair.
+Source regression is separate from native BDS and rendered client acceptance.
