@@ -262,9 +262,9 @@ broken registrations for unimplemented guns. Existing sound volume/pitch and
 animation event times are retained. Listening and rendered client acceptance are
 not inferred from these resource checks.
 
-## Original TACZ gun appearance and hit lifecycle (toolkit 0.19)
+## Original TACZ gun appearance and hit lifecycle
 
-The current descriptor produces TACZ20009. The SkinPack author identifies four
+The current descriptor produces TACZ20010. The SkinPack author identifies four
 reskinned guns: Glock17, AKM, UZI and Type81. Restore their four original Bedrock
 textures with the three corresponding pre-SkinPack cosmetic models. Their item
 icons and all138 animation/controller files are unchanged between the source
@@ -284,3 +284,11 @@ An already removed hit entity is skipped before `matches` or health access,
 using `isValid()` from the declared server1.18 API. The actual author-module
 regression reproduces the old failure and compares normal damage after repair.
 Source regression is separate from native BDS and rendered client acceptance.
+
+The current texture correction maps `textures/nothing` to the original
+`textures/ikon/empty` asset in82 attachables. The original geometry uses a
+texture mesh for the otherwise hidden ordinary held-item plane. The referenced
+`nothing` file is absent; the existing1x1 empty pixel is fully transparent.
+Only the texture path changes: actual gun models, item icons, render controllers,
+animation, material and all texture bytes remain unchanged. The clean-author
+archive regression verifies all affected attachables and their shipped target.

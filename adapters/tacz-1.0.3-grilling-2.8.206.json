@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "senluo-core:tacz-1.0.3-grilling-2.8.206",
-  "toolkit_version": "0.19.0",
+  "toolkit_version": "0.20.0",
   "immersive_eating": {
     "archive_sha256": "81575e63b40e2db4f58f0ab37b2aaa1854ff6ad564ba15e0acefa1f63c2f2fbf",
     "version": [
@@ -62,7 +62,7 @@
     "output_version": [
       1,
       0,
-      20009
+      20010
     ],
     "prefixes": {
       "BP": "TACZBehavi/",
@@ -214,5 +214,8 @@
     "archive_bytes": 34378491,
     "official_author_download_verified": false,
     "scope": "Public mirror of the removed1.0.2 translated Bedrock distribution. Restore only the four advertised reskins and their three altered cosmetic models. No BP or other RP data copied. All original animations/controllers are identical between these source editions. Original item icons are unchanged. No gameplay or save downgrade."
+  },
+  "texture_path_corrections": {
+    "textures/nothing": "textures/ikon/empty"
   }
 }
