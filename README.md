@@ -44,7 +44,7 @@ Earlier descriptors and their validation records remain as history. Reproduce
 older Cookery decoding outputs with their original toolkit source; the 0.12
 helper intentionally rejects those immutable older helper pins. The optional TACZ route now builds local 1.0.20006 with the resource stack PBR
 capability, while retaining 24 gun properties alongside Grilling's four. Use
-[the TACZ20005 recipe](adapters/owned-t194-g206-w180-tacz-pbr.json). It requires
+[the current TACZ family recipe](adapters/owned-t194-g206-w180-recipe-ingress-tacz.json). It requires
 its own full-family, saved-world, rollback and client evidence. Toolkit 0.12
 releases and their TACZ20004 recipes remain historical outputs.
 
@@ -52,7 +52,7 @@ Cookery recipe registration now processes at most four incoming messages per tic
 
 The source and family builder defaults select the current G206/Cookery20008 installation. Historical G201/G203 and prior Cookery recipes remain available through an explicit `--descriptor`.
 
-Archive writers use canonical ZIP metadata on both Windows and Linux. The pinned G206, Cookery20008, IE20002, TACZ20005 and SDK0.1.0 archive bytes remain unchanged.
+Archive writers use canonical ZIP metadata on both Windows and Linux. The G206, Cookery20008, IE20002 and SDK0.1.0 archive bytes remain unchanged. The current TACZ output is pinned by its descriptor; older TACZ20005 recipes remain historical.
 
 Toolkit 0.17 fixes TACZ client resource errors. Use the exact `composer_source` commit
 in [the current TACZ descriptor](adapters/tacz-1.0.3-grilling-2.8.206.json) as
