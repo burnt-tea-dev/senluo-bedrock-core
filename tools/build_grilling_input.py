@@ -9,6 +9,7 @@ from pathlib import Path
 import zipfile
 
 from install_cookery import _atomic_new, sha256
+import install_cookery_from_descriptor as cookery_installer
 
 ROOT = Path(__file__).resolve().parents[1]
 TREES = {
@@ -19,7 +20,7 @@ TREES = {
 
 def build(source, descriptor=None):
     if descriptor is None:
-        descriptor = json.loads((ROOT / 'adapters/cookery-1.6.4.json').read_text())
+        descriptor = json.loads(cookery_installer.DEFAULT_DESCRIPTOR.read_text(encoding='utf-8'))
     elif isinstance(descriptor, (str, Path)):
         descriptor = json.loads(Path(descriptor).read_text())
     companion = descriptor['companion']

@@ -54,6 +54,7 @@
     "tests/test_assemble_family.py",
     "tests/test_build_owned_family_recipe.py",
     "tests/test_build_release.py",
+    "tests/test_current_installation.py",
     "tests/test_install_cookery.py",
     "tests/test_player_presentation.py",
     "tests/test_port_adapters.py",
@@ -72,7 +73,8 @@
     "src/host_api/cookery-recipe-ingress.js",
     "tests/cookery-recipe-ingress.test.mjs",
     "adapters/cookery-1.6.4-grilling-2.8.206-recipe-ingress.json",
-    "adapters/owned-t194-g206-w180-recipe-ingress-tacz.json"
+    "adapters/owned-t194-g206-w180-recipe-ingress-tacz.json",
+    "adapters/owned-t194-g206-w180-cookery-recipe-ingress.json"
   ],
   "rule": "Only these reviewed source/SDK/tool files are distributable. Original and generated author archives are never release assets."
 }
