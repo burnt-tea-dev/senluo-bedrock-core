@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "senluo-core:tacz-1.0.3-grilling-2.8.206",
-  "toolkit_version": "0.13.0",
+  "toolkit_version": "0.17.0",
   "immersive_eating": {
     "archive_sha256": "81575e63b40e2db4f58f0ab37b2aaa1854ff6ad564ba15e0acefa1f63c2f2fbf",
     "version": [
@@ -62,11 +62,17 @@
     "output_version": [
       1,
       0,
-      20005
+      20006
     ],
     "prefixes": {
       "BP": "TACZBehavi/",
       "RP": "TACZResour/"
     }
+  },
+  "composer_source": {
+    "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+    "commit": "a12a9cf35578d9db9c84f72130e707f54442b6ff",
+    "git_tree": "302d609c21a41af38ed9130d0ef733468971664b",
+    "scope": "Animation composition tooling; Grilling206 archive and its original source pin remain unchanged."
   }
 }

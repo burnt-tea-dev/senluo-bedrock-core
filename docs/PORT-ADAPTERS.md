@@ -215,3 +215,26 @@ retained20003 failure. Original player records and world property keys/types
 were unchanged, with zero installed drift. This is public12 evidence only;
 private57, actual TACZ rollback, rendered gameplay, audio and real viewers remain
 unverified. See [the0.11 validation record](validation-0.11.0.json).
+
+## Current TACZ client-resource composition (toolkit 0.17)
+
+The current [descriptor](../adapters/tacz-1.0.3-grilling-2.8.206.json)
+uses the canonical Grilling PR334 composer. Its `composer_source` pins the tool
+separately from the unchanged Grilling206 archive's `grilling.source` provenance.
+Pass the clean checkout of `composer_source.commit` to `install_tacz.py
+--grilling-source`. For `verify_archive_portability.py`, retain the original
+Grilling206 checkout for `--grilling-source` and supply the corrected tool checkout
+with `--composer-source`.
+
+TACZ20006 replaces equipment queries inside constant cubic keyframes with a
+separate left-arm animation's blend weight. Controller state timing and all
+original keys/curves are retained; effect events run on the original animation
+only. Four undeclared pistol walking aliases now use the author's existing
+`animation.default.fp.walk`; missing generic/G3 casings and muzzle smoke use
+existing `krep:762shell` and `krep:muzzlesmoke`.
+
+The source archive contains no `animation.humanoid.slide`. Its dead G36
+third-person route is removed while keeping the existing hold pose, movement
+state and transitions. A new third-person sliding pose has not been restored.
+This does not address other addons' HUD, geometry, crafting or voxel-shape errors.
+Native client rendering, audio and saved-world acceptance remain separate gates.

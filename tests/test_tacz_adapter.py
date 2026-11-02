@@ -41,6 +41,10 @@ class TaczAdapterTests(unittest.TestCase):
                           'Author RP/animations/gun.json': b'original animation',
                           'Author RP/models/body.json': b'original model',
                           'Author RP/textures/skin.png': b'original pixels',
+                          'Author RP/animation_controllers/g36.json': encoded({'animation_controllers': {
+                              'controller.animation.g36.tp': {'states': {'slide': {
+                                  'animations': [{'slide': 'v.g36'}, {'g36_tp_hold': 'v.g36'}],
+                                  'transitions': [{'hold': "q.property('krep:movement')==0"}]}}}}}),
                           'Author RP/render_controllers/player.json': encoded({'render_controllers': {
                               FP: {'geometry': 'original-fp'}, 'controller.render.gun': {'geometry': 'unchanged-gun'},
                               'controller.render.player.universal.first_person': {'geometry':'Geometry.custom','part_visibility':[{'*':False},{'rightArm':'v.gun'},{'leftArm':'v.gun'},{'leftSleeve':'v.gun'}]}}})})
@@ -81,6 +85,12 @@ class TaczAdapterTests(unittest.TestCase):
         self.assertEqual(arm['part_visibility'][3], {'leftArm':'v.left'})
         client=json.loads(result['Author RP/entity/player.entity.json'])['minecraft:client_entity']['description']
         self.assertIn(OFFHAND_FP, client['render_controllers'][-1])
+        self.assertEqual(client['particle_effects'], {
+            'krep.shell': 'krep:762shell', 'krep.g3shell': 'krep:762shell',
+            'krep.muzzlesmoke': 'krep:muzzlesmoke'})
+        slide = json.loads(result['Author RP/animation_controllers/g36.json'])['animation_controllers']['controller.animation.g36.tp']['states']['slide']
+        self.assertEqual(slide['animations'], [{'g36_tp_hold': 'v.g36'}])
+        self.assertEqual(slide['transitions'], [{'hold': "q.property('krep:movement')==0"}])
         for side, uid in [('BP', 't-bp'), ('RP', 't-rp')]:
             manifest = json.loads(result['Author ' + side + '/manifest.json'])
             self.assertEqual(manifest['header']['uuid'], uid)
