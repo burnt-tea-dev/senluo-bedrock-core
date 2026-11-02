@@ -1,13 +1,15 @@
 import copy
 import json
+import os
 from pathlib import Path
 import sys
 import subprocess
 import tempfile
 import unittest
+import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from install_tacz import adapt_files, apply_archive, repair_ui, repair_sound_definitions, source_sound_files, FP, OFFHAND_FP
+from install_tacz import adapt_files, apply_archive, repair_ui, repair_sound_definitions, source_sound_files, _source_files, repair_projectile_hit, FP, OFFHAND_FP
 from assemble_family import read_definition
 
 
@@ -16,6 +18,69 @@ def encoded(value):
 
 
 class TaczAdapterTests(unittest.TestCase):
+    @unittest.skipUnless(os.environ.get('TACZ_ORIGINAL_ARCHIVE'), 'Real author archives are supplied by the clean-input CI stage')
+    def test_real_hit_callback_preserves_damage_and_skips_removed_targets(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            roots = []
+            for kind, variable in [('original', 'TACZ_ORIGINAL_ARCHIVE'), ('fixed', 'TACZ_ADAPTED_ARCHIVE')]:
+                root = Path(temporary) / kind
+                root.mkdir()
+                with zipfile.ZipFile(os.environ[variable]) as archive:
+                    for name in ('projectileHitEntity.js', 'armorDetection.js'):
+                        (root / name).write_bytes(archive.read('TACZBehavi/scripts/events/' + name))
+                roots.append(str(root))
+            # Execute the actual modules; only the native event/actor surface is
+            # supplied here. Damage and armor logic remain the author's code.
+            script = r"""
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path'),assert=require('node:assert/strict');
+async function load(root){
+ let callback; const sounds=[];
+ class Player{playSound(s){sounds.push(s)}addTag(){}}
+ const context=vm.createContext({Indoarsenal:{bullets:{akm:{damage:10,penetration:0.3}}}});
+ const world={afterEvents:new Proxy({},{get:(_,name)=>({subscribe(fn){if(name==='projectileHitEntity')callback=fn}})})};
+ const api={world,Player,GameMode:{creative:'creative'},EquipmentSlot:{},system:{runInterval(){return 1}}};
+ const native=new vm.SyntheticModule(Object.keys(api),function(){for(const[k,v]of Object.entries(api))this.setExport(k,v)},{context});
+ const modules=new Map();
+ function module(file){if(!modules.has(file))modules.set(file,new vm.SourceTextModule(fs.readFileSync(file,'utf8'),{context,identifier:file}));return modules.get(file)}
+ const main=module(path.join(root,'projectileHitEntity.js'));
+ await main.link((name,ref)=>name==='@minecraft/server'?native:module(path.resolve(path.dirname(ref.identifier),name)));
+ await main.evaluate();assert.equal(typeof callback,'function');
+ function hit(valid,creative=false){
+  const health={currentValue:20,setCurrentValue(n){this.currentValue=n}};
+  const entity={isValid:()=>valid,matches(){if(!valid)throw Error('native removed target');return creative},hasTag:()=>false,getComponent:()=>health,getHeadLocation:()=>({x:0,y:1,z:0})};
+  callback({getEntityHit:()=>({entity}),projectile:{typeId:'bullet:akm'},source:new Player(),location:{x:0,y:0,z:0}});
+  return health.currentValue;
+ }
+ return hit;
+}
+(async()=>{const old=await load(process.argv[1]),fixed=await load(process.argv[2]);assert.throws(()=>old(false),/native removed target/);assert.equal(fixed(false),20);assert.equal(fixed(true),old(true));assert.equal(fixed(true),10);assert.equal(fixed(true,true),20);process.stdout.write('actual callback regression passed')})().catch(e=>{console.error(e);process.exit(1)});
+"""
+            self.assertEqual(subprocess.check_output(['node', '--experimental-vm-modules', '-e', script, *roots], text=True),
+                             'actual callback regression passed')
+
+    def test_projectile_target_is_validated_before_native_queries(self):
+        from hashlib import sha256
+        original = b"const hit=t=>{const _0x357e52=t;if(!_0x357e52||_0x357e52.matches({}))return;return 'damage';};"
+        expected = original.replace(b'if(!_0x357e52||', b'if(!_0x357e52||!_0x357e52.isValid()||')
+        fixed = repair_projectile_hit(original, {'prepared_sha256': sha256(original).hexdigest(),
+                                                'output_sha256': sha256(expected).hexdigest()})
+        script = fixed.decode() + "const gone={isValid:()=>false,matches:()=>{throw Error('removed')}};const live={isValid:()=>true,matches:()=>false};process.stdout.write(JSON.stringify([hit(gone),hit(live)]));"
+        self.assertEqual(json.loads(subprocess.check_output(['node', '-e', script], text=True)), [None, 'damage'])
+
+    def test_original_texture_bytes_are_required_without_replacing_item_icons(self):
+        from hashlib import sha256
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            texture = root / 'textures/gun/akm.png'
+            texture.parent.mkdir(parents=True)
+            texture.write_bytes(b'original gun pixels')
+            descriptor = {'tacz': {'prefixes': {'RP': 'RP/'}}, 'restored_texture_files': {
+                'textures/gun/akm.png': {'sha256': sha256(texture.read_bytes()).hexdigest()}}}
+            self.assertEqual(_source_files(root, descriptor, 'texture'), {'RP/textures/gun/akm.png': b'original gun pixels'})
+            texture.write_bytes(b'skinned pixels')
+            with self.assertRaisesRegex(ValueError, 'Original author texture differs'):
+                _source_files(root, descriptor, 'texture')
+
     def test_sound_reference_repair_keeps_volume_and_retires_only_declared_orphans(self):
         original = {'reload': {'category': 'player', 'sounds': [
             {'name': 'sounds/wrong/reload', 'volume': 0.7, 'pitch': [0.9, 1.1]}, 'sounds/kept']},
@@ -41,7 +106,7 @@ class TaczAdapterTests(unittest.TestCase):
             source.write_bytes(b'different audio')
             with self.assertRaisesRegex(ValueError, 'Original author sound differs'):
                 source_sound_files(root, descriptor)
-            with self.assertRaisesRegex(ValueError, 'requires --source-sounds'):
+            with self.assertRaisesRegex(ValueError, 'requires --source-assets'):
                 source_sound_files(None, descriptor)
 
     def test_ui_preserves_layout_and_uses_native_control_properties(self):
