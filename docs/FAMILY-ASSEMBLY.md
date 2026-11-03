@@ -9,6 +9,90 @@ the SDK version in `sdk.json` and its release history remain separate.
 <a id="current-g206-installation"></a>
 <a id="current-g208-installation"></a>
 
+## Public-minimal Grilling + Cookery
+
+For ordinary **Grilling 2.8.212** players, use `--profile public-minimal`.
+This is a four-pack build: Grilling BP/RP plus a *user-local* Cookery BP/RP,
+derived from original Cookery **1.6.4**. It does **not** take Tavern, World
+Liquor, Immersive Eating, TACZ, any private pack or family lock as input.
+This is a selection in the **existing** recipe builder and assembler, not
+another installer or a claim that unchanged `.mcaddon` files work together.
+
+The unchanged Grilling 2.8.212 manifests request Cookery `[1,6,4]`;
+the reviewed Cookery host hooks produce `[1,6,20012]`. The minimal recipe
+therefore updates **only the two Grilling manifest dependency versions**
+in the *locally generated* output, using verified preimage values and
+postimage hashes. It keeps the original downloaded Grilling archive intact.
+Pack/module UUIDs, original gameplay/assets, other dependencies and Cookery's
+original pack identities are retained. Missing or conflicting dependencies
+fail closed; none are silently removed. The Grilling player BP definition is
+the sole reviewed `minecraft:player` behavior owner in this profile.
+The IE presentation and TACZ player composers are **not invoked**.
+
+### Inputs and build
+
+Download the original Cookery 1.6.4 file **9317031** from the
+[author's page](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial).
+The unmodified author archive must have SHA256
+`aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83`.
+Keep it outside this repository; do not redistribute it or the locally
+adapted Cookery archive. Obtain the **exact** published Grilling 2.8.212
+archive if it exists, with SHA256
+`2a3e79a889156d147c332c53fbc0fd368672d44c49c76f8b633fc59129dc20cd`.
+Alternatively, reproduce that archive from the clean pinned public source:
+
+
+```sh
+git clone https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial.git /path/to/grilling
+git -C /path/to/grilling checkout aa8a07ad223c993c05b0d356615d38e990148588
+mkdir -p /path/to/local-inputs
+python3 tools/build_grilling_input.py \
+  --source /path/to/grilling \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.212-station-performance.json \
+  --output /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon
+python3 tools/install_cookery_from_descriptor.py \
+  --cookery /path/to/original-cookery-1.6.4.mcaddon \
+  --grilling /path/to/local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.212-station-performance.json \
+  --output /path/to/local-inputs/cookery-station-performance-20012.mcaddon
+python3 tools/build_owned_family_recipe.py \
+  --profile public-minimal --inputs /path/to/local-inputs \
+  --output /path/to/minimal-recipe.json
+python3 tools/assemble_family.py \
+  --recipe /path/to/minimal-recipe.json --inputs /path/to/local-inputs \
+  --output /path/to/minimal-output
+```
+
+If Grilling's exact published archive is already available, copy it to the
+above local-inputs filename and **skip only** the clone/build step. Do not
+substitute the latest unrelated file, rename a different archive to bypass
+the SHA check, or use original Cookery 1.6.4 alongside its adapted copy.
+The Cookery installer verifies the exact author archive, Grilling API contract,
+source/target helpers and both local output identities. The recipe builder
+then validates both whole archives and all pack/member hashes. The assembler
+builds `grilling-bp.mcpack`, `grilling-rp.mcpack`,
+`cookery-bp.mcpack`, `cookery-rp.mcpack`, and `family.mcaddon`
+(the historical **aggregate filename**, containing only these four packs).
+Import that one aggregate into a fresh test world and activate both pairs
+in its generated BP/RP order. Keep all `*.receipt.json`, `receipt.json`
+and the generated recipe to audit hashes and reconstruct the exact build.
+
+Requires Minecraft/BDS 1.26.60 with the pinned `@minecraft/server`
+2.12.0-beta API, Beta APIs and Points of Interest experiments for the
+selected pack features. The assembler does not touch a live world or save.
+Back up the **stopped** world first and test on a copy; rollback uses that
+backup and the untouched original downloads, **not** an in-place downgrade
+of a modified save. If a pinned archive or manifest changes, the build stops
+rather than silently accepting a different version. To opt into IE or TACZ,
+use the separately pinned optional adapters and full-family documentation;
+those tools still require their own author inputs, but are not part of
+`public-minimal`.
+
+**Validation boundary:** a four-pack ZIP/manifest build is not evidence of
+first/third-person rendering, cooking/eating, save reload, multiplayer or
+client acceptance. The client/runtime P0 work is tracked separately in
+[Grilling #342](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/issues/342).
+
 ## Current G212 installation
 
 Use the owned Tavern 0.6.194, Grilling 2.8.212 and World Liquor 0.1.180
