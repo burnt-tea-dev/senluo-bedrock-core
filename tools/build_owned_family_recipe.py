@@ -2,17 +2,23 @@
 """Build a local owned-port recipe from independently obtained, pinned archives."""
 import argparse
 import copy
+from contextlib import redirect_stdout
 import hashlib
+import io
 import json
+import os
 from pathlib import Path
+import tempfile
 
 from assemble_family import (_load_and_verify_inputs, _tree_fingerprint,
-                             _read_archive_source, _transform, read_definition)
+                             _read_archive_source, _transform, read_definition, assemble)
 from install_cookery import _atomic_new, _read_zip, sha256
+import install_cookery_from_descriptor as cookery_installer
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DESCRIPTOR = ROOT / 'adapters/owned-t194-g212-w180-cookery-station-performance.json'
 PUBLIC_MINIMAL_DESCRIPTOR = ROOT / 'adapters/public-minimal-player.json'
+PUBLIC_COOKERY_DESCRIPTOR = ROOT / 'adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json'
 
 
 def _rewrite_manifest_dependency(raw, rule, pack_id):
@@ -205,6 +211,75 @@ def build_recipe(descriptor, inputs_dir, *, grilling_source=None, vanilla_source
     return recipe
 
 
+def install_public_pair(cookery, grilling, grilling_source, vanilla_source, output):
+    """Build the existing reviewed G218 four-pack route in one local command.
+
+    Unlike the older package-only prototype, this *requires* the canonical
+    player composer and official vanilla reference; it cannot silently produce
+    a resource pack missing the first-person player presentation.
+    """
+    output = Path(output).absolute()
+    if output.exists() or output.is_symlink():
+        raise ValueError('refusing to overwrite an existing public installation')
+    descriptor = json.loads(PUBLIC_MINIMAL_DESCRIPTOR.read_text(encoding='utf-8'))
+    if (set(descriptor['inputs']) != {'grilling', 'cookery'}
+            or {p['id'] for p in descriptor['packs']}
+            != {'grilling-bp', 'grilling-rp', 'cookery-bp', 'cookery-rp'}
+            or 'player_presentation' not in descriptor):
+        raise ValueError('reviewed public-minimal profile must include its player presentation')
+    # Inputs are snapshotted in a temporary directory. No archive, author
+    # resource or player world is modified; staging is removed on failure.
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='.public-install-', dir=output.parent) as temp:
+        stage = Path(temp)
+        inputs = stage / 'inputs'
+        inputs.mkdir()
+        grilling_file = inputs / descriptor['inputs']['grilling']['filename']
+        cookery_file = inputs / descriptor['inputs']['cookery']['filename']
+        _atomic_new(grilling_file, Path(grilling).read_bytes())
+        if sha256(grilling_file.read_bytes()) != descriptor['inputs']['grilling']['sha256']:
+            raise ValueError('Grilling source archive differs from reviewed public-minimal input')
+        # Same canonical adapter as the two-step install; its own clean-author,
+        # source API, helper and postimage checks remain in force.
+        with redirect_stdout(io.StringIO()):
+            cookery_installer.main([
+                '--cookery', str(Path(cookery).resolve()),
+                '--grilling', str(grilling_file),
+                '--descriptor', str(PUBLIC_COOKERY_DESCRIPTOR),
+                '--output', str(cookery_file),
+            ])
+        if sha256(cookery_file.read_bytes()) != descriptor['inputs']['cookery']['sha256']:
+            raise ValueError('adapted Cookery output differs from reviewed public-minimal input')
+        recipe = build_recipe(descriptor, inputs,
+                              grilling_source=Path(grilling_source),
+                              vanilla_source=Path(vanilla_source))
+        recipe_raw = (json.dumps(recipe, ensure_ascii=False, indent=2) + '\n').encode()
+        recipe_path = stage / 'recipe.json'
+        _atomic_new(recipe_path, recipe_raw)
+        candidate = stage / 'candidate'
+        receipt = assemble(recipe, recipe_path, inputs, candidate)
+        if (len(receipt['packs']) != 4
+                or receipt['behavior_player_definition']['pack_id'] != 'grilling-bp'
+                or receipt['resource_player_definition']['pack_id'] != 'grilling-rp'):
+            raise ValueError('public installation lacks a unique Grilling player owner')
+        _atomic_new(candidate / 'recipe.json', recipe_raw)
+        _atomic_new(candidate / 'cookery-adapter.receipt.json',
+                    Path(str(cookery_file) + '.receipt.json').read_bytes())
+        _atomic_new(candidate / 'installation.json', (
+            json.dumps({
+                'profile': 'public-minimal',
+                'grilling_source_sha256': sha256(grilling_file.read_bytes()),
+                'original_cookery_sha256': sha256(Path(cookery).read_bytes()),
+                'adapted_cookery_sha256': sha256(cookery_file.read_bytes()),
+                'client': 'NOT_RUN', 'saved_world': 'NOT_RUN',
+                'live': False,
+            }, indent=2) + '\n').encode())
+        if output.exists() or output.is_symlink():
+            raise ValueError('public output appeared during staging')
+        os.rename(candidate, output)
+        return receipt
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     selection = parser.add_mutually_exclusive_group()
@@ -213,9 +288,24 @@ def main(argv=None):
                            help='Reviewed installation selection (default: full-family)')
     parser.add_argument('--grilling-source', type=Path, help='Exact canonical composer checkout (public profile)')
     parser.add_argument('--vanilla-source', type=Path, help='Official engine player reference directory, not an addon')
-    parser.add_argument('--inputs', type=Path, required=True)
+    parser.add_argument('--inputs', type=Path, help='Existing recipe input directory')
+    parser.add_argument('--cookery', type=Path, help='Original author Cookery .mcaddon (direct public mode)')
+    parser.add_argument('--grilling', type=Path, help='Reviewed Grilling .mcaddon (direct public mode)')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.cookery is not None or args.grilling is not None:
+        if (args.cookery is None or args.grilling is None or args.inputs is not None
+                or args.descriptor is not None or args.profile not in (None, 'public-minimal')
+                or args.grilling_source is None or args.vanilla_source is None):
+            parser.error('direct public install needs --cookery, --grilling, --grilling-source and --vanilla-source only')
+        receipt = install_public_pair(args.cookery, args.grilling,
+                                      args.grilling_source, args.vanilla_source, args.output)
+        print(json.dumps({'output': str(args.output / 'public-minimal.mcaddon'),
+                          'packs': len(receipt['packs']), 'client': 'NOT_RUN',
+                          'saved_world': 'NOT_RUN'}, ensure_ascii=False))
+        return
+    if args.inputs is None:
+        parser.error('supply --inputs for a recipe or --cookery and --grilling for direct install')
     if args.output.exists():
         raise ValueError('refusing to overwrite an existing recipe')
     descriptor_path = args.descriptor or (
