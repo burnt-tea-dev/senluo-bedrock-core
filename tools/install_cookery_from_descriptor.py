@@ -82,19 +82,9 @@ def apply_station_adapter(output, descriptor):
     return apply_post_adapter(output, {**descriptor, "post_adapter": station})
 
 
-def main(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--cookery", required=True, type=Path)
-    parser.add_argument("--grilling", required=True, type=Path)
-    parser.add_argument("--descriptor", type=Path, default=DEFAULT_DESCRIPTOR)
-    parser.add_argument("--output", required=True, type=Path)
-    args = parser.parse_args(argv)
-    receipt_path = Path(str(args.output) + ".receipt.json")
-    inputs = {args.cookery.resolve(), args.grilling.resolve()}
-    if args.output.exists() or receipt_path.exists() or args.output.resolve() in inputs:
-        raise SystemExit("refusing to overwrite an existing file or an input")
-    descriptor = json.loads(args.descriptor.read_text(encoding="utf-8"))
-    output, receipt = apply_archive(args.cookery, args.grilling, descriptor)
+def adapt_archive(cookery: Path, grilling: Path, descriptor: dict) -> tuple[bytes, dict]:
+    """Reuse the canonical adapter stages without writing or replacing inputs."""
+    output, receipt = apply_archive(cookery, grilling, descriptor)
     stage1_output_sha256 = sha256(output)
     post = descriptor.get("post_adapter")
     if post is not None:
@@ -133,6 +123,22 @@ def main(argv=None):
         receipt["output_file_count"] = len(final_files)
     receipt["output_sha256"] = sha256(output)
     receipt["final_stage1_output_sha256"] = stage1_output_sha256
+    return output, receipt
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--cookery", required=True, type=Path)
+    parser.add_argument("--grilling", required=True, type=Path)
+    parser.add_argument("--descriptor", type=Path, default=DEFAULT_DESCRIPTOR)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args(argv)
+    receipt_path = Path(str(args.output) + ".receipt.json")
+    inputs = {args.cookery.resolve(), args.grilling.resolve()}
+    if args.output.exists() or receipt_path.exists() or args.output.resolve() in inputs:
+        raise SystemExit("refusing to overwrite an existing file or an input")
+    descriptor = json.loads(args.descriptor.read_text(encoding="utf-8"))
+    output, receipt = adapt_archive(args.cookery, args.grilling, descriptor)
     _atomic_new(args.output, output)
     _atomic_new(receipt_path, (json.dumps(receipt, ensure_ascii=False, indent=2) + "\n").encode())
     print(json.dumps({"output": str(args.output), "output_sha256": sha256(output),
