@@ -116,7 +116,7 @@ class PublicMinimalTests(unittest.TestCase):
             self.assertEqual(len(json.loads((output / "world_resource_packs.json").read_text())), 2)
             self.assertEqual(json.loads((output / "world_behavior_packs.json").read_text())[0]
                              ["pack_id"], next(p["uuid"] for p in descriptor["packs"] if p["id"] == "grilling-bp"))
-            self.assertEqual(set(zipfile.ZipFile(output / "family.mcaddon").namelist()),
+            self.assertEqual(set(zipfile.ZipFile(output / "public-minimal.mcaddon").namelist()),
                              {p["id"] + ".mcpack" for p in descriptor["packs"]})
             for pack in descriptor["packs"]:
                 with zipfile.ZipFile(output / (pack["id"] + ".mcpack")) as built:
@@ -157,6 +157,30 @@ class PublicMinimalTests(unittest.TestCase):
                          cookery["author_version"])
         self.assertEqual({p["id"] for p in public["packs"]},
                          {"grilling-bp", "grilling-rp", "cookery-bp", "cookery-rp"})
+
+    def test_original_family_entry_requires_tavern_even_when_minimal_inputs_exist(self):
+        # Real pre-fix failure: default family recipe demanded unrelated author
+        # inputs. The new opt-in selection succeeds without those inputs.
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            minimal, _ = self.fixture(root)
+            family = json.loads(builder.DEFAULT_DESCRIPTOR.read_text())
+            with self.assertRaisesRegex(ValueError, "input file missing: Kaleidoscope_Tavern"):
+                builder.build_recipe(family, root)
+            self.assertEqual(len(builder.build_recipe(minimal, root)["packs"]), 4)
+
+    def test_invalid_aggregate_name_rejected_and_no_output(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            descriptor, _ = self.fixture(root)
+            recipe = builder.build_recipe(descriptor, root)
+            recipe["aggregate_filename"] = "../replace.mcaddon"
+            recipe_path = root / "recipe.json"
+            recipe_path.write_text(json.dumps(recipe))
+            output = root / "output"
+            with self.assertRaisesRegex(ValueError, "invalid aggregate"):
+                assemble_family.assemble(recipe, recipe_path, root, output)
+            self.assertFalse(output.exists())
 
     def test_manifest_preimage_mismatch_rejected_before_recipe(self):
         with tempfile.TemporaryDirectory() as td:
