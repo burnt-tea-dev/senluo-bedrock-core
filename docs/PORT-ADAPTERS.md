@@ -4,9 +4,63 @@ These tools join our Grilling port to separately downloaded author inputs.
 They create user-local files. They do not modify a server or publish author
 archives.
 
-For the current G206, Cookery 1.6.20007 and IE 1.1.20002 route, use
-[the current family installation](FAMILY-ASSEMBLY.md#current-g206-installation).
-The older descriptor examples below remain historical reproduction paths.
+The default Grilling + Cookery install is maintained separately from the
+optional integrations below; see the current public-install PR and
+[README](../README.md). Historical G203/G205/G206 recipes below are retained
+only to reproduce their recorded outputs.
+
+## Optional player compatibility profiles (current contract)
+
+- **No IE, no TACZ:** do not run either player-presentation installer. Neither
+  original archive is a dependency of the public Grilling + Cookery base.
+  The public-minimal installer and runtime validation are owned by the public
+  installation workstream, not this adapter.
+- **IE selected, no TACZ:** explicitly use `tools/install_player_presentation.py`
+  with its matching IE descriptor and author archive; do not modify TACZ.
+- **TACZ 1.0.3 and IE 1.1.0 both selected:** explicitly use
+  `tools/install_tacz.py` and its pinned matching G212 descriptor
+  (`adapters/tacz-1.0.3-grilling-2.8.212.json`), the specified Grilling
+  archive, and its exact clean canonical composer checkout. This **combined
+  profile requires IE** as a reviewed resource-player host. It never runs as
+  part of the public-minimal installation. Historical pinned G206–G208
+  outputs remain independently reproducible through their old descriptors.
+- **TACZ without IE:** not yet a reviewed, installable profile. The existing
+  composer accepts a caller-supplied host player, but Core has no validated
+  non-IE host definition/controller and no client evidence for that pairing.
+  Do not silently supply IE, use an arbitrary player JSON or assume that pack
+  priority resolves the conflict.
+
+The local adapted TACZ archive is distinct from the unchanged author archive.
+The `.receipt.json` now contains `member_diff` with **all** altered, added
+and removed ZIP paths and their before/after SHA-256, plus counts grouped
+by repair scope. `cross_addon_player_owner` and
+`cross_addon_player_presentation` represent player conflicts. UI, audio,
+block-registry, projectile-validity and startup-table fixes are **TACZ's own
+version-specific repairs**, not general Grilling compatibility requirements.
+Cosmetic replacement files are sourced only from explicitly pinned local
+inputs. The reviewed legacy profile retains these fixes for output
+reproducibility, but no such files enter the public base. The source archive
+SHA-256 is checked both before and after local composition.
+
+The existing Grilling `tools/compose_held_player.py` is the **sole**
+player composer. Core rejects conflicting `minecraft:player` property values,
+more than 32 effective properties, duplicate/unknown FP and TP routes,
+unreviewed player-composer output paths, and a pre-existing generated
+offhand-controller path. It does not overwrite unknown versions or other
+player owners. Original gun and ammo identities, reload/shoot implementations,
+and save keys are not intentional compatibility edits; receipt categories show
+the separate native TACZ changes precisely. Static ZIP output does not prove
+in-game animations, sound, gun operation, save/rollback or multiplayer acceptance.
+
+**Interface request to the Grilling composer owner (not implemented here):**
+if a TACZ-only profile is required, provide a reviewed non-IE
+`minecraft:client_entity` player preimage with exact source/version pins,
+the matching vanilla/Grilling FP controller contract, preserved TP routes and
+left/right arm ownership, plus a complete BP/RP output receipt. The composer
+must explicitly arbitrate collided scripts and controller aliases or refuse the
+pairing. Core will then be able to select that profile without creating a
+second composer or changing the public installer.
+
 
 ## Historical Cookery 1.6.4 with Grilling 2.8.203
 
