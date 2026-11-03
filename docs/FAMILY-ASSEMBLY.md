@@ -9,14 +9,64 @@ the SDK version in `sdk.json` and its release history remain separate.
 <a id="current-g206-installation"></a>
 <a id="current-g208-installation"></a>
 
-## Current G212 installation
+## Public minimal: Grilling + Cookery
+
+This public P0 route uses the **existing** Cookery installer,
+`build_owned_family_recipe.py` and `assemble_family.py`. It does not call
+the IE player adapter or require Tavern, World Liquor, TACZ, private overlays
+or a server-specific family lock.
+
+Use the Grilling **2.8.212** source at reviewed gameplay commit
+`aa8a07ad223c993c05b0d356615d38e990148588`, and obtain the untouched
+Cookery **1.6.4** archive from its author. The Cookery local adapter currently
+needs those exact clean author bytes to install the required host hooks. This
+does not mean third-party addon versions have to be pinned for every player.
+
+```sh
+mkdir -p ./local-inputs
+
+python3 tools/build_grilling_input.py \
+  --source /path/to/kaleidoscope-grilling-unofficial \
+  --output ./local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon
+
+python3 tools/install_cookery_from_descriptor.py \
+  --cookery /path/to/original-cookery-1.6.4.mcaddon \
+  --grilling ./local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon \
+  --output ./local-inputs/cookery-station-performance-20012.mcaddon
+
+python3 tools/build_owned_family_recipe.py \
+  --profile public-minimal --inputs ./local-inputs \
+  --output ./minimal-recipe.json
+
+python3 tools/assemble_family.py \
+  --recipe ./minimal-recipe.json --inputs ./local-inputs \
+  --output ./minimal-output
+```
+
+`minimal-output/family.mcaddon` is the local **four-pack** import bundle,
+despite its generic internal filename. It includes Grilling BP/RP and locally
+adapted Cookery BP/RP only. The receipt, individual `.mcpack` files and
+world pack-order JSONs document the exact local result. No other author
+archives are fetched or included. The manifest references to Cookery remain
+real: the generator rejects a required dependency absent from these four
+packs rather than deleting it.
+
+**Limits:** Target Bedrock 26.60, required Script API and enabled Beta APIs /
+Points of Interest experiments. A generated ZIP is **not** a Minecraft
+client, BDS, multiplayer, hand animation or saved-world PASS. Verify the
+candidate in a disposable world and inspect both hand views and eating;
+back up existing worlds before upgrading. Adapted Cookery stays user-local,
+never a public distributed release asset.
+
+## Full owned-family G212 installation (optional)
 
 Use the owned Tavern 0.6.194, Grilling 2.8.212 and World Liquor 0.1.180
 archives named by
 [`owned-t194-g212-w180-cookery-station-performance.json`](../adapters/owned-t194-g212-w180-cookery-station-performance.json).
 Obtain clean Cookery 1.6.4 (file 9317031) and Immersive Eating 1.1.0 from
 their authors. Keep original and locally adapted author files private.
-Toolkit 0.25.0 selects G212 and the Cookery20012 station adapter by default.
+The reviewed G212 / Cookery20012 pairing was authored with toolkit 0.25.0;
+the current toolkit continues to select this pairing for explicit full-family builds.
 SDK0.1.0 and historical explicit recipes remain unchanged. Omitting `--descriptor`
 selects the current recipe; the explicit arguments below identify the inputs.
 
