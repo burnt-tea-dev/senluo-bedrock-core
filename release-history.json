@@ -1923,7 +1923,7 @@
       "tests/cookery-station-performance.test.mjs": "72f992416b4f3008c1720db9528fc0ce3bd8d1c931afb402fc625a64695aaf0f",
       "tests/sdk.test.mjs": "e5314133346cc2eabf83b02c2715e3ac1389207dc08f447dc059e4ef7c00cd50",
       "tests/test_assemble_family.py": "5d86f4f7fe685d6224eb8fa78e71579c1b414e6b4981e36905e3be2c987812a0",
-      "tests/test_build_owned_family_recipe.py": "f1b4f8995c74ce71def316de89b3bc3cad9675312360fad3934e6b003306fd39",
+      "tests/test_build_owned_family_recipe.py": "1d7af76d143d4581690df4c1911febc0d2763f8a9517e32ce46e206dd89463a4",
       "tests/test_build_release.py": "3dd6fbb25a38b3f091325dd453473c5d845c0ffefb33c62d5da81fb9b167d798",
       "tests/test_cookery_station_adapter.py": "bcd3c874bd10ae568409d6e45218da144d0dfe5fbfc794419cd7ea80ac1c470b",
       "tests/test_current_installation.py": "430af1834f1e89ee5bb57d3302f826f276988850811afba99c497a0ead404157",
