@@ -267,8 +267,9 @@ def adapt_files(originals, composed, controller, descriptor):
         if name == 'BP/entities/player.json':
             continue
         if (not _safe_name(name) or not name.startswith('RP/')
-                or not name.startswith(('RP/entity/player.entity.json', 'RP/animations/',
-                                        'RP/animation_controllers/', 'RP/models/'))):
+                or not (name == 'RP/entity/player.entity.json'
+                        or name.startswith(('RP/animations/', 'RP/animation_controllers/',
+                                            'RP/models/')))):
             raise ValueError('Unexpected player-composer output path: ' + name)
         target = roots['RP'] + name.removeprefix('RP/')
         if target not in originals:
@@ -389,6 +390,11 @@ def adapt_files(originals, composed, controller, descriptor):
 
 
 def apply_archive(tacz, ie, grilling, source, descriptor, source_sounds=None):
+    profile = descriptor.get('optional_profile')
+    if profile is not None and (profile.get('selection') != 'explicit'
+            or profile.get('requires_ie') is not True
+            or profile.get('supports_tacz_without_ie') is not False):
+        raise ValueError('Unsupported optional TACZ profile; a reviewed non-IE player host is required')
     tacz, ie, grilling = Path(tacz), Path(ie), Path(grilling)
     if sha256(tacz.read_bytes()) != descriptor['tacz']['archive_sha256']:
         raise ValueError('TACZ archive differs from reviewed source')
@@ -445,7 +451,7 @@ def apply_archive(tacz, ie, grilling, source, descriptor, source_sounds=None):
         if sha256(tacz.read_bytes()) != descriptor['tacz']['archive_sha256']:
             raise ValueError('Original TACZ archive changed during local composition')
         receipt.update(schema=1, adapter=descriptor['tacz']['id'],
-                       optional_profile='reviewed-tacz-1.0.3-with-ie-1.1.0',
+                       optional_profile=profile['id'] if profile else 'legacy-pinned-tacz-with-ie',
                        ie_is_required_for_this_profile=True,
                        source_archive_unchanged=True,
                        toolkit_version=descriptor['toolkit_version'],
