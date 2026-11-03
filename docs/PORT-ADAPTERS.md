@@ -4,9 +4,9 @@ These tools join our Grilling port to separately downloaded author inputs.
 They create user-local files. They do not modify a server or publish author
 archives.
 
-For the current G206, Cookery 1.6.20007 and IE 1.1.20002 route, use
-[the current family installation](FAMILY-ASSEMBLY.md#current-g206-installation).
-The older descriptor examples below remain historical reproduction paths.
+For the **current G212** public route, use [the exact current family installation](FAMILY-ASSEMBLY.md#current-g212-installation). It selects Grilling 2.8.212 and the reviewed Cookery 1.6.4 station adapter (`adapters/cookery-1.6.4-grilling-2.8.212-station-performance.json`); the locally adapted Cookery pair is version 1.6.20012. Optional Immersive Eating and TACZ integrations require their own exact G212 descriptors and admission checks. Do not mix those generated inputs with different main-branch identities or assume that successful assembly is client/LIVE acceptance.
+
+The older G206 / Cookery 1.6.20007 / IE 1.1.20002 path is a **historical, exact-identity reconstruction route**, not the current default. The G203/G205 examples below likewise remain historical reproduction paths; use their original pinned descriptors and toolchain, without rewriting archive identities or removing legacy inputs.
 
 ## Historical Cookery 1.6.4 with Grilling 2.8.203
 
