@@ -59,7 +59,7 @@ python3 tools/assemble_family.py \
   --output ./public-minimal-output
 ```
 
-Import `./public-minimal-output/family.mcaddon` into a **fresh test world**:
+Import `./public-minimal-output/public-minimal.mcaddon` into a **fresh test world**:
 it nests four `.mcpack` files (2 BP and 2 RP) and writes source,
 manifest, output SHA256, UUID/version and player-owner evidence to
 `./public-minimal-output/receipt.json`. Enable both pairs in the world.
@@ -234,7 +234,8 @@ python3 tools/assemble_family.py --recipe /path/to/reviewed-recipe.json \
 Place each recipe input under its exact `filename` in the input directory.
 The tool checks every whole-input hash before it creates output. The output
 directory must not already exist. It contains one `.mcpack` per recipe pack,
-one `family.mcaddon` that nests those exact `.mcpack` files, the two world
+one aggregate (`family.mcaddon` for historical family recipes,
+`public-minimal.mcaddon` for public-minimal) that nests those exact `.mcpack` files, the two world
 load-list JSON files, and `receipt.json`. The aggregate is a user-local
 convenience output and is not a Core release asset. The world files are
 metadata for review; they are not copied to a world.
@@ -275,3 +276,38 @@ ZIP paths are checked for traversal, duplicates, and size limits on every
 archive layer. Files are staged in a temporary sibling directory and renamed
 into place only after all recipe checks pass. On failure, the tool removes
 only its own temporary output.
+
+
+### Explicit verified G213 public pair (integration candidate)
+
+The existing `public-minimal` profile remains pinned to G212. For G213, use the
+explicit descriptors below. This keeps every historical descriptor available.
+Checkout public Grilling commit `6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3`
+(tree `9b7cd7c6e6be0a8a808fb73c27c67af9c3a1b224`) in `./grilling` and obtain the
+same clean author Cookery 1.6.4 described above. Never redistribute original or
+locally adapted Cookery archives.
+
+```sh
+mkdir -p local-g213-inputs
+python tools/build_grilling_input.py --source ./grilling --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json --output local-g213-inputs/grilling-2.8.213.mcaddon
+python tools/install_cookery_from_descriptor.py --cookery /path/to/clean-original-Cookery-1.6.4.mcaddon --grilling local-g213-inputs/grilling-2.8.213.mcaddon --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json --output local-g213-inputs/cookery-g213.mcaddon
+python tools/build_owned_family_recipe.py --descriptor adapters/public-minimal-grilling-g213-cookery20012.json --inputs local-g213-inputs --output public-g213.recipe.json
+python tools/assemble_family.py --recipe public-g213.recipe.json --inputs local-g213-inputs --output public-g213-output
+```
+
+Import `public-g213-output/public-minimal.mcaddon`. Public outputs have fixed ZIP
+metadata, while historical full-family ZIP handling is unchanged. Grilling input
+SHA256 is `ba073d40ad2bbf3ef8f68ea1121c3f9d9d81dd10acdb4085eb2bf15b0c000643`;
+adapted Cookery remains `a13cf4e8f48308c73c0e9acf72352026a0bd0becc9a5c89fff1670e7d9e3c144`.
+The repeated four-pack aggregate is
+`96856304f186320014636d3cca81f2e8429edee433780c761de82bb1b029423e`.
+
+The existing workflow's manually dispatched `real-public-minimal` job runs only
+this current pair plus existing station and assembly tests, with no IE, TACZ,
+Tavern or World Liquor downloads. A CDN failure is an input-acquisition failure,
+not a successful real-input check. Ordinary PR tests remain source-only.
+Local real-input checks prove packaging and manifest consistency, not Bedrock
+client rendering, audio, gameplay, multiplayer, BDS or saved-world acceptance.
+Toolkit 0.29.0 identifies this un-published integration candidate and pins its
+reviewed source payloads. Local reproducible source/SDK archive construction
+does not authorize publication or establish client acceptance.
