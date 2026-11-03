@@ -1848,7 +1848,7 @@
     ],
     "scope": "Opt-in, hash-pinned public-minimal Grilling + locally adapted Cookery installation; canonical family and historical recipes unchanged; no SDK/gameplay changes.",
     "payloads": {
-      ".github/workflows/ci.yml": "019d7d1929ba49dcf70de76a175e112538a13ab17798e3b17ee940b47c16417f",
+      ".github/workflows/ci.yml": "0e8e59b54579c304bd229711f4234355f8acecfb2ce80755f4753fe677eb29fe",
       ".gitignore": "1eac8fcf42455bb942bc4498d06e04b34359b14ba8180e3f4b869fb72abab396",
       ".repo-target.json": "dc995552df1ef531214678b320aeaf5160f10ea70780732b685e16d1bfaedfe1",
       "AGENTS.md": "470edeb6f4934abd8c5c93b61deff0ececb8788edf419730fc43b4c4288d83bd",
