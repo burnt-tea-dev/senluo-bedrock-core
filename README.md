@@ -42,6 +42,11 @@ The SDK and newly written tools are BSD-3-Clause; see [LICENSE](LICENSE).
 Gameplay helpers supplied by the separate Grilling addon retain that project's
 notices. Locally adapted author content retains its original license and credits.
 
+Routine PR CI checks current SDK/adapter behavior without rebuilding historical
+source releases. The source toolkit download excludes CI files and test suites;
+they remain available on GitHub. Explicit publication still validates the
+versioned source allowlist, content hashes and original SDK identity.
+
 Earlier descriptors and their validation records remain as history. Reproduce
 older Cookery decoding outputs with their original toolkit source; the 0.12
 helper intentionally rejects those immutable older helper pins. The optional TACZ route now builds local 1.0.20014 with the resource stack PBR

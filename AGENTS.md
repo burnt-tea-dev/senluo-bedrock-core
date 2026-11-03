@@ -6,3 +6,4 @@
 - Keep source and generated SDK exports in one direction. Consumers pin the exact committed SDK version and hashes; update the canonical source and regenerate consumers.
 - Verify actual exported behavior and clean-author integration. Do not replace engine or client acceptance with mocks. Preserve original failed evidence and existing save keys/IDs/UUID ownership.
 - Release only after appropriate SDK, original-author input, isolated BDS, saved-world and rollback checks. Record remaining client limitations honestly.
+- Ordinary PR CI tests source behavior only. Tests and workflow files are not public toolkit inputs; change them freely without bumping the toolkit version. Validate exact published files and SDK hashes when preparing an actual release.

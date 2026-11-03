@@ -23,8 +23,10 @@ def validate():
     publication = json.loads((ROOT / 'PUBLICATION.json').read_text())
     names = publication['files']
     tracked = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
-    if set(names) != set(filter(None, tracked)) or len(names) != len(set(names)):
-        raise ValueError('Tracked files differ from the explicit publication allowlist')
+    # The toolkit source archive is intentionally smaller than the repository:
+    # tests, CI configuration and private diagnostic workflow code do not ship.
+    if not set(names).issubset(set(filter(None, tracked))) or len(names) != len(set(names)):
+        raise ValueError('Explicit publication inputs must be unique tracked files')
     sdk = json.loads((ROOT / 'sdk.json').read_text())
     package = json.loads((ROOT / 'package.json').read_text())
     toolkit_version = package.get('version')
@@ -46,8 +48,8 @@ def validate():
             or toolkit.get('sdk_version') != sdk['version']):
         raise ValueError('Toolkit release history does not match the package and SDK versions')
     toolkit_payloads = toolkit.get('payloads')
-    if not isinstance(toolkit_payloads, dict) or not toolkit_payloads:
-        raise ValueError('Toolkit release history has no payload hashes')
+    if not isinstance(toolkit_payloads, dict) or set(toolkit_payloads) != set(names) - {'release-history.json'}:
+        raise ValueError('Toolkit release inputs differ from the publication allowlist')
     for name, expected in toolkit_payloads.items():
         path = ROOT / name
         if (name == 'release-history.json' or name not in names or path.is_symlink()
