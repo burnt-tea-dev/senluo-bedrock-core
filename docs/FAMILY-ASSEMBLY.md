@@ -66,6 +66,31 @@ player definition is published in Core's source repository.
 
 ### Commands
 
+### Direct local build (recommended)
+
+Once you have the **clean original Cookery 1.6.4 archive** and the reviewed
+**Grilling G213** archive, the existing builder can perform the Cookery local
+adaptation, exact two-input recipe, complete G218 player-RP composition and
+four-pack assembly **in one command**:
+
+```sh
+python tools/build_owned_family_recipe.py \
+  --cookery /path/to/original-cookery-1.6.4.mcaddon \
+  --grilling /path/to/grilling-2.8.213.mcaddon \
+  --grilling-source ./grilling --vanilla-source ./vanilla \
+  --output ./public-minimal-output
+```
+
+The `grilling-source` and `vanilla-source` directories are the exact clean
+build references already identified above; they are **not** additional addons
+for players to install. The output remains `public-minimal.mcaddon` with four
+packs and the completed resource player, plus receipt and installation metadata.
+It does not call the IE/TACZ player adapter, depend on the private family, or
+accept unrelated Grilling builds with unreviewed manifests or changed helpers.
+This is a convenience entry into the **same existing installer and assembler**;
+the separate commands below remain available for reproducing each step.
+
+
 From this candidate's Core source checkout (Python 3 and Node.js available):
 
 ```sh
