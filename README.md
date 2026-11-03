@@ -1,120 +1,79 @@
 # Senluo Bedrock Core
 
-Unofficial shared SDK and local integration tools for the Senluo Bedrock addon family.
+Unofficial shared build-time SDK and local integration tools for Minecraft
+Bedrock addons. Core does **not** add a gameplay pack, global tick loop or new
+save-data owner. Each addon owns its gameplay and saved data.
 
-Core is a build-time SDK. Its code is copied into each consuming pack; it does
-not add a behavior pack, a global tick loop or a new save-data owner.
+## Public Grilling: only Grilling and Cookery
 
-```text
-Core SDK ──→ Grilling (event routing and public food metadata)
-        └──→ Cookery's original host (through Grilling's reviewed adapter)
-Local installer + your original Cookery archive ──→ your adapted local archive
-```
+Start with the [public-minimal installation guide](docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only).
+It selects **Grilling BP/RP + locally adapted Cookery 1.6.4 BP/RP**, using the
+existing recipe builder and assembler. Tavern, 世界名酒, Immersive Eating,
+TACZ, private repair packs and a particular server family are **not required**.
+Cookery's gameplay/host interface remains a genuine dependency, not something
+the installer pretends to remove.
 
-For ordinary Grilling users, start with the
-[public-minimal Grilling + Cookery guide](docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only).
-It builds only Grilling BP/RP and user-local adapted Cookery BP/RP via the
-existing Core recipe builder and assembler, pinning original sources and the
-generated manifest dependencies. The
-[full family guide](docs/FAMILY-ASSEMBLY.md#current-g212-installation)
-documents optional private combination reproduction, **not public installation
-prerequisites**. Cookery capabilities needed by Grilling remain a real dependency;
-IE, TACZ and server-specific player overlays are optional integrations. New
-releases target current Bedrock APIs, not a test matrix of historical ports.
-Pack/module UUIDs, item IDs and save ownership are retained. Back up a stopped
-world and test a copy before upgrading.
+The current source candidate also composes Grilling's player display into its
+own RP using the existing canonical composer and a pinned official vanilla
+reference. That reference is a **build input**, not a third addon installed in
+the world. The output still has four packs, with no fifth compatibility layer.
+IE/TACZ-specific player routes are not executed in the public profile.
 
-- [SDK contract and source ownership](docs/SDK.md)
+**Status: implemented source candidate, not a published one-click addon.**
+Actual original-author input reconstruction, unique BP/RP player ownership,
+held-state public variables/animation aliases and repeatability have been
+checked. [The report](docs/validation-public-player-20261103.json) retains the
+original package-only FAIL and the repaired structural PASS. Native rendering,
+normal survival gameplay, sound, saved-world upgrade/restart and multiplayer
+remain **NOT-RUN** for this candidate. Building a ZIP is not client acceptance.
+
+Local adaptation is still needed because the original Cookery archive lacks
+this port's host-extension interface. The source workflow is documented;
+removing unrelated family dependencies does not mean that this remaining
+installation burden has already disappeared. Author originals stay unchanged.
+
+## Optional integrations are separate
+
+[Full-family assembly](docs/FAMILY-ASSEMBLY.md#current-g212-installation),
+[owned-port adapters](docs/PORT-ADAPTERS.md), IE and TACZ integration are explicit
+choices, not prerequisites for public Grilling. An actual third-party player
+override may need an adapter. This does not justify a whitelist that excludes
+otherwise unrelated addons, nor a claim of compatibility with every unknown
+player definition. Never silently replace another addon's player or weapons.
+
+For backward compatibility, the existing recipe builder's no-profile default
+still selects the historical full family; the public commands explicitly use
+`--profile public-minimal`. Historical descriptors and their exact source
+instructions remain available. They do not establish present-day client or
+LIVE status, and their identities are not reused for new output bytes.
+
+## Development and publication
+
+- [SDK contracts and ownership](docs/SDK.md)
 - [Cookery local installation](docs/COOKERY.md)
-- [Local family assembly tool](docs/FAMILY-ASSEMBLY.md)
-- [Owned-port adapters](docs/PORT-ADAPTERS.md)
-- [Validation limits](docs/VALIDATION.md)
+- [Public/family assembly and reproduction](docs/FAMILY-ASSEMBLY.md)
+- [Validation boundaries](docs/VALIDATION.md)
+- [Published source/SDK assets](https://github.com/burnt-tea-dev/senluo-bedrock-core/releases)
 
-Public and server integration use the same canonical Grilling player composer
-and Core guide helper. The three owned ports and required glue are the public
-parity scope; unrelated third-party addons are separate downloads. Native and
-save evidence do not establish rendered client acceptance. Get published
-assets from [Releases](https://github.com/burnt-tea-dev/senluo-bedrock-core/releases).
+Ordinary PR CI tests the current SDK and adapters without rebuilding historical
+releases or downloading optional third-party packs. Real-author input checks
+are separate. Publication validates its actual source allowlist and immutable
+SDK/toolkit identities. A successful source PR does not publish a Release or
+deploy a server. The new source must receive its own publication identity
+before distribution as a toolkit release; old payload hashes remain untouched.
 
-Author archives, complete author modules, worlds, private integration history,
-server configuration and credentials are not distributed here. Obtain Cookery
-from its [author's project](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial).
-This unofficial project is not affiliated with Mojang or the original authors.
+## Rights and privacy
+
+Obtain Cookery from [its author's project](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial).
+Complete author archives/scripts, generated author packs, worlds, private
+server configuration and credentials are not distributed here. Local composed
+vanilla player data retains Mojang's reference license in the generated RP.
 
 The SDK and newly written tools are BSD-3-Clause; see [LICENSE](LICENSE).
-Gameplay helpers supplied by the separate Grilling addon retain that project's
-notices. Locally adapted author content retains its original license and credits.
+Grilling helpers retain that project's notices; locally adapted author content
+retains its original terms and credits. This unofficial project is not
+associated with Mojang or the addon authors.
 
-Routine PR CI checks current SDK/adapter behavior without rebuilding historical
-source releases. The source toolkit download excludes CI files and test suites;
-they remain available on GitHub. Explicit publication still validates the
-versioned source allowlist, content hashes and original SDK identity.
-
-Earlier descriptors and their validation records remain as history. Reproduce
-older Cookery decoding outputs with their original toolkit source; the 0.12
-helper intentionally rejects those immutable older helper pins. The optional TACZ route now builds local 1.0.20014 with the resource stack PBR
-capability, while retaining 24 gun properties alongside Grilling's four. Use
-[the current TACZ family recipe](adapters/owned-t194-g212-w180-station-performance-tacz.json). It requires
-its own full-family, saved-world, rollback and client evidence. Toolkit 0.12
-releases and their TACZ20004 recipes remain historical outputs.
-
-Cookery recipe registration now processes at most four incoming messages per tick, with a one-millisecond target. Original registration validation, FIFO replacement order, every recipe and welcome chat remain. The synchronous exported registration function is unchanged. Use [the current Cookery descriptor](adapters/cookery-1.6.4-grilling-2.8.212-station-performance.json) and [optional TACZ family descriptor](adapters/owned-t194-g212-w180-station-performance-tacz.json). Native and client acceptance remain separate from installer verification.
-
-The source and family builder defaults select the current G212/Cookery20012 installation. Historical G201/G203 and prior Cookery recipes remain available through an explicit `--descriptor`.
-
-Archive writers use canonical ZIP metadata on both Windows and Linux.
-SDK0.1.0 retains its archive bytes. The current descriptors pin fresh paired
-identities; older recipes retain their recorded outputs.
-
-Toolkit 0.17 fixes TACZ client resource errors. Use the exact `composer_source` commit
-in [the current TACZ descriptor](adapters/tacz-1.0.3-grilling-2.8.212.json) as
-`install_tacz.py --grilling-source`. This is the animation tool source; the separately
-pinned Grilling archive retains its reviewed gameplay bytes.
-Left-arm curves retain constant keyframes and use a separate animation weight.
-The four pistol walk aliases use the author's existing common pistol pose;
-casing and smoke aliases resolve to existing author particles. The dead G36
-third-person slide reference is removed: no missing sliding pose is invented.
-The current family recipe uses TACZ 1.0.20014; explicit historical recipes retain
-their recorded older outputs. Client rendering/audio and complete saved-world
-validation must still pass before use; a successful local build is not acceptance.
-
-Toolkit 0.20 retains the TACZ HUD/form controls and keeps oil-pot
-animation weights free of actor queries during skin previews. The current local
-TACZ installer requires `--source-assets /path/to/source-assets` (the existing
-`--source-sounds` flag is also accepted). The current descriptor pins the seven
-source sounds plus four pre-SkinPack gun textures and three matching cosmetic
-models. The historical toolkit recipes record the separate downloads and exact archive
-and file verification. The cosmetic source is a mirror of the removed Bedrock
-1.0.2 translation, not a currently verified official author download. Only those
-seven cosmetic files are selected; its code is not installed. The 1.0.3 scripts,
-IDs and mechanics remain, with a target-validity repair before native hit queries.
-Public source/SDK archives contain no author audio, textures or models.
-
-Sound path spelling is corrected against the existing author assets. Broken
-CAR15/PKM/Tabukar sound registrations with no corresponding item definitions are
-retired; no replacement gun, sound stub or new gameplay is introduced. Original
-source audio was restored for the supported AKM, MP5, G3, P90 and minigun cues.
-Native rendering, listening, complete-family saves and rollback remain separate.
-
-TACZ20010 also corrects the missing `textures/nothing` reference in82 held-item
-attachables to the author-shipped `textures/ikon/empty` transparent pixel. The
-existing gun geometry, render controllers, animation and pixel files are retained.
-
-The portable station helper avoids rewriting unchanged native displays and
-saved JSON. Cooking still advances every original loaded tick. It rechecks
-loaded or removed replicas and reads actual saved properties before writes.
-Cookery-only lantern/tray geometry, basin and ChineseFood mold repairs are
-outside the three-port integration scope. No author files are published here.
-
-Toolkit0.23 completes the oil-preview guard in `pre_animation`, which skin
-previews can also execute without a gameplay actor. UI models keep native arm
-poses; world first/third-person rendering retains the prior held-data predicate.
-Use the current G207 source pin for both local IE and TACZ composition. G207
-changes the G206 package manifests and adds license notices; gameplay payloads
-are unchanged. Source tests cover UI entry/exit; real client preview acceptance
-remains required. Earlier complete archive identities remain in explicit recipes.
-
-Toolkit0.25 pairs the merged native-oil-POI Grilling source with the current
-local installers. Original gun appearance, UI-safe composition, shared station
-behavior, all UUIDs and save owners are preserved. No new rendered-client or
-multiplayer acceptance is implied.
+Earlier toolkit-specific repair descriptions remain in the
+[immutable previous README](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/7f015e92ed7536e5ed64317338eda55968e0c4ae/README.md).
+They are history, not public installation prerequisites.
