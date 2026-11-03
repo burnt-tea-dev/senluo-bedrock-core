@@ -1,0 +1,69 @@
+name: Temporary P0 real-author-input smoke (remove after evidence)
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  real-minimal:
+    if: github.repository == 'burnt-tea-dev/senluo-bedrock-core' && github.head_ref == 'feat/public-minimal-grilling-cookery'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Download original publicly available author inputs (never upload outputs)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/public-minimal-inputs
+          curl -fLsS --retry 2 --max-time 90 \
+            'https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/download/A2.8.212/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon' \
+            -o /tmp/public-minimal-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon
+          curl -fLsS --retry 2 --max-time 90 \
+            'https://mediafilez.forgecdn.net/files/9317/031/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' \
+            -o /tmp/original-cookery-1.6.4.mcaddon
+          printf '%s  %s\n' \
+            '2a3e79a889156d147c332c53fbc0fd368672d44c49c76f8b633fc59129dc20cd' \
+            '/tmp/public-minimal-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon' | sha256sum -c
+          printf '%s  %s\n' \
+            'aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83' \
+            '/tmp/original-cookery-1.6.4.mcaddon' | sha256sum -c
+      - name: Build actual four-pack pair and inspect local receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/install_cookery_from_descriptor.py \
+            --cookery /tmp/original-cookery-1.6.4.mcaddon \
+            --grilling /tmp/public-minimal-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon \
+            --descriptor adapters/cookery-1.6.4-grilling-2.8.212-station-performance.json \
+            --output /tmp/public-minimal-inputs/cookery-station-performance-20012.mcaddon
+          python3 tools/build_owned_family_recipe.py --profile public-minimal \
+            --inputs /tmp/public-minimal-inputs --output /tmp/public-minimal-recipe.json
+          python3 tools/assemble_family.py --recipe /tmp/public-minimal-recipe.json \
+            --inputs /tmp/public-minimal-inputs --output /tmp/public-minimal-output
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, zipfile
+          root = Path("/tmp/public-minimal-output")
+          receipt = json.loads((root / "receipt.json").read_text())
+          expected = {"grilling-bp", "grilling-rp", "cookery-bp", "cookery-rp"}
+          assert {pack["id"] for pack in receipt["packs"]} == expected
+          assert set(receipt["inputs"]) == {"grilling", "cookery"}
+          assert receipt["behavior_player_definition"]["pack_id"] == "grilling-bp"
+          with zipfile.ZipFile(root / "family.mcaddon") as z:
+              assert set(z.namelist()) == {name + ".mcpack" for name in expected}
+          for item in receipt["packs"]:
+              with zipfile.ZipFile(root / item["archive"]) as z:
+                  manifest = json.loads(z.read("manifest.json"))
+                  if item["id"].startswith("grilling-"):
+                      assert any(d.get("version") == [1, 6, 20012]
+                                 for d in manifest["dependencies"] if "uuid" in d)
+          print(json.dumps({"packs": sorted(expected), "aggregate_sha256": receipt["aggregate"]["sha256"],
+                             "input_sha256": {k: v["sha256"] for k,v in receipt["inputs"].items()}}, indent=2))
+          PY
+          # No upload-artifact; generated author-derived archives remain runner-local.
