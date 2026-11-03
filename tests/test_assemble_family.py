@@ -249,8 +249,9 @@ class AssembleFamilyTests(unittest.TestCase):
             names = sorted(files)
             files["PUBLICATION.json"] = json.dumps({"schema": 1, "files": names})
             toolkit_payloads = {name: digest(files[name].encode()) for name in (
-                "PUBLICATION.json", "README.md", "package.json", "tools/build_release.py",
-                "tools/assemble_family.py", "tests/test_assemble_family.py", "docs/FAMILY-ASSEMBLY.md")}
+                "LICENSE", "sdk.json", "PUBLICATION.json", "README.md", "package.json",
+                "tools/build_release.py", "tools/assemble_family.py",
+                "tests/test_assemble_family.py", "docs/FAMILY-ASSEMBLY.md")}
             files["release-history.json"] = json.dumps({"schema": 1,
                 "0.1.0": {"payloads": {}, "cookery_version": [1, 6, 4]},
                 "0.2.0": {"sdk_version": "0.1.0", "toolkit_version": "0.2.0",

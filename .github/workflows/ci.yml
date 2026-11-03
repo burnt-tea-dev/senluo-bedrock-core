@@ -27,5 +27,5 @@ jobs:
         run: |
           node --test tests/*.test.mjs
           python -m unittest discover -s tests -p 'test_*.py' -v
-      - name: Build the current source SDK and toolkit
-        run: python tools/build_release.py --output dist
+      # Releasing immutable source archives is a separate publication action.
+      # Code and test edits do not need a new toolkit release identity.

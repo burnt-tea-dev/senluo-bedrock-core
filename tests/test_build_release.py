@@ -59,3 +59,13 @@ class ReleaseScopeTests(unittest.TestCase):
         (root / "release-history.json").write_text(json.dumps(history))
         with self.assertRaisesRegex(ValueError, "src/core.js"):
             release.validate()
+
+    def test_additional_tracked_ci_and_test_files_are_not_publication_inputs(self):
+        root, _ = self.fixture()
+        extra = root / '.github/workflows/ci.yml'
+        extra.parent.mkdir(parents=True, exist_ok=True)
+        extra.write_text('name: developer CI only\n')
+        subprocess.run(['git', 'add', '.github/workflows/ci.yml'], cwd=root, check=True)
+        _, names, _, _ = release.validate()
+        self.assertNotIn('.github/workflows/ci.yml', names)
+        self.assertIn('tools/install_cookery.py', names)
