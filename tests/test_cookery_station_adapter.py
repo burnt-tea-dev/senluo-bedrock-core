@@ -24,6 +24,15 @@ def members(raw):
 @unittest.skipUnless(os.environ.get('COOKERY_ORIGINAL_ARCHIVE') and os.environ.get('GRILLING_ADAPTED_ARCHIVE'),
                      'Clean author and public Grilling inputs required; CI supplies both')
 class RealCookeryStationTests(unittest.TestCase):
+    def setUp(self):
+        # Explicit real-input selection leaves the historical default unchanged.
+        from unittest.mock import patch
+        selected = os.environ.get('COOKERY_TEST_DESCRIPTOR')
+        if selected:
+            context = patch.object(installer, 'DEFAULT_DESCRIPTOR', Path(selected))
+            context.start()
+            self.addCleanup(context.stop)
+
     def test_real_station_owner_and_fresh_pair_preserve_other_files(self):
         cookery = Path(os.environ['COOKERY_ORIGINAL_ARCHIVE'])
         grilling = Path(os.environ['GRILLING_ADAPTED_ARCHIVE'])

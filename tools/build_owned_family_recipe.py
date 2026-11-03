@@ -100,6 +100,11 @@ def build_recipe(descriptor, inputs_dir):
               'packs': [found[row['id']] for row in selected], 'order': descriptor['order']}
     if 'toolkit_version' in descriptor:
         recipe['toolkit_version'] = descriptor['toolkit_version']
+    if 'aggregate_filename' in descriptor:
+        recipe['aggregate_filename'] = descriptor['aggregate_filename']
+    elif (descriptor.get('require_closed_pack_dependencies') is True
+          and descriptor.get('required_behavior_player_owner') == 'grilling-bp'):
+        recipe['aggregate_filename'] = 'public-minimal.mcaddon'
     if 'behavior_player_override' in descriptor:
         recipe['behavior_player_override'] = descriptor['behavior_player_override']
     if descriptor.get('require_closed_pack_dependencies') is True:

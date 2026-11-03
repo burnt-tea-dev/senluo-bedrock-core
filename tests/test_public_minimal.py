@@ -4,6 +4,7 @@ from contextlib import redirect_stderr, redirect_stdout
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -127,7 +128,7 @@ class PublicMinimalTests(unittest.TestCase):
             self.assertEqual(hashes, {p.name: digest(p.read_bytes()) for p in inputs.iterdir()})
             self.assertEqual(len(json.loads((root / 'out/world_behavior_packs.json').read_text())), 2)
             self.assertEqual(len(json.loads((root / 'out/world_resource_packs.json').read_text())), 2)
-            with zipfile.ZipFile(root / 'out/family.mcaddon') as combined:
+            with zipfile.ZipFile(root / 'out/public-minimal.mcaddon') as combined:
                 self.assertEqual(set(combined.namelist()), {p['archive'] for p in receipt['packs']})
                 for pack in recipe['packs']:
                     with zipfile.ZipFile(io.BytesIO(combined.read(pack['id'] + '.mcpack'))) as archive:
@@ -159,7 +160,7 @@ class PublicMinimalTests(unittest.TestCase):
                                             '--inputs', str(inputs), '--output', str(root / 'built')]):
                 with redirect_stdout(io.StringIO()):
                     assemble_family.main()
-            self.assertTrue((root / 'built/family.mcaddon').exists())
+            self.assertTrue((root / 'built/public-minimal.mcaddon').exists())
             with redirect_stdout(io.StringIO()):
                 builder.main(['--descriptor', str(path), '--inputs', str(inputs),
                               '--output', str(root / 'explicit.json')])
@@ -167,6 +168,72 @@ class PublicMinimalTests(unittest.TestCase):
             with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 builder.main(['--profile', 'public-minimal', '--descriptor', str(path),
                               '--inputs', str(inputs), '--output', str(root / 'ambiguous.json')])
+
+    def test_aggregate_filename_safety_and_historical_default(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            inputs, descriptor, _ = self.fixture(root)
+            recipe = builder.build_recipe(descriptor, inputs)
+            path = root / 'recipe.json'
+            path.write_text(json.dumps(recipe))
+            for index, name in enumerate(('../outside.mcaddon', '/tmp/out.mcaddon',
+                                           'grilling-bp.mcpack', 'bad.zip', 'a\\b.mcaddon',
+                                           'D:outside.mcaddon', 'output.mcaddon:stream.mcaddon',
+                                           'CON.mcaddon', 'nul.mcaddon', 'COM1.mcaddon',
+                                           'LPT9.mcaddon', 'COM¹.mcaddon', 'bad?.mcaddon',
+                                           'bad\x1f.mcaddon')):
+                invalid = copy.deepcopy(recipe)
+                invalid['aggregate_filename'] = name
+                output = root / ('invalid-' + str(index))
+                with self.assertRaisesRegex(ValueError, 'invalid aggregate'):
+                    assemble_family.assemble(invalid, path, inputs, output)
+                self.assertFalse(output.exists())
+            del recipe['aggregate_filename']
+            assemble_family.assemble(recipe, path, inputs, root / 'historical')
+            self.assertTrue((root / 'historical/family.mcaddon').is_file())
+
+    def test_g213_descriptor_provenance_and_adapter_pin(self):
+        public = json.loads((ROOT / 'adapters/public-minimal-grilling-g213-cookery20012.json').read_text())
+        self.assertEqual(public['candidate_provenance']['grilling_commit'],
+                         '6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3')
+        self.assertEqual(public['candidate_provenance']['grilling_input_archive_sha256'],
+                         public['inputs']['grilling']['sha256'])
+        self.assertEqual(set(public['inputs']), {'grilling', 'cookery'})
+        self.assertEqual([p['version'] for p in public['packs'] if p['input'] == 'grilling'],
+                         [[2, 8, 213], [2, 8, 213]])
+
+    @unittest.skipUnless(os.environ.get('PUBLIC_MINIMAL_INPUTS'), 'Real public-minimal archives required')
+    def test_real_g213_pair_repeatability_and_manifest_closure(self):
+        inputs = Path(os.environ['PUBLIC_MINIMAL_INPUTS'])
+        descriptor = json.loads((ROOT / 'adapters/public-minimal-grilling-g213-cookery20012.json').read_text())
+        self.assertEqual({p.name for p in inputs.iterdir()},
+                         {p['filename'] for p in descriptor['inputs'].values()})
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            path = root / 'recipe.json'
+            recipe = builder.build_recipe(descriptor, inputs)
+            path.write_text(json.dumps(recipe))
+            one = assemble_family.assemble(recipe, path, inputs, root / 'one')
+            assemble_family.assemble(recipe, path, inputs, root / 'two')
+            self.assertEqual(len(one['packs']), 4)
+            self.assertEqual(one['behavior_player_definition']['pack_id'], 'grilling-bp')
+            versions = {p['uuid']: p['version'] for p in one['packs']}
+            for pack in one['packs']:
+                raw = (root / 'one' / pack['archive']).read_bytes()
+                self.assertEqual(raw, (root / 'two' / pack['archive']).read_bytes())
+                self.assertEqual(digest(raw), pack['archive_sha256'])
+                with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+                    manifest = json.loads(archive.read('manifest.json'))
+                    for dep in manifest.get('dependencies', []):
+                        if 'uuid' in dep:
+                            self.assertEqual(dep['version'], versions[dep['uuid']])
+            raw = (root / 'one/public-minimal.mcaddon').read_bytes()
+            self.assertEqual(raw, (root / 'two/public-minimal.mcaddon').read_bytes())
+            self.assertEqual(digest(raw), '96856304f186320014636d3cca81f2e8429edee433780c761de82bb1b029423e')
+            with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+                self.assertEqual(set(archive.namelist()), {p['archive'] for p in one['packs']})
+                for name in archive.namelist():
+                    self.assertEqual(archive.read(name), (root / 'one' / name).read_bytes())
 
     def test_bad_inputs_preimages_and_output_rollback(self):
         with tempfile.TemporaryDirectory() as td:

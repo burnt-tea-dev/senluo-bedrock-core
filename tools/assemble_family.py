@@ -196,6 +196,18 @@ def _safe_output_path(root: Path, relative: str) -> Path:
     return path
 
 
+def _safe_aggregate_name(name) -> bool:
+    if (not isinstance(name, str) or "/" in name or not _safe_name(name)
+            or not name.endswith(".mcaddon")):
+        return False
+    # Apply Windows rules on every OS: drive-relative paths and NTFS streams
+    # must never escape the staged output or bypass ordinary file handling.
+    if any(char in '<>:"|?*' or ord(char) < 32 for char in name):
+        return False
+    stem = name.partition(".")[0].rstrip(" ").upper()
+    return re.fullmatch(r"CON|PRN|AUX|NUL|CONIN\$|CONOUT\$|COM[1-9¹²³]|LPT[1-9¹²³]", stem) is None
+
+
 def _load_and_verify_inputs(recipe: dict, inputs_dir: Path):
     inputs = recipe.get("inputs")
     if not isinstance(inputs, dict) or not inputs:
@@ -365,7 +377,14 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                     target = _safe_output_path(pack_root, relative)
                     if file_sha256(target) != source_hashes[relative]["output_sha256"]:
                         raise ValueError("staged output hash differs: " + relative)
-                    zf.write(target, relative)
+                    if recipe.get('require_closed_pack_dependencies') is True:
+                        info = zipfile.ZipInfo(relative, (2026, 9, 29, 0, 0, 0))
+                        info.create_system = 3
+                        info.compress_type = zipfile.ZIP_DEFLATED
+                        info.external_attr = 0o100644 << 16
+                        zf.writestr(info, target.read_bytes())
+                    else:
+                        zf.write(target, relative)
             with zipfile.ZipFile(archive, "r") as zf:
                 members = _validate_zip(zf)
                 if set(members) != set(source_hashes):
@@ -414,7 +433,10 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
             raise ValueError("required behavior minecraft:player owner differs")
         for name, key in (("world_behavior_packs.json", "BP"), ("world_resource_packs.json", "RP")):
             _atomic_new(stage / name, (json.dumps(world_lists[key], ensure_ascii=False, indent=2) + "\n").encode())
-        aggregate_name = "family.mcaddon"
+        aggregate_name = recipe.get("aggregate_filename", "family.mcaddon")
+        if (not _safe_aggregate_name(aggregate_name)
+                or aggregate_name in {item["archive"] for item in pack_receipts}):
+            raise ValueError("invalid aggregate .mcaddon filename")
         aggregate_path = stage / aggregate_name
         aggregate_members = {}
         with zipfile.ZipFile(aggregate_path, "w", zipfile.ZIP_DEFLATED) as aggregate:
@@ -422,7 +444,14 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                 standalone = stage / pack_receipt["archive"]
                 aggregate_member = pack_receipt["archive"]
                 raw = standalone.read_bytes()
-                aggregate.writestr(aggregate_member, raw)
+                if recipe.get('require_closed_pack_dependencies') is True:
+                    info = zipfile.ZipInfo(aggregate_member, (2026, 9, 29, 0, 0, 0))
+                    info.create_system = 3
+                    info.compress_type = zipfile.ZIP_DEFLATED
+                    info.external_attr = 0o100644 << 16
+                    aggregate.writestr(info, raw)
+                else:
+                    aggregate.writestr(aggregate_member, raw)
                 member_info = {"path": aggregate_member, "sha256": sha256(raw), "bytes": len(raw)}
                 pack_receipt["archive_sha256"] = member_info["sha256"]
                 pack_receipt["archive_bytes"] = member_info["bytes"]
