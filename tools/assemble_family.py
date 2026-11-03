@@ -50,12 +50,20 @@ def _pointer_parent(doc, pointer):
         raise ValueError("invalid JSON pointer")
     node = doc
     for part in pointer[:-1]:
-        if not isinstance(node, dict) or part not in node:
+        if isinstance(node, dict) and part in node:
+            node = node[part]
+        elif (isinstance(node, list) and part.isascii() and part.isdecimal()
+              and str(int(part)) == part and int(part) < len(node)):
+            node = node[int(part)]
+        else:
             raise ValueError("JSON pointer parent missing")
-        node = node[part]
-    if not isinstance(node, dict):
-        raise ValueError("JSON pointer parent is not an object")
-    return node, pointer[-1]
+    leaf = pointer[-1]
+    if isinstance(node, dict):
+        return node, leaf
+    if (isinstance(node, list) and leaf.isascii() and leaf.isdecimal()
+            and str(int(leaf)) == leaf and int(leaf) < len(node)):
+        return node, int(leaf)
+    raise ValueError("JSON pointer parent is not an object or valid array index")
 
 
 def _transform(raw: bytes, operations: list, label: str) -> bytes:
@@ -76,7 +84,7 @@ def _transform(raw: bytes, operations: list, label: str) -> bytes:
             except (UnicodeDecodeError, json.JSONDecodeError) as exc:
                 raise ValueError("JSON transform target is invalid: " + label) from exc
             parent, leaf = _pointer_parent(doc, operation.get("pointer"))
-            if leaf not in parent or parent[leaf] != operation.get("before"):
+            if (isinstance(parent, dict) and leaf not in parent) or parent[leaf] != operation.get("before"):
                 raise ValueError("JSON transform preimage differs: " + label)
             parent[leaf] = operation.get("after")
             raw = (json.dumps(doc, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
@@ -251,6 +259,12 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
     packs = recipe.get("packs")
     if not isinstance(packs, list) or not packs:
         raise ValueError("recipe packs must be a nonempty list")
+    profile = recipe.get("profile")
+    if profile not in (None, "public-minimal"):
+        raise ValueError("unsupported recipe profile")
+    if profile == "public-minimal" and (set(recipe.get("inputs", {})) != {"grilling", "cookery"}
+            or len(packs) != 4 or sorted(pack.get("side") for pack in packs) != ["BP", "BP", "RP", "RP"]):
+        raise ValueError("public-minimal requires exactly two pinned BP/RP pairs")
     output = output.absolute()
     if output.exists():
         raise ValueError("refusing to replace existing output directory")
@@ -261,6 +275,7 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
     stage = Path(tempfile.mkdtemp(prefix="." + output.name + ".", dir=output.parent))
     pack_receipts = []
     behavior_players = []
+    public_manifests = []
     world_lists = {"BP": [], "RP": []}
     archive_reader = None
     try:
@@ -340,6 +355,8 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
             except (UnicodeDecodeError, json.JSONDecodeError) as exc:
                 raise ValueError("invalid pack manifest: " + pack_id) from exc
             header = manifest.get("header", {})
+            if profile == "public-minimal":
+                public_manifests.append((pack_id, manifest))
             if header.get("uuid") != pack_uuid or header.get("version") != version:
                 raise ValueError("pack manifest UUID or version differs from recipe: " + pack_id)
             expected_modules = pack.get("modules")
@@ -363,7 +380,16 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                     target = _safe_output_path(pack_root, relative)
                     if file_sha256(target) != source_hashes[relative]["output_sha256"]:
                         raise ValueError("staged output hash differs: " + relative)
-                    zf.write(target, relative)
+                    if profile == "public-minimal":
+                        # Stable bytes for independently reproducible local imports.
+                        info = zipfile.ZipInfo(relative, (2026, 9, 29, 0, 0, 0))
+                        info.create_system = 3
+                        info.compress_type = zipfile.ZIP_DEFLATED
+                        info.external_attr = 0o100644 << 16
+                        zf.writestr(info, target.read_bytes())
+                    else:
+                        # Leave historical family archive identities unchanged.
+                        zf.write(target, relative)
             with zipfile.ZipFile(archive, "r") as zf:
                 members = _validate_zip(zf)
                 if set(members) != set(source_hashes):
@@ -388,11 +414,22 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                 if not isinstance(desired, list) or set(desired) != set(by_id) or len(desired) != len(by_id):
                     raise ValueError("order must list each pack id once for " + side)
                 world_lists[side] = [by_id[item] for item in desired]
+        if profile == "public-minimal":
+            versions = {row["uuid"]: row["version"] for row in pack_receipts}
+            if len(versions) != len(pack_receipts):
+                raise ValueError("public-minimal has duplicate UUID identities")
+            for pack_id, manifest in public_manifests:
+                for dependency in manifest.get("dependencies", []):
+                    if not isinstance(dependency, dict):
+                        raise ValueError("invalid public manifest dependency: " + pack_id)
+                    uid = dependency.get("uuid")
+                    if uid is not None and dependency.get("version") != versions.get(uid):
+                        raise ValueError("unresolved public-minimal manifest dependency: " + pack_id)
         behavior_player = selected_behavior_player(behavior_players,
             recipe.get('behavior_player_override'), world_lists['BP'])
         for name, key in (("world_behavior_packs.json", "BP"), ("world_resource_packs.json", "RP")):
             _atomic_new(stage / name, (json.dumps(world_lists[key], ensure_ascii=False, indent=2) + "\n").encode())
-        aggregate_name = "family.mcaddon"
+        aggregate_name = "public-minimal.mcaddon" if profile == "public-minimal" else "family.mcaddon"
         aggregate_path = stage / aggregate_name
         aggregate_members = {}
         with zipfile.ZipFile(aggregate_path, "w", zipfile.ZIP_DEFLATED) as aggregate:
@@ -422,6 +459,9 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                        "sha256": aggregate_sha256, "bytes": aggregate_bytes,
                        "members": aggregate_members}, "order": order,
                    "behavior_player_definition": behavior_player}
+        if profile == "public-minimal":
+            receipt["profile"] = profile
+            receipt["manifest_dependency_rebindings"] = recipe.get("manifest_dependency_rebindings", [])
         _atomic_new(stage / "receipt.json", (json.dumps(receipt, ensure_ascii=False, indent=2) + "\n").encode())
         output.parent.mkdir(parents=True, exist_ok=True)
         os.rename(stage, output)
