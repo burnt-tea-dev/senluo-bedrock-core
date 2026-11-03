@@ -11,12 +11,17 @@ Core SDK ──→ Grilling (event routing and public food metadata)
 Local installer + your original Cookery archive ──→ your adapted local archive
 ```
 
-Current pack versions, exact inputs, required experiments and build commands live in
-[the family installation guide](docs/FAMILY-ASSEMBLY.md#current-g212-installation).
-Use that reviewed combination together; older IE/TACZ pairs retain exact
-Grilling dependencies and cannot be mixed with a newer port.
+**Public Grilling installation (no family required):** select
+`build_owned_family_recipe.py --profile public-minimal` following the
+[Grilling + Cookery 1.6.4 local-install instructions](docs/FAMILY-ASSEMBLY.md#public-minimal-grilling--cookery-only-opt-in).
+This uses the same pinned Cookery host installer and family assembler, but
+requires only the Grilling and locally adapted Cookery BP/RP pairs. IE, TACZ,
+Tavern, World Liquor and private packs are **not required**.
+
+The [complete G212 family installation](docs/FAMILY-ASSEMBLY.md#current-g212-installation)
+and older exact-version IE/TACZ recipes remain available by explicit selection.
 Pack/module UUIDs, item IDs and save ownership are retained. Back up a stopped
-world and test a copy before upgrading.
+world and test a copy before upgrading. Builds are not client gameplay PASS.
 
 - [SDK contract and source ownership](docs/SDK.md)
 - [Cookery local installation](docs/COOKERY.md)
@@ -25,8 +30,9 @@ world and test a copy before upgrading.
 - [Validation limits](docs/VALIDATION.md)
 
 Public and server integration use the same canonical Grilling player composer
-and Core guide helper. The three owned ports and required glue are the public
-parity scope; unrelated third-party addons are separate downloads. Native and
+and Core guide helper. The public-minimal entry covers Grilling + the real Cookery host dependency;
+the other owned ports and third-party compatibility are separate, opt-in
+profiles rather than required downloads. Native and
 save evidence do not establish rendered client acceptance. Get published
 assets from [Releases](https://github.com/burnt-tea-dev/senluo-bedrock-core/releases).
 
