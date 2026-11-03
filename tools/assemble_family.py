@@ -437,7 +437,14 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                 standalone = stage / pack_receipt["archive"]
                 aggregate_member = pack_receipt["archive"]
                 raw = standalone.read_bytes()
-                aggregate.writestr(aggregate_member, raw)
+                if profile == "public-minimal":
+                    info = zipfile.ZipInfo(aggregate_member, (2026, 9, 29, 0, 0, 0))
+                    info.create_system = 3
+                    info.compress_type = zipfile.ZIP_DEFLATED
+                    info.external_attr = 0o100644 << 16
+                    aggregate.writestr(info, raw)
+                else:
+                    aggregate.writestr(aggregate_member, raw)
                 member_info = {"path": aggregate_member, "sha256": sha256(raw), "bytes": len(raw)}
                 pack_receipt["archive_sha256"] = member_info["sha256"]
                 pack_receipt["archive_bytes"] = member_info["bytes"]
