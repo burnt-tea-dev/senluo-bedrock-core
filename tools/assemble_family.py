@@ -260,6 +260,7 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
     output.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix="." + output.name + ".", dir=output.parent))
     pack_receipts = []
+    pack_dependencies = {}
     behavior_players = []
     world_lists = {"BP": [], "RP": []}
     archive_reader = None
@@ -340,6 +341,7 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
             except (UnicodeDecodeError, json.JSONDecodeError) as exc:
                 raise ValueError("invalid pack manifest: " + pack_id) from exc
             header = manifest.get("header", {})
+            pack_dependencies[pack_id] = manifest.get("dependencies", [])
             if header.get("uuid") != pack_uuid or header.get("version") != version:
                 raise ValueError("pack manifest UUID or version differs from recipe: " + pack_id)
             expected_modules = pack.get("modules")
@@ -379,6 +381,22 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
         if archive_reader is not None:
             archive_reader.close()
             archive_reader = None
+        if recipe.get("require_closed_pack_dependencies") is True:
+            versions_by_uuid = {pack["uuid"]: pack["version"] for pack in pack_receipts}
+            if len(versions_by_uuid) != len(pack_receipts):
+                raise ValueError("public-minimal pack UUID occurs more than once")
+            for pack_id, dependencies in pack_dependencies.items():
+                if not isinstance(dependencies, list):
+                    raise ValueError("invalid manifest dependencies: " + pack_id)
+                for dependency in dependencies:
+                    if not isinstance(dependency, dict):
+                        raise ValueError("invalid manifest dependency: " + pack_id)
+                    if "uuid" not in dependency:
+                        continue  # Script API module dependencies are supplied by the engine.
+                    if dependency["uuid"] not in versions_by_uuid:
+                        raise ValueError("required pack dependency is absent: " + pack_id)
+                    if dependency.get("version") != versions_by_uuid[dependency["uuid"]]:
+                        raise ValueError("required pack dependency version differs: " + pack_id)
         order = recipe.get("order", {})
         for side, key in (("BP", "BP"), ("RP", "RP")):
             desired = order.get(key)
@@ -390,6 +408,10 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                 world_lists[side] = [by_id[item] for item in desired]
         behavior_player = selected_behavior_player(behavior_players,
             recipe.get('behavior_player_override'), world_lists['BP'])
+        required_player_owner = recipe.get("required_behavior_player_owner")
+        if required_player_owner is not None and (
+                behavior_player is None or behavior_player["pack_id"] != required_player_owner):
+            raise ValueError("required behavior minecraft:player owner differs")
         for name, key in (("world_behavior_packs.json", "BP"), ("world_resource_packs.json", "RP")):
             _atomic_new(stage / name, (json.dumps(world_lists[key], ensure_ascii=False, indent=2) + "\n").encode())
         aggregate_name = "family.mcaddon"
