@@ -246,6 +246,9 @@ def adapt_files(originals, composed, controller, descriptor):
     player = roots['BP'] + 'entities/player.json'
     if old_player not in originals or player in originals:
         raise ValueError('TACZ behavior player preimage differs')
+    offhand_path = roots['RP'] + 'render_controllers/kg_tacz_offhand.render_controllers.json'
+    if offhand_path in originals:
+        raise ValueError('Conflicting TACZ offhand render-controller file: ' + offhand_path)
     property_count = verify_composed_player(originals, composed, roots)
     changed = {player: composed['BP/entities/player.json']}
     awp_path = roots['BP'] + 'entities/bullet/awp.json'
@@ -332,9 +335,6 @@ def adapt_files(originals, composed, controller, descriptor):
             changed[name] = (json.dumps(document, ensure_ascii=False, indent=2) + '\n').encode()
     if len(controller_paths) != 1:
         raise ValueError('Expected one TACZ generic first-person controller')
-    offhand_path = roots['RP'] + 'render_controllers/kg_tacz_offhand.render_controllers.json'
-    if offhand_path in originals:
-        raise ValueError('Conflicting TACZ offhand render-controller file: ' + offhand_path)
     changed[offhand_path] = (
         json.dumps({'format_version': '1.8.0', 'render_controllers': {
             OFFHAND_FP: offhand_controller(merged_controller)}}, ensure_ascii=False, indent=2) + '\n').encode()
