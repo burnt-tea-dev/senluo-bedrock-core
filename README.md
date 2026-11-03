@@ -11,11 +11,17 @@ Core SDK ──→ Grilling (event routing and public food metadata)
 Local installer + your original Cookery archive ──→ your adapted local archive
 ```
 
-Current pack build commands and optional local integration recipes live in
-[the family installation guide](docs/FAMILY-ASSEMBLY.md#current-g212-installation).
-Those pinned recipes reproduce particular private combinations; they are **not**
-requirements that public Addon players install matching Tavern, IE or TACZ
-versions. Cookery capabilities needed by Grilling remain a real dependency;
+**Public Grilling installation:** use the existing recipe builder with
+`--profile public-minimal`, as described in the
+[Grilling + Cookery guide](docs/FAMILY-ASSEMBLY.md#public-minimal-grilling-cookery).
+Only exact Grilling 2.8.212 and a locally adapted original Cookery 1.6.4 are
+inputs. The adapter pins both archives and updates the two Grilling manifest
+references to the matching local Cookery version without modifying either
+download. No Tavern, World Liquor, IE, TACZ, private patch or family lock is
+required. A locally built `family.mcaddon` contains four packs and must still
+pass actual Bedrock client/gameplay validation. The
+[existing full-family recipe](docs/FAMILY-ASSEMBLY.md#current-g212-installation)
+and historical descriptors remain available for explicit private integrations. Cookery capabilities needed by Grilling remain a real dependency;
 IE, TACZ and server-specific player overlays are optional integrations. New
 releases target current Bedrock APIs, not a test matrix of historical ports.
 Pack/module UUIDs, item IDs and save ownership are retained. Back up a stopped
@@ -28,8 +34,8 @@ world and test a copy before upgrading.
 - [Validation limits](docs/VALIDATION.md)
 
 Public and server integration use the same canonical Grilling player composer
-and Core guide helper. The three owned ports and required glue are the public
-parity scope; unrelated third-party addons are separate downloads. Native and
+and Core guide helper. The full-family recipe assembles the three owned ports and their optional
+integrations; it is not a dependency of the public-minimal Grilling route. Native and
 save evidence do not establish rendered client acceptance. Get published
 assets from [Releases](https://github.com/burnt-tea-dev/senluo-bedrock-core/releases).
 
@@ -52,7 +58,10 @@ releases and their TACZ20004 recipes remain historical outputs.
 
 Cookery recipe registration now processes at most four incoming messages per tick, with a one-millisecond target. Original registration validation, FIFO replacement order, every recipe and welcome chat remain. The synchronous exported registration function is unchanged. Use [the current Cookery descriptor](adapters/cookery-1.6.4-grilling-2.8.212-station-performance.json) and [optional TACZ family descriptor](adapters/owned-t194-g212-w180-station-performance-tacz.json). Native and client acceptance remain separate from installer verification.
 
-The source and family builder defaults select the current G212/Cookery20012 installation. Historical G201/G203 and prior Cookery recipes remain available through an explicit `--descriptor`.
+The source and existing family builder defaults preserve the current
+G212/Cookery20012 full-family selection for compatibility. Select
+`build_owned_family_recipe.py --profile public-minimal` for the two-input
+public route, or use `--descriptor` for pinned historical recipes.
 
 Archive writers use canonical ZIP metadata on both Windows and Linux.
 SDK0.1.0 retains its archive bytes. The current descriptors pin fresh paired
