@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "id": "senluo-core:public-grilling-g213-cookery20012",
+  "recipe_version": "g213-cookery20012-r1",
+  "scope": "Public-minimal G213 and locally adapted Cookery; no optional family inputs.",
+  "inputs": {
+    "grilling": {
+      "filename": "grilling-2.8.213.mcaddon",
+      "sha256": "ba073d40ad2bbf3ef8f68ea1121c3f9d9d81dd10acdb4085eb2bf15b0c000643",
+      "distribution": "owned-public-source-candidate"
+    },
+    "cookery": {
+      "filename": "cookery-g213.mcaddon",
+      "sha256": "a13cf4e8f48308c73c0e9acf72352026a0bd0becc9a5c89fff1670e7d9e3c144",
+      "distribution": "user-local-only-original-author-input-required"
+    }
+  },
+  "packs": [
+    {
+      "id": "grilling-bp",
+      "input": "grilling",
+      "uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+      "version": [
+        2,
+        8,
+        213
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "dcf70052-c592-56e3-84d2-2a9b86abe7ab",
+          "version": [
+            2,
+            8,
+            213
+          ]
+        },
+        {
+          "uuid": "d0bb6818-8187-5d20-8e1f-a2ab7b517795",
+          "version": [
+            2,
+            8,
+            213
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grilling-rp",
+      "input": "grilling",
+      "uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+      "version": [
+        2,
+        8,
+        213
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "e7d592db-f4a0-53ce-8b0a-cab7a0cee8d7",
+          "version": [
+            2,
+            8,
+            213
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cookery-rp",
+      "input": "cookery",
+      "uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+      "version": [
+        1,
+        6,
+        20012
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "b25e061d-b15a-48c1-a6de-dcc15a9276d4",
+          "version": [
+            1,
+            6,
+            20012
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cookery-bp",
+      "input": "cookery",
+      "uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+      "version": [
+        1,
+        6,
+        20012
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "45b88a1d-d195-42c1-acd2-afd385791439",
+          "version": [
+            1,
+            6,
+            20012
+          ]
+        }
+      ]
+    }
+  ],
+  "order": {
+    "BP": [
+      "grilling-bp",
+      "cookery-bp"
+    ],
+    "RP": [
+      "grilling-rp",
+      "cookery-rp"
+    ]
+  },
+  "candidate_provenance": {
+    "grilling_repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+    "grilling_commit": "aa8a07ad223c993c05b0d356615d38e990148588",
+    "grilling_git_tree": "27218efec1960c1eb4c33226e5c72d36bdafaabf",
+    "grilling_input_archive_sha256": "2a3e79a889156d147c332c53fbc0fd368672d44c49c76f8b633fc59129dc20cd",
+    "status": "source candidate; not a public Release; full-family and client acceptance remain pending"
+  },
+  "toolkit_version": "0.27.0"
+}

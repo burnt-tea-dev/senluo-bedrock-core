@@ -12,7 +12,7 @@ Local installer + your original Cookery archive ──→ your adapted local arc
 ```
 
 **Public Grilling installation (no family required):** select
-`build_owned_family_recipe.py --profile public-minimal` following the
+`build_owned_family_recipe.py --descriptor adapters/public-grilling-g213-cookery20012.json --profile public-minimal` following the
 [Grilling + Cookery 1.6.4 local-install instructions](docs/FAMILY-ASSEMBLY.md#public-minimal-grilling--cookery-only-opt-in).
 This uses the same pinned Cookery host installer and family assembler, but
 requires only the Grilling and locally adapted Cookery BP/RP pairs. IE, TACZ,

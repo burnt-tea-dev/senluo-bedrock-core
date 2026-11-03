@@ -13,29 +13,31 @@ the SDK version in `sdk.json` and its release history remain separate.
 
 For an ordinary player **without** Tavern, World Liquor (世界名酒),
 Immersive Eating, TACZ or private Senluo repairs, use the existing recipe builder
-with `--profile public-minimal`. This profile selects only the G212 BP/RP and
-locally adapted Cookery 1.6.4 BP/RP from the **unchanged**, SHA-pinned current
-family descriptor. It does not run `install_player_presentation.py` (`--ie`)
+with `--profile public-minimal`. This profile selects only the G213 BP/RP and
+locally adapted Cookery 1.6.4 BP/RP from a dedicated two-input, SHA-pinned public descriptor. It does not run `install_player_presentation.py` (`--ie`)
 or any TACZ composer, and does not require their archives.
 
 The author Cookery archive needs its public host API connected locally; merely
 importing an unmodified Cookery 1.6.4 plus ordinary Grilling is **not** yet an
 equivalent working installation. Obtain clean Cookery 1.6.4 (CurseForge file
 9317031) directly from its author. Use a clean Grilling checkout at
-`aa8a07ad223c993c05b0d356615d38e990148588` (source candidate, not a
+`6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3` (source candidate, not a
 published gameplay release) or the independently verified matching Grilling
 input archive. Only those two archives go into `local-inputs`.
 
 ```sh
 mkdir -p local-inputs
 python3 tools/build_grilling_input.py \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json \
   --source /path/to/grilling \
-  --output local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon
+  --output local-inputs/grilling-2.8.213.mcaddon
 python3 tools/install_cookery_from_descriptor.py \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json \
   --cookery /path/to/original-cookery-1.6.4.mcaddon \
-  --grilling local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon \
-  --output local-inputs/cookery-station-performance-20012.mcaddon
+  --grilling local-inputs/grilling-2.8.213.mcaddon \
+  --output local-inputs/cookery-g213.mcaddon
 python3 tools/build_owned_family_recipe.py \
+  --descriptor adapters/public-grilling-g213-cookery20012.json \
   --profile public-minimal --inputs local-inputs \
   --output public-minimal.recipe.json
 python3 tools/assemble_family.py \
@@ -75,6 +77,11 @@ older Grilling or historical family selector.
 The existing full-family instructions below remain for maintainers and
 explicitly selected optional compatibility. The default (no `--profile`)
 still builds the complete historical/family recipe.
+
+The G213 Cookery host archive is byte-identical to the verified G212 host output
+(`a13cf4e8f48308c73c0e9acf72352026a0bd0becc9a5c89fff1670e7d9e3c144`),
+so its existing `1.6.20012` identity is retained. Existing family defaults and
+G212 descriptors remain unchanged.
 
 ## Current G212 installation
 

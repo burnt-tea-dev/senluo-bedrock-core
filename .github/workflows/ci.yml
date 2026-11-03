@@ -51,12 +51,22 @@ jobs:
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9317/31/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' --output "$RUNNER_TEMP/cookery.mcaddon"
           python tools/install_player_presentation.py --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.212.mcaddon" --grilling-source .grilling-next --output "$RUNNER_TEMP/ie-g212.mcaddon"
           python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.212.mcaddon" --output "$RUNNER_TEMP/cookery-g212.mcaddon"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: burnt-tea-dev/kaleidoscope-grilling-unofficial
+          ref: 6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3
+          path: .grilling-public
+          persist-credentials: false
+      - name: Reproduce verified public G213 and its unchanged Cookery host
+        run: |
+          python tools/build_grilling_input.py --source .grilling-public --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json --output "$RUNNER_TEMP/grilling-2.8.213.mcaddon"
+          python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery.mcaddon" --grilling "$RUNNER_TEMP/grilling-2.8.213.mcaddon" --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json --output "$RUNNER_TEMP/cookery-g213.mcaddon"
       - name: Assemble the real two-archive public-minimal import in isolation
         run: |
           mkdir -p "$RUNNER_TEMP/public-minimal-inputs"
-          cp "$RUNNER_TEMP/Grilling-2.8.212.mcaddon" "$RUNNER_TEMP/public-minimal-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon"
-          cp "$RUNNER_TEMP/cookery-g212.mcaddon" "$RUNNER_TEMP/public-minimal-inputs/cookery-station-performance-20012.mcaddon"
-          python tools/build_owned_family_recipe.py --profile public-minimal --inputs "$RUNNER_TEMP/public-minimal-inputs" --output "$RUNNER_TEMP/public-minimal.recipe.json"
+          cp "$RUNNER_TEMP/grilling-2.8.213.mcaddon" "$RUNNER_TEMP/public-minimal-inputs/grilling-2.8.213.mcaddon"
+          cp "$RUNNER_TEMP/cookery-g213.mcaddon" "$RUNNER_TEMP/public-minimal-inputs/cookery-g213.mcaddon"
+          python tools/build_owned_family_recipe.py --descriptor adapters/public-grilling-g213-cookery20012.json --profile public-minimal --inputs "$RUNNER_TEMP/public-minimal-inputs" --output "$RUNNER_TEMP/public-minimal.recipe.json"
           python tools/assemble_family.py --recipe "$RUNNER_TEMP/public-minimal.recipe.json" --inputs "$RUNNER_TEMP/public-minimal-inputs" --output "$RUNNER_TEMP/public-minimal-output"
           python tools/assemble_family.py --recipe "$RUNNER_TEMP/public-minimal.recipe.json" --inputs "$RUNNER_TEMP/public-minimal-inputs" --output "$RUNNER_TEMP/public-minimal-repeat"
           python - <<'PY_PUBLIC_MINIMAL'
