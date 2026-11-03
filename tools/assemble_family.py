@@ -80,6 +80,32 @@ def _transform(raw: bytes, operations: list, label: str) -> bytes:
                 raise ValueError("JSON transform preimage differs: " + label)
             parent[leaf] = operation.get("after")
             raw = (json.dumps(doc, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+        elif kind == "manifest_dependency_version":
+            # A reviewed, single-UUID manifest dependency update. Do not change
+            # author archive bytes or remove a dependency to make a build pass.
+            if PurePosixPath(label).name != "manifest.json":
+                raise ValueError("dependency transform requires manifest.json: " + label)
+            try:
+                doc = json.loads(raw.decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise ValueError("invalid manifest dependency target: " + label) from exc
+            uuid = operation.get("uuid")
+            before, after = operation.get("before"), operation.get("after")
+            if (not isinstance(uuid, str) or not uuid
+                    or any(not (isinstance(v, list) and len(v) == 3
+                                and all(type(n) is int and n >= 0 for n in v))
+                           for v in (before, after))
+                    or before == after):
+                raise ValueError("invalid pinned dependency versions: " + label)
+            dependencies = doc.get("dependencies")
+            if not isinstance(dependencies, list):
+                raise ValueError("manifest dependencies missing: " + label)
+            matches = [dep for dep in dependencies
+                       if isinstance(dep, dict) and dep.get("uuid") == uuid]
+            if len(matches) != 1 or matches[0].get("version") != before:
+                raise ValueError("manifest dependency preimage differs: " + label)
+            matches[0]["version"] = after
+            raw = (json.dumps(doc, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
         else:
             raise ValueError("unsupported transform kind: " + str(kind))
     return raw
@@ -260,6 +286,7 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
     output.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix="." + output.name + ".", dir=output.parent))
     pack_receipts = []
+    manifest_dependencies = {}
     behavior_players = []
     world_lists = {"BP": [], "RP": []}
     archive_reader = None
@@ -350,6 +377,11 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                               for module in modules]
             if actual_modules != expected_modules:
                 raise ValueError("pack manifest module UUIDs or versions differ from recipe: " + pack_id)
+            if recipe.get("require_resolved_dependencies") is True:
+                dependencies = manifest.get("dependencies", [])
+                if not isinstance(dependencies, list):
+                    raise ValueError("invalid manifest dependencies: " + pack_id)
+                manifest_dependencies[pack_id] = dependencies
             expected = pack.get("expected_tree", {})
             expected_files = expected.get("files") if isinstance(expected, dict) else None
             if expected_files is not None and expected_files != {p: h["output_sha256"] for p, h in source_hashes.items()}:
@@ -379,6 +411,23 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
         if archive_reader is not None:
             archive_reader.close()
             archive_reader = None
+        # Opt-in closed pack set for the public-minimal profile. Reject any
+        # unresolved/mismatched UUID dependency; script module dependencies
+        # remain the engine's responsibility.
+        if recipe.get("require_resolved_dependencies") is True:
+            by_uuid = {pack["uuid"]: pack["version"] for pack in pack_receipts}
+            if len(by_uuid) != len(pack_receipts):
+                raise ValueError("duplicate pack UUID in closed dependency set")
+            for pack_id, dependencies in manifest_dependencies.items():
+                for dep in dependencies:
+                    if not isinstance(dep, dict):
+                        raise ValueError("invalid manifest dependency: " + pack_id)
+                    if "uuid" not in dep:
+                        continue
+                    if dep["uuid"] not in by_uuid:
+                        raise ValueError("unresolved pack dependency: " + pack_id + " -> " + str(dep["uuid"]))
+                    if dep.get("version") != by_uuid[dep["uuid"]]:
+                        raise ValueError("pack dependency version mismatch: " + pack_id + " -> " + dep["uuid"])
         order = recipe.get("order", {})
         for side, key in (("BP", "BP"), ("RP", "RP")):
             desired = order.get(key)
