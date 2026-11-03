@@ -52,6 +52,22 @@ and save keys are not intentional compatibility edits; receipt categories show
 the separate native TACZ changes precisely. Static ZIP output does not prove
 in-game animations, sound, gun operation, save/rollback or multiplayer acceptance.
 
+### Player and third-party conflict decisions
+
+| Actual input surface | Reviewed action | Unsupported / conflict |
+| --- | --- | --- |
+| BP `minecraft:player` identity and properties | Preserve all TACZ definitions while merging Grilling's existing fields; check the **full effective** <=32 property limit, not simply 24+4 for other combinations | Changed original property value, duplicate player owner, or >32 effective properties: reject |
+| RP `minecraft:player` and FP/TP render routes | Use canonical Grilling composer for the pinned IE host and TACZ pair; retain unique named routes and their original TP predicates | Duplicate FP/TP aliases, missing generic FP or unknown route shape: reject; never rely on order silently |
+| Arm bones and animation controllers | The reviewed TACZ offhand route affects left-arm/sleeve visibility; existing numeric interpolation and third-person state are retained | Unsupported bone layout or an already occupied generated controller name: reject; live rendered behavior remains unverified |
+| Client `initialize`, `pre_animation`, `animate` | Use the canonical composer's **pinned** script-owner merge, including its reviewed attack-body conditional and duplicate assignment handling | New expression owner, external interface or unknown composer output: no generic merger; require a new reviewed composer contract |
+| External BP scripts, items, ammo and save structure | Preserve the author source except the separately categorized pinned startup-table and invalid-hit repairs | Do not rewrite arbitrary script modules, gun items, reload events, ammo, save identifiers or unrelated bullets |
+| Pack manifests and resources | Local output keeps the reviewed paired UUIDs, raises adapter versions, and declares Grilling and IE dependencies **only in the selected combined profile** | An unselected provider is not a public-base dependency; do not republish the altered third-party package as original |
+
+The final save/player/FP/TP owner cannot be inferred from a single archive
+when other third-party packs are installed but not supplied as inputs. Those
+extra `minecraft:player` owners and script hooks require explicit compatibility
+review; neither a generic priority rule nor this local adapter solves them.
+
 **Interface request to the Grilling composer owner (not implemented here):**
 if a TACZ-only profile is required, provide a reviewed non-IE
 `minecraft:client_entity` player preimage with exact source/version pins,
