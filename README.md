@@ -11,10 +11,13 @@ Core SDK ──→ Grilling (event routing and public food metadata)
 Local installer + your original Cookery archive ──→ your adapted local archive
 ```
 
-Current pack versions, exact inputs, required experiments and build commands live in
+Current pack build commands and optional local integration recipes live in
 [the family installation guide](docs/FAMILY-ASSEMBLY.md#current-g212-installation).
-Use that reviewed combination together; older IE/TACZ pairs retain exact
-Grilling dependencies and cannot be mixed with a newer port.
+Those pinned recipes reproduce particular private combinations; they are **not**
+requirements that public Addon players install matching Tavern, IE or TACZ
+versions. Cookery capabilities needed by Grilling remain a real dependency;
+IE, TACZ and server-specific player overlays are optional integrations. New
+releases target current Bedrock APIs, not a test matrix of historical ports.
 Pack/module UUIDs, item IDs and save ownership are retained. Back up a stopped
 world and test a copy before upgrading.
 
@@ -72,7 +75,7 @@ animation weights free of actor queries during skin previews. The current local
 TACZ installer requires `--source-assets /path/to/source-assets` (the existing
 `--source-sounds` flag is also accepted). The current descriptor pins the seven
 source sounds plus four pre-SkinPack gun textures and three matching cosmetic
-models. The pinned CI workflow shows the separate downloads and exact archive
+models. The historical toolkit recipes record the separate downloads and exact archive
 and file verification. The cosmetic source is a mirror of the removed Bedrock
 1.0.2 translation, not a currently verified official author download. Only those
 seven cosmetic files are selected; its code is not installed. The 1.0.3 scripts,
