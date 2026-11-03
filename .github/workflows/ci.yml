@@ -91,6 +91,11 @@ jobs:
                   assert archive.read(name) == (root/'public-minimal-output'/name).read_bytes()
           assert set(recipe['inputs']) == {'grilling', 'cookery'}
           print('Real public-minimal archives, paired manifest dependencies and reproducible hashes verified')
+          print(json.dumps({'profile': receipt['profile'], 'recipe_sha256': receipt['recipe_sha256'],
+                            'input_sha256': {key: value['sha256'] for key, value in receipt['inputs'].items()},
+                            'aggregate_sha256': receipt['aggregate']['sha256'],
+                            'pack_sha256': {pack['id']: pack['archive_sha256'] for pack in receipt['packs']}},
+                           sort_keys=True))
           PY_PUBLIC_MINIMAL
       - name: Verify the real Cookery station adapter
         # The ordinary test run above has no author inputs; this stage runs
