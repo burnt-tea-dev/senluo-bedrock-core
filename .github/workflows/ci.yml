@@ -31,8 +31,9 @@ jobs:
       # Code and test edits do not need a new toolkit release identity.
 
   real-public-minimal:
-    # Run explicitly when accepting an installer change; ordinary source CI
-    # stays independent of author CDN availability and private family inputs.
+    # Explicit only. Ordinary source CI does not download author assets or
+    # require IE/TACZ/private family inputs. The vanilla checkout is a build
+    # reference, not another addon selected by the resulting four-pack recipe.
     if: github.event_name == 'workflow_dispatch' && github.repository == 'burnt-tea-dev/senluo-bedrock-core' && github.repository_id == '1439792715'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -49,6 +50,12 @@ jobs:
           ref: 6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3
           path: .grilling-public
           persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: Mojang/bedrock-samples
+          ref: 15701fa9c13923f12662984c32c124327e40e3d3
+          path: .vanilla-public
+          persist-credentials: false
       - name: Reproduce only the pinned public Grilling and clean Cookery pair
         run: |
           mkdir -p "$RUNNER_TEMP/public-minimal-inputs"
@@ -57,9 +64,11 @@ jobs:
           python tools/build_grilling_input.py --source .grilling-public --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json --output "$RUNNER_TEMP/public-minimal-inputs/grilling-2.8.213.mcaddon"
           python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery-original.mcaddon" --grilling "$RUNNER_TEMP/public-minimal-inputs/grilling-2.8.213.mcaddon" --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json --output "$RUNNER_TEMP/public-minimal-inputs/cookery-g213.mcaddon"
           mv "$RUNNER_TEMP/public-minimal-inputs/cookery-g213.mcaddon.receipt.json" "$RUNNER_TEMP/cookery-g213.receipt.json"
-      - name: Verify real station adapter and repeatable four-pack public output
+      - name: Verify real station adapter and repeatable four-pack player-complete output
         env:
           PUBLIC_MINIMAL_INPUTS: ${{ runner.temp }}/public-minimal-inputs
+          PUBLIC_PLAYER_GRILLING_SOURCE: .grilling-public
+          PUBLIC_PLAYER_VANILLA_SOURCE: .vanilla-public
           COOKERY_ORIGINAL_ARCHIVE: ${{ runner.temp }}/cookery-original.mcaddon
           GRILLING_ADAPTED_ARCHIVE: ${{ runner.temp }}/public-minimal-inputs/grilling-2.8.213.mcaddon
           COOKERY_TEST_DESCRIPTOR: adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json
