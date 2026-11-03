@@ -11,6 +11,18 @@ Core SDK ──→ Grilling (event routing and public food metadata)
 Local installer + your original Cookery archive ──→ your adapted local archive
 ```
 
+## Public minimal install (Grilling + original Cookery only)
+
+The public Grilling path does **not** require Tavern, World Liquor, Immersive
+Eating, TACZ or the private Senluo integration. Use the existing local
+installer and pack assembler with `--profile public-minimal`, which selects
+the two Grilling and two locally adapted Cookery packs. Obtain the original
+Cookery archive yourself; do not redistribute the locally adapted output.
+
+See [public-minimal installation](docs/FAMILY-ASSEMBLY.md#public-minimal-grilling--cookery)
+for commands and source requirements. Building these packs is not client,
+visual or in-world acceptance; those steps are still pending.
+
 Current pack build commands and optional local integration recipes live in
 [the family installation guide](docs/FAMILY-ASSEMBLY.md#current-g212-installation).
 Those pinned recipes reproduce particular private combinations; they are **not**
@@ -28,8 +40,8 @@ world and test a copy before upgrading.
 - [Validation limits](docs/VALIDATION.md)
 
 Public and server integration use the same canonical Grilling player composer
-and Core guide helper. The three owned ports and required glue are the public
-parity scope; unrelated third-party addons are separate downloads. Native and
+and Core guide helper. The three owned ports are a separate full-family profile, not a mandatory
+public Grilling install set; unrelated third-party addons remain optional. Native and
 save evidence do not establish rendered client acceptance. Get published
 assets from [Releases](https://github.com/burnt-tea-dev/senluo-bedrock-core/releases).
 
