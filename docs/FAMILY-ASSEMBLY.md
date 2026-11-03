@@ -11,6 +11,47 @@ the SDK version in `sdk.json` and its release history remain separate.
 
 ## Public-minimal installation (Grilling + Cookery only)
 
+### Direct public installation: two inputs, one command
+
+With Python available, use the existing builder as the public entrypoint:
+
+```sh
+python tools/build_owned_family_recipe.py --cookery /path/to/original-Cookery-1.6.4.mcaddon --grilling /path/to/Grilling.mcaddon --output ./new-public-output
+```
+
+Import `new-public-output/public-minimal.mcaddon`. This path selects only
+Grilling BP/RP and locally adapted Cookery BP/RP. It neither reads nor requires
+Tavern, 世界名酒, IE, TACZ, private source catalogs or a server family lock.
+It calls the existing Cookery adapter and assembler, not another installer.
+Original input archives are never overwritten; the output directory must be new.
+Generated Cookery and combined archives remain user-local, not public assets.
+
+Grilling's whole archive hash and version are **observed inputs, not a fixed
+family-combination requirement** in this direct mode. Both original pack UUIDs,
+module UUIDs and the paired BP/RP version are checked. The reviewed Cookery API
+declaration and all copied helper bytes must still match, as must the original
+Cookery archive and all author-file preimages/postimages. Unrelated Grilling
+resources or gameplay changes no longer require another version-specific recipe.
+An unknown interface is reported instead of asking the player to install IE/TACZ
+or silently changing an author script. This is a build-interface check, not
+certification of an arbitrary Grilling archive or gameplay compatibility.
+
+The generated local recipe records the actual input SHA256s and versions; its
+manifest dependency closure and sole behavior player owner are checked by the
+same assembler as before. `installation.json`, `receipt.json` and
+`cookery-adapter.receipt.json` record the source contract and resulting bytes,
+without borrowing an old candidate's commit, test result or Release identity.
+Use the engine/API/experiment requirements of the actual selected packages.
+Client, BDS, saved-world, multiplayer, rendering and audio results are **NOT RUN**
+for a newly assembled pair until separately observed. No world is modified.
+
+This command expects the existing flat BP/RP source-archive layout supported by
+the reviewed adapter. It is not a promise to accept every third-party ZIP layout,
+any Cookery version or arbitrary competing player definitions. Keep the legacy
+exact-descriptor commands below for reproducing an old recorded candidate.
+
+### Exact G212 recipe reproduction
+
 This public-first profile selects exactly Grilling 2.8.212 BP/RP and
 locally adapted original-author Cookery 1.6.4 BP/RP. **Tavern, 世界名酒,
 Immersive Eating, TACZ, the private repair pack and server family lock are not
@@ -77,9 +118,11 @@ gates. Do not describe a synthetic fixture test as original-author or
 client PASS. For IE/TACZ, deliberately use their separate optional installers
 and matching reviewed inputs. Do not use them for this profile.
 
-The existing complete family remains selectable by omitting `--profile`
-or providing `--profile full-family`. Explicit historical
-`--descriptor` paths are unchanged.
+In the legacy `--inputs` recipe mode, the existing complete family remains
+selectable by omitting `--profile` or providing `--profile full-family`.
+The direct `--cookery`/`--grilling` mode above always selects public-minimal;
+it rejects full-family selection and cannot mix direct and legacy inputs.
+Explicit historical `--descriptor` paths are unchanged.
 
 ## Current G212 installation
 
@@ -280,8 +323,10 @@ only its own temporary output.
 
 ### Explicit verified G213 public pair (integration candidate)
 
-The existing `public-minimal` profile remains pinned to G212. For G213, use the
-explicit descriptors below. This keeps every historical descriptor available.
+The legacy `--profile public-minimal --inputs` recipe mode remains pinned to
+G212. To reproduce this exact G213 candidate, use the explicit descriptors below.
+The direct public command above instead checks the same host contract against
+the actual Grilling input. Every historical descriptor remains available.
 Checkout public Grilling commit `6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3`
 (tree `9b7cd7c6e6be0a8a808fb73c27c67af9c3a1b224`) in `./grilling` and obtain the
 same clean author Cookery 1.6.4 described above. Never redistribute original or
