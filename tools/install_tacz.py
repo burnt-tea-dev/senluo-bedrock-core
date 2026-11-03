@@ -136,6 +136,109 @@ def offhand_controller(controller):
     return result
 
 
+
+def compare_author_members(originals, adapted, descriptor):
+    """Report every changed ZIP member, including additions and removals.
+
+    A path outside the reviewed player, metadata and known TACZ repair surfaces
+    is a conflict, not an implicit permission to patch the author's gameplay.
+    """
+    roots = descriptor['tacz']['prefixes']
+
+    def category(path):
+        side = next((key for key in ('BP', 'RP') if path.startswith(roots[key])), None)
+        if side is None:
+            raise ValueError('Unreviewed TACZ output member: ' + path)
+        relative = path.removeprefix(roots[side])
+        if relative == 'manifest.json':
+            return 'pack_metadata'
+        if side == 'BP':
+            if relative in ('entities/plalyer.json', 'entities/player.json'):
+                return 'cross_addon_player_owner'
+            if relative == 'entities/bullet/awp.json':
+                return 'native_tacz_block_registry_repair'
+            if relative == 'scripts/events/projectileHitEntity.js':
+                return 'native_tacz_projectile_validity_repair'
+            if relative.startswith('scripts/') and relative.endswith('.js'):
+                return 'native_tacz_startup_optimization'
+        else:
+            if (relative == 'entity/player.entity.json'
+                    or relative.startswith(('animations/', 'animation_controllers/', 'render_controllers/'))):
+                return 'cross_addon_player_presentation'
+            if relative.startswith('models/'):
+                return ('optional_tacz_original_cosmetics'
+                        if relative in descriptor.get('restored_model_files', {})
+                        else 'cross_addon_player_model')
+            if relative.startswith('textures/'):
+                return 'optional_tacz_original_cosmetics'
+            if relative == 'sounds/sound_definitions.json':
+                return 'native_tacz_audio_reference_repair'
+            if relative.startswith('sounds/'):
+                return 'optional_tacz_original_audio'
+            if relative.startswith('attachables/'):
+                return 'native_tacz_texture_reference_repair'
+            if relative.startswith('ui/'):
+                return 'native_tacz_ui_repair'
+            if relative == 'blocks.json':
+                return 'native_tacz_block_catalog_repair'
+        raise ValueError('Unreviewed TACZ output member: ' + path)
+
+    changed = {}
+    categories = {}
+    preserved = 0
+    for path in sorted(originals.keys() | adapted.keys()):
+        before, after = originals.get(path), adapted.get(path)
+        if before == after:
+            preserved += 1
+            continue
+        reason = category(path)
+        categories[reason] = categories.get(reason, 0) + 1
+        changed[path] = {
+            'operation': 'added' if before is None else 'removed' if after is None else 'modified',
+            'category': reason,
+            'before_sha256': sha256(before) if before is not None else None,
+            'after_sha256': sha256(after) if after is not None else None,
+        }
+    return changed, {'changed_members': len(changed),
+                     'unchanged_author_members': preserved, 'categories': categories}
+
+
+def verify_composed_player(originals, composed, roots):
+    """The selected source owner must retain every gun property and FP route."""
+    original_path = roots['BP'] + 'entities/plalyer.json'
+    candidate = composed.get('BP/entities/player.json')
+    client_raw = composed.get('RP/entity/player.entity.json')
+    if candidate is None or client_raw is None:
+        raise ValueError('Missing composed behavior/resource player pair')
+    source = read_definition(originals[original_path])['minecraft:entity']['description']
+    target = read_definition(candidate)['minecraft:entity']['description']
+    if source.get('identifier') != 'minecraft:player' or target.get('identifier') != 'minecraft:player':
+        raise ValueError('Conflicting minecraft:player behavior identifier')
+    old_properties = source.get('properties', {})
+    properties = target.get('properties', {})
+    if not isinstance(old_properties, dict) or not isinstance(properties, dict):
+        raise ValueError('Invalid minecraft:player properties')
+    if len(properties) > 32:
+        raise ValueError('Effective player property limit exceeded: ' + str(len(properties)))
+    for key, value in old_properties.items():
+        if properties.get(key) != value:
+            raise ValueError('Conflicting minecraft:player property: ' + key)
+    client = read_definition(client_raw)['minecraft:client_entity']['description']
+    if client.get('identifier') != 'minecraft:player':
+        raise ValueError('Conflicting minecraft:player resource identifier')
+    aliases = []
+    for route in client.get('render_controllers', []):
+        if isinstance(route, str):
+            aliases.append(route)
+        elif isinstance(route, dict) and len(route) == 1:
+            aliases.append(next(iter(route)))
+        else:
+            raise ValueError('Unreviewed minecraft:player render route')
+    if len(aliases) != len(set(aliases)) or aliases.count(FP) != 1 or OFFHAND_FP in aliases:
+        raise ValueError('Conflicting minecraft:player first/third-person render routes')
+    return len(properties)
+
+
 def adapt_files(originals, composed, controller, descriptor):
     pin = descriptor['tacz']
     roots = pin['prefixes']
@@ -143,9 +246,7 @@ def adapt_files(originals, composed, controller, descriptor):
     player = roots['BP'] + 'entities/player.json'
     if old_player not in originals or player in originals:
         raise ValueError('TACZ behavior player preimage differs')
-    schema = json.loads(composed['BP/entities/player.json'])['minecraft:entity']['description']
-    if schema.get('identifier') != 'minecraft:player' or len(schema.get('properties', {})) > 32:
-        raise ValueError('Invalid composed behavior player')
+    property_count = verify_composed_player(originals, composed, roots)
     changed = {player: composed['BP/entities/player.json']}
     awp_path = roots['BP'] + 'entities/bullet/awp.json'
     awp_raw = originals[awp_path]
@@ -165,8 +266,10 @@ def adapt_files(originals, composed, controller, descriptor):
     for name, raw in composed.items():
         if name == 'BP/entities/player.json':
             continue
-        if not _safe_name(name) or not name.startswith('RP/'):
-            raise ValueError('Unexpected player-composer output path')
+        if (not _safe_name(name) or not name.startswith('RP/')
+                or not name.startswith(('RP/entity/player.entity.json', 'RP/animations/',
+                                        'RP/animation_controllers/', 'RP/models/'))):
+            raise ValueError('Unexpected player-composer output path: ' + name)
         target = roots['RP'] + name.removeprefix('RP/')
         if target not in originals:
             raise ValueError('Missing reviewed TACZ resource preimage: ' + target)
@@ -228,7 +331,10 @@ def adapt_files(originals, composed, controller, descriptor):
             changed[name] = (json.dumps(document, ensure_ascii=False, indent=2) + '\n').encode()
     if len(controller_paths) != 1:
         raise ValueError('Expected one TACZ generic first-person controller')
-    changed[roots['RP'] + 'render_controllers/kg_tacz_offhand.render_controllers.json'] = (
+    offhand_path = roots['RP'] + 'render_controllers/kg_tacz_offhand.render_controllers.json'
+    if offhand_path in originals:
+        raise ValueError('Conflicting TACZ offhand render-controller file: ' + offhand_path)
+    changed[offhand_path] = (
         json.dumps({'format_version': '1.8.0', 'render_controllers': {
             OFFHAND_FP: offhand_controller(merged_controller)}}, ensure_ascii=False, indent=2) + '\n').encode()
     pair = {pin['bp_uuid'], pin['rp_uuid']}
@@ -273,10 +379,12 @@ def adapt_files(originals, composed, controller, descriptor):
         catalog['format_version'] = '1.1.0'
         changed[blocks_path] = (json.dumps(catalog, ensure_ascii=False, indent=2) + '\n').encode()
     result.update(changed)
+    member_diff, diff_summary = compare_author_members(originals, result, descriptor)
     return result, {'changed_files': {name: sha256(raw) for name, raw in changed.items()},
+                    'member_diff': member_diff, 'diff_summary': diff_summary,
                     'removed_paths': [old_player], 'behavior_player_path': player,
                     'preserved_author_files': sum(name not in changed and name != old_player for name in originals),
-                    'player_properties': len(schema['properties']),
+                    'player_properties': property_count,
                     'required_priority': 'Adapted TACZ BP/RP above Grilling and the selected IE adapter; raw TACZ pair disabled'}
 
 
@@ -323,6 +431,8 @@ def apply_archive(tacz, ie, grilling, source, descriptor, source_sounds=None):
                 receipt['preserved_author_files'] -= 1
             receipt['changed_files'][name] = sha256(files[name])
             receipt['runtime_repairs'] = ['projectile_hit_invalid_target']
+        receipt['member_diff'], receipt['diff_summary'] = compare_author_members(originals, files, descriptor)
+        receipt['preserved_author_files'] = receipt['diff_summary']['unchanged_author_members']
         output = io.BytesIO()
         with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as target:
             for name, raw in files.items():
@@ -332,7 +442,12 @@ def apply_archive(tacz, ie, grilling, source, descriptor, source_sounds=None):
                 info.external_attr = 0o100644 << 16
                 target.writestr(info, raw)
         payload = output.getvalue()
+        if sha256(tacz.read_bytes()) != descriptor['tacz']['archive_sha256']:
+            raise ValueError('Original TACZ archive changed during local composition')
         receipt.update(schema=1, adapter=descriptor['tacz']['id'],
+                       optional_profile='reviewed-tacz-1.0.3-with-ie-1.1.0',
+                       ie_is_required_for_this_profile=True,
+                       source_archive_unchanged=True,
                        toolkit_version=descriptor['toolkit_version'],
                        version=descriptor['tacz']['output_version'], output_sha256=sha256(payload),
                        source_archive_sha256=descriptor['tacz']['archive_sha256'],
