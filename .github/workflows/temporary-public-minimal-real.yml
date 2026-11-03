@@ -21,9 +21,15 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/public-minimal-inputs
-          curl -fLsS --retry 2 --max-time 90 \
-            'https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/releases/download/A2.8.212/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon' \
-            -o /tmp/public-minimal-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon
+          echo 'Building the exact G212 public source (avoids release-asset download restrictions)'
+          git clone --filter=blob:none --no-checkout \
+            https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial.git /tmp/public-grilling-source
+          git -C /tmp/public-grilling-source checkout aa8a07ad223c993c05b0d356615d38e990148588
+          python3 tools/build_grilling_input.py \
+            --source /tmp/public-grilling-source \
+            --descriptor adapters/cookery-1.6.4-grilling-2.8.212-station-performance.json \
+            --output /tmp/public-minimal-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon
+          echo 'Fetching the exact official original Cookery file 9317031'
           curl -fLsS --retry 2 --max-time 90 \
             'https://mediafilez.forgecdn.net/files/9317/031/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' \
             -o /tmp/original-cookery-1.6.4.mcaddon
