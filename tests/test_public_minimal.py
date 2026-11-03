@@ -404,3 +404,72 @@ class PublicMinimalTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class DirectPublicInstallTests(unittest.TestCase):
+    """The one-command route must retain the complete Grilling resource player."""
+
+    def test_original_inputs_build_four_packs_with_player_presentation(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            fixture = PublicMinimalTests()
+            inputs, descriptor, _ = fixture.fixture(root)
+            grilling_source, vanilla_source, _, composed = fixture.player_fixture(root, descriptor)
+            descriptor['aggregate_filename'] = 'public-minimal.mcaddon'
+            descriptor_path = root / 'public.json'
+            descriptor_path.write_text(json.dumps(descriptor))
+            grilling = inputs / 'grilling.mcaddon'
+            adapted_cookery = inputs / 'cookery.mcaddon'
+            original_cookery = root / 'original-cookery.mcaddon'
+            original_cookery.write_bytes(b'synthetic original author archive')
+            before = (grilling.read_bytes(), original_cookery.read_bytes())
+
+            def use_existing_adapter(args):
+                target = Path(args[args.index('--output') + 1])
+                target.write_bytes(adapted_cookery.read_bytes())
+                Path(str(target) + '.receipt.json').write_text(json.dumps({
+                    'output_sha256': digest(target.read_bytes()),
+                    'original_cookery_source': 'synthetic author-free fixture',
+                }))
+
+            with (patch.object(builder, 'PUBLIC_MINIMAL_DESCRIPTOR', descriptor_path),
+                  patch.object(builder.cookery_installer, 'main', side_effect=use_existing_adapter),
+                  patch('install_player_presentation.compose_players', return_value=composed) as composer):
+                first = root / 'first'
+                with redirect_stdout(io.StringIO()):
+                    builder.main([
+                        '--cookery', str(original_cookery), '--grilling', str(grilling),
+                        '--grilling-source', str(grilling_source),
+                        '--vanilla-source', str(vanilla_source), '--output', str(first),
+                    ])
+                second = root / 'second'
+                builder.install_public_pair(original_cookery, grilling,
+                                            grilling_source, vanilla_source, second)
+            self.assertEqual(composer.call_count, 2)
+            self.assertEqual((first / 'public-minimal.mcaddon').read_bytes(),
+                             (second / 'public-minimal.mcaddon').read_bytes())
+            receipt = json.loads((first / 'receipt.json').read_text())
+            self.assertEqual(len(receipt['packs']), 4)
+            self.assertEqual(receipt['behavior_player_definition']['pack_id'], 'grilling-bp')
+            self.assertEqual(receipt['resource_player_definition']['pack_id'], 'grilling-rp')
+            with zipfile.ZipFile(first / 'grilling-rp.mcpack') as package:
+                self.assertIn('entity/player.entity.json', package.namelist())
+                self.assertIn('MOJANG-VANILLA-LICENSE.md', package.namelist())
+            with zipfile.ZipFile(first / 'public-minimal.mcaddon') as addon:
+                self.assertEqual(set(addon.namelist()),
+                                 {'grilling-bp.mcpack', 'grilling-rp.mcpack',
+                                  'cookery-bp.mcpack', 'cookery-rp.mcpack'})
+            self.assertEqual((grilling.read_bytes(), original_cookery.read_bytes()), before)
+            self.assertEqual(json.loads((first / 'installation.json').read_text())['client'], 'NOT_RUN')
+
+    def test_direct_mode_rejects_missing_player_reference_without_side_effects(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            cookery, grilling = root / 'cookery.mcaddon', root / 'grilling.mcaddon'
+            cookery.write_bytes(b'synthetic')
+            grilling.write_bytes(b'synthetic')
+            output = root / 'no-output'
+            with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                builder.main(['--cookery', str(cookery), '--grilling', str(grilling),
+                              '--output', str(output)])
+            self.assertFalse(output.exists())
