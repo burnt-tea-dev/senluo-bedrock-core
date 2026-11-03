@@ -274,6 +274,7 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
     pack_receipts = []
     pack_dependencies = {}
     behavior_players = []
+    resource_players = []
     world_lists = {"BP": [], "RP": []}
     archive_reader = None
     try:
@@ -339,6 +340,12 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                     if definition.get('minecraft:entity', {}).get('description', {}).get('identifier') == 'minecraft:player':
                         behavior_players.append({'pack_id': pack_id, 'uuid': pack_uuid,
                             'path': relative, 'sha256': sha256(raw)})
+                if (recipe.get('required_resource_player') is not None and side == 'RP'
+                        and relative.startswith('entity/') and relative.endswith('.json')):
+                    description = read_definition(raw).get('minecraft:client_entity', {}).get('description', {})
+                    if description.get('identifier') == 'minecraft:player':
+                        resource_players.append({'pack_id': pack_id, 'path': relative,
+                            'sha256': sha256(raw), 'description': description})
                 if sha256(raw) != spec.get("output_sha256", spec.get("sha256")):
                     raise ValueError("file output hash differs: " + relative)
                 source_hashes[relative] = {"source_sha256": source_hash, "output_sha256": sha256(raw)}
@@ -431,6 +438,18 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
         if required_player_owner is not None and (
                 behavior_player is None or behavior_player["pack_id"] != required_player_owner):
             raise ValueError("required behavior minecraft:player owner differs")
+        required_resource = recipe.get('required_resource_player')
+        resource_player = None
+        if required_resource is not None:
+            if len(resource_players) != 1 or resource_players[0]['pack_id'] != required_resource['owner']:
+                raise ValueError('public resource minecraft:player owner missing or competing')
+            resource_player = resource_players[0]
+            description = resource_player.pop('description')
+            variables = description.get('scripts', {}).get('variables', {})
+            animations = description.get('animations', {})
+            if (any(variables.get(k) != v for k, v in required_resource['variables'].items())
+                    or any(animations.get(k) != v for k, v in required_resource['animations'].items())):
+                raise ValueError('public resource-player presentation contract is incomplete')
         for name, key in (("world_behavior_packs.json", "BP"), ("world_resource_packs.json", "RP")):
             _atomic_new(stage / name, (json.dumps(world_lists[key], ensure_ascii=False, indent=2) + "\n").encode())
         aggregate_name = recipe.get("aggregate_filename", "family.mcaddon")
@@ -473,6 +492,9 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
                        "sha256": aggregate_sha256, "bytes": aggregate_bytes,
                        "members": aggregate_members}, "order": order,
                    "behavior_player_definition": behavior_player}
+        if resource_player is not None:
+            receipt['resource_player_definition'] = resource_player
+            receipt['player_presentation_provenance'] = recipe.get('player_presentation_provenance')
         _atomic_new(stage / "receipt.json", (json.dumps(receipt, ensure_ascii=False, indent=2) + "\n").encode())
         output.parent.mkdir(parents=True, exist_ok=True)
         os.rename(stage, output)
