@@ -44,7 +44,6 @@ def select_profile(descriptor, profile):
         'schema': descriptor['schema'],
         'id': descriptor['id'] + ':public-minimal',
         'recipe_version': descriptor['recipe_version'] + '-public-minimal',
-        'toolkit_version': descriptor.get('toolkit_version'),
         'inputs': {key: descriptor['inputs'][key] for key in ('grilling', 'cookery')},
         'packs': packs, 'order': order,
     }
