@@ -220,6 +220,8 @@ class OwnedFamilyRecipeTests(unittest.TestCase):
                             expected = entries['cookery/' + source_name] if source == 'cookery' else entries[source_name]
                             self.assertEqual(archive.read(name), expected)
             with zipfile.ZipFile(output / 'public-minimal.mcaddon') as aggregate:
+                self.assertTrue(all(item.date_time == (2026, 9, 29, 0, 0, 0)
+                                    for item in aggregate.infolist()))
                 self.assertEqual(set(aggregate.namelist()),
                                  {pack['id'] + '.mcpack' for pack in recipe['packs']})
                 for name in aggregate.namelist():
