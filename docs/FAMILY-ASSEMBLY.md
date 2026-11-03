@@ -71,8 +71,9 @@ The Cookery installer verifies the exact author archive, Grilling API contract,
 source/target helpers and both local output identities. The recipe builder
 then validates both whole archives and all pack/member hashes. The assembler
 builds `grilling-bp.mcpack`, `grilling-rp.mcpack`,
-`cookery-bp.mcpack`, `cookery-rp.mcpack`, and `family.mcaddon`
-(the historical **aggregate filename**, containing only these four packs).
+`cookery-bp.mcpack`, `cookery-rp.mcpack`, and **`public-minimal.mcaddon`**
+(containing only these four packs). Existing family recipes still output
+`family.mcaddon`.
 Import that one aggregate into a fresh test world and activate both pairs
 in its generated BP/RP order. Keep all `*.receipt.json`, `receipt.json`
 and the generated recipe to audit hashes and reconstruct the exact build.
