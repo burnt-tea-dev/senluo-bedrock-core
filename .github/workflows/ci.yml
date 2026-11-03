@@ -51,6 +51,47 @@ jobs:
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9317/31/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' --output "$RUNNER_TEMP/cookery.mcaddon"
           python tools/install_player_presentation.py --ie "$RUNNER_TEMP/ie.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.212.mcaddon" --grilling-source .grilling-next --output "$RUNNER_TEMP/ie-g212.mcaddon"
           python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery.mcaddon" --grilling "$RUNNER_TEMP/Grilling-2.8.212.mcaddon" --output "$RUNNER_TEMP/cookery-g212.mcaddon"
+      - name: Assemble the real two-archive public-minimal import in isolation
+        run: |
+          mkdir -p "$RUNNER_TEMP/public-minimal-inputs"
+          cp "$RUNNER_TEMP/Grilling-2.8.212.mcaddon" "$RUNNER_TEMP/public-minimal-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon"
+          cp "$RUNNER_TEMP/cookery-g212.mcaddon" "$RUNNER_TEMP/public-minimal-inputs/cookery-station-performance-20012.mcaddon"
+          python tools/build_owned_family_recipe.py --profile public-minimal --inputs "$RUNNER_TEMP/public-minimal-inputs" --output "$RUNNER_TEMP/public-minimal.recipe.json"
+          python tools/assemble_family.py --recipe "$RUNNER_TEMP/public-minimal.recipe.json" --inputs "$RUNNER_TEMP/public-minimal-inputs" --output "$RUNNER_TEMP/public-minimal-output"
+          python tools/assemble_family.py --recipe "$RUNNER_TEMP/public-minimal.recipe.json" --inputs "$RUNNER_TEMP/public-minimal-inputs" --output "$RUNNER_TEMP/public-minimal-repeat"
+          python - <<'PY_PUBLIC_MINIMAL'
+          import hashlib, json, os, pathlib, zipfile
+          root = pathlib.Path(os.environ['RUNNER_TEMP'])
+          receipt = json.loads((root/'public-minimal-output/receipt.json').read_text())
+          recipe = json.loads((root/'public-minimal.recipe.json').read_text())
+          assert set(receipt['inputs']) == {'grilling', 'cookery'}
+          assert receipt['profile'] == 'public-minimal' and len(receipt['packs']) == 4
+          assert len(receipt['manifest_dependency_rebindings']) == 2
+          versions = {p['uuid']: p['version'] for p in receipt['packs']}
+          members = set()
+          for pack in receipt['packs']:
+              path = root/'public-minimal-output'/pack['archive']
+              repeat = root/'public-minimal-repeat'/pack['archive']
+              assert path.read_bytes() == repeat.read_bytes(), pack['id']
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == pack['archive_sha256']
+              members.add(pack['archive'])
+              with zipfile.ZipFile(path) as archive:
+                  manifest = json.loads(archive.read('manifest.json'))
+                  assert manifest['header']['uuid'] == pack['uuid']
+                  assert manifest['header']['version'] == pack['version']
+                  for dep in manifest.get('dependencies', []):
+                      if 'uuid' in dep:
+                          assert dep['uuid'] in versions and dep['version'] == versions[dep['uuid']]
+          archive_path = root/'public-minimal-output/public-minimal.mcaddon'
+          assert archive_path.read_bytes() == (root/'public-minimal-repeat/public-minimal.mcaddon').read_bytes()
+          assert hashlib.sha256(archive_path.read_bytes()).hexdigest() == receipt['aggregate']['sha256']
+          with zipfile.ZipFile(archive_path) as archive:
+              assert set(archive.namelist()) == members
+              for name in members:
+                  assert archive.read(name) == (root/'public-minimal-output'/name).read_bytes()
+          assert set(recipe['inputs']) == {'grilling', 'cookery'}
+          print('Real public-minimal archives, paired manifest dependencies and reproducible hashes verified')
+          PY_PUBLIC_MINIMAL
       - name: Verify the real Cookery station adapter
         # The ordinary test run above has no author inputs; this stage runs
         # the integration tests against the archives that were just verified.
