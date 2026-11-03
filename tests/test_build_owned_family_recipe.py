@@ -107,7 +107,7 @@ class OwnedFamilyRecipeTests(unittest.TestCase):
                 'header': {'uuid': uuid, 'version': version, 'min_engine_version': [1, 26, 60]},
                 'modules': [{'uuid': uuid + '-module', 'version': version}],
                 'dependencies': list(dependencies),
-            }, ensure_ascii=False, indent=2) + '\\n').encode()
+            }, ensure_ascii=False, indent=2) + '\n').encode()
 
         dep = lambda uuid, version: {'uuid': uuid, 'version': version}
         grilling = {
@@ -121,7 +121,7 @@ class OwnedFamilyRecipeTests(unittest.TestCase):
                 'identifier': 'minecraft:player', 'properties': {
                     'kaleidoscope_grilling:held_frame': {'type': 'int', 'range': [0, 1], 'default': 0},
                 }}}}).encode(),
-            'BP/scripts/main.js': b'export const originalGrilling = true;\\n',
+            'BP/scripts/main.js': b'export const originalGrilling = true;\n',
             'RP/manifest.json': manifest('grilling-rp', grill_version, [
                 dep('cookery-rp', [1, 6, 4]),
             ]),
@@ -131,7 +131,7 @@ class OwnedFamilyRecipeTests(unittest.TestCase):
             'BP/manifest.json': manifest('cookery-bp', cook_version, [
                 dep('cookery-rp', cook_version), dep('grilling-bp', grill_version),
             ]),
-            'BP/scripts/host_api.js': b'// local host capability, not the original author archive\\n',
+            'BP/scripts/host_api.js': b'// local host capability, not the original author archive\n',
             'RP/manifest.json': manifest('cookery-rp', cook_version, [
                 dep('grilling-rp', grill_version),
             ]),
