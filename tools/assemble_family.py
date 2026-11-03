@@ -441,7 +441,11 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
             recipe.get('behavior_player_override'), world_lists['BP'])
         for name, key in (("world_behavior_packs.json", "BP"), ("world_resource_packs.json", "RP")):
             _atomic_new(stage / name, (json.dumps(world_lists[key], ensure_ascii=False, indent=2) + "\n").encode())
-        aggregate_name = "family.mcaddon"
+        aggregate_name = recipe.get("aggregate_filename", "family.mcaddon")
+        if (not isinstance(aggregate_name, str) or "/" in aggregate_name
+                or not _safe_name(aggregate_name) or not aggregate_name.endswith(".mcaddon")
+                or aggregate_name in {item["archive"] for item in pack_receipts}):
+            raise ValueError("invalid aggregate .mcaddon filename")
         aggregate_path = stage / aggregate_name
         aggregate_members = {}
         with zipfile.ZipFile(aggregate_path, "w", zipfile.ZIP_DEFLATED) as aggregate:
