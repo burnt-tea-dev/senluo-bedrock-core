@@ -85,6 +85,8 @@ def build_recipe(descriptor, inputs_dir):
         recipe['toolkit_version'] = descriptor['toolkit_version']
     if 'behavior_player_override' in descriptor:
         recipe['behavior_player_override'] = descriptor['behavior_player_override']
+    if 'aggregate_filename' in descriptor:
+        recipe['aggregate_filename'] = descriptor['aggregate_filename']
     if descriptor.get('require_resolved_dependencies') is True:
         recipe['require_resolved_dependencies'] = True
     return recipe
