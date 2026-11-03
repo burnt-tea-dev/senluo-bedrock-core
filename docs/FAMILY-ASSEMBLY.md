@@ -158,5 +158,6 @@ record is not renderer or native gameplay acceptance.
 
 Toolkit and SDK identities are separate from generated game-pack identities.
 The existing immutable toolkit history is not rewritten to bless these newer
-source bytes. A later toolkit Release must pin its actual publication inputs
-and include `adapters/public-minimal-player.json`; this PR does not publish it.
+source bytes. Toolkit 0.30.0's source allowlist now includes the public player descriptor
+and its review evidence, with pinned content hashes. This PR prepares those
+release inputs; it does not create a Release or ship any author archive.
