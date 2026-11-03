@@ -196,6 +196,18 @@ def _safe_output_path(root: Path, relative: str) -> Path:
     return path
 
 
+def _safe_aggregate_name(name) -> bool:
+    if (not isinstance(name, str) or "/" in name or not _safe_name(name)
+            or not name.endswith(".mcaddon")):
+        return False
+    # Apply Windows rules on every OS: drive-relative paths and NTFS streams
+    # must never escape the staged output or bypass ordinary file handling.
+    if any(char in '<>:"|?*' or ord(char) < 32 for char in name):
+        return False
+    stem = name.partition(".")[0].rstrip(" ").upper()
+    return re.fullmatch(r"CON|PRN|AUX|NUL|CONIN\$|CONOUT\$|COM[1-9¹²³]|LPT[1-9¹²³]", stem) is None
+
+
 def _load_and_verify_inputs(recipe: dict, inputs_dir: Path):
     inputs = recipe.get("inputs")
     if not isinstance(inputs, dict) or not inputs:
@@ -422,8 +434,7 @@ def assemble(recipe: dict, recipe_path: Path, inputs_dir: Path, output: Path) ->
         for name, key in (("world_behavior_packs.json", "BP"), ("world_resource_packs.json", "RP")):
             _atomic_new(stage / name, (json.dumps(world_lists[key], ensure_ascii=False, indent=2) + "\n").encode())
         aggregate_name = recipe.get("aggregate_filename", "family.mcaddon")
-        if (not isinstance(aggregate_name, str) or "/" in aggregate_name
-                or not _safe_name(aggregate_name) or not aggregate_name.endswith(".mcaddon")
+        if (not _safe_aggregate_name(aggregate_name)
                 or aggregate_name in {item["archive"] for item in pack_receipts}):
             raise ValueError("invalid aggregate .mcaddon filename")
         aggregate_path = stage / aggregate_name

@@ -12,7 +12,7 @@ Local installer + your original Cookery archive ──→ your adapted local arc
 ```
 
 For ordinary Grilling users, start with the
-[public-minimal Grilling + Cookery guide](docs/FAMILY-ASSEMBLY.md#public-minimal-installation).
+[public-minimal Grilling + Cookery guide](docs/FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only).
 It builds only Grilling BP/RP and user-local adapted Cookery BP/RP via the
 existing Core recipe builder and assembler, pinning original sources and the
 generated manifest dependencies. The

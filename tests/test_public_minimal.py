@@ -177,7 +177,11 @@ class PublicMinimalTests(unittest.TestCase):
             path = root / 'recipe.json'
             path.write_text(json.dumps(recipe))
             for index, name in enumerate(('../outside.mcaddon', '/tmp/out.mcaddon',
-                                           'grilling-bp.mcpack', 'bad.zip', 'a\\b.mcaddon')):
+                                           'grilling-bp.mcpack', 'bad.zip', 'a\\b.mcaddon',
+                                           'D:outside.mcaddon', 'output.mcaddon:stream.mcaddon',
+                                           'CON.mcaddon', 'nul.mcaddon', 'COM1.mcaddon',
+                                           'LPT9.mcaddon', 'COM¹.mcaddon', 'bad?.mcaddon',
+                                           'bad\x1f.mcaddon')):
                 invalid = copy.deepcopy(recipe)
                 invalid['aggregate_filename'] = name
                 output = root / ('invalid-' + str(index))
