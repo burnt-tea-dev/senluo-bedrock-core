@@ -1,5 +1,7 @@
 # Senluo Bedrock Core
 
+[简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · **English**
+
 Unofficial shared SDK and local integration tools for the Senluo Bedrock addon family.
 
 Core is a build-time SDK. Its code is copied into each consuming pack; it does
