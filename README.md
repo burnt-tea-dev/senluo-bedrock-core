@@ -11,11 +11,14 @@ Core SDK ──→ Grilling (event routing and public food metadata)
 Local installer + your original Cookery archive ──→ your adapted local archive
 ```
 
-Current pack build commands and optional local integration recipes live in
-[the family installation guide](docs/FAMILY-ASSEMBLY.md#current-g212-installation).
-Those pinned recipes reproduce particular private combinations; they are **not**
-requirements that public Addon players install matching Tavern, IE or TACZ
-versions. Cookery capabilities needed by Grilling remain a real dependency;
+For ordinary Grilling users, start with the
+[public-minimal Grilling + Cookery guide](docs/FAMILY-ASSEMBLY.md#public-minimal-installation).
+It builds only Grilling BP/RP and user-local adapted Cookery BP/RP via the
+existing Core recipe builder and assembler, pinning original sources and the
+generated manifest dependencies. The
+[full family guide](docs/FAMILY-ASSEMBLY.md#current-g212-installation)
+documents optional private combination reproduction, **not public installation
+prerequisites**. Cookery capabilities needed by Grilling remain a real dependency;
 IE, TACZ and server-specific player overlays are optional integrations. New
 releases target current Bedrock APIs, not a test matrix of historical ports.
 Pack/module UUIDs, item IDs and save ownership are retained. Back up a stopped

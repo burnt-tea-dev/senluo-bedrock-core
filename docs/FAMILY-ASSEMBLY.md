@@ -9,7 +9,81 @@ the SDK version in `sdk.json` and its release history remain separate.
 <a id="current-g206-installation"></a>
 <a id="current-g208-installation"></a>
 
+## Public-minimal installation (Grilling + Cookery only)
+
+This public-first profile selects exactly Grilling 2.8.212 BP/RP and
+locally adapted original-author Cookery 1.6.4 BP/RP. **Tavern, 世界名酒,
+Immersive Eating, TACZ, the private repair pack and server family lock are not
+inputs or dependencies.** It uses the same `build_owned_family_recipe.py` and
+`assemble_family.py` as the full-family and historical workflows.
+
+**Why local assembly?** Grilling requires Cookery's host-extension interface.
+The original Grilling G212 BP/RP manifest dependencies name Cookery
+`[1,6,4]`, while the reviewed local host adapter produces `[1,6,20012]`.
+This recipe checks the exact manifest dependency preimages and updates **only
+the two dependencies in the generated Grilling copies** to Cookery
+`[1,6,20012]`. It never changes the source archives, drops a dependency,
+or reads optional third-party resources. The assembler checks pack-dependency
+closure and that Grilling is the sole behavior `minecraft:player` owner.
+
+Download clean Cookery 1.6.4 from
+[the original author's project](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial)
+(file 9317031, SHA256
+`aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83`).
+The reviewed G212 Grilling source candidate is pinned to commit
+`aa8a07ad223c993c05b0d356615d38e990148588`. Until a matching
+public Grilling Release exists, use that clean public checkout; source
+trees and generated archive are also pinned and checked.
+
+```sh
+git clone https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial.git grilling
+git -C grilling checkout aa8a07ad223c993c05b0d356615d38e990148588
+
+python3 tools/build_grilling_input.py \
+  --source ./grilling \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.212-station-performance.json \
+  --output ./local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon
+
+python3 tools/install_cookery_from_descriptor.py \
+  --cookery /path/to/clean-original-Cookery-1.6.4.mcaddon \
+  --grilling ./local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.212-station-performance.json \
+  --output ./local-inputs/cookery-station-performance-20012.mcaddon
+
+python3 tools/build_owned_family_recipe.py \
+  --profile public-minimal --inputs ./local-inputs \
+  --output ./public-minimal.recipe.json
+
+python3 tools/assemble_family.py \
+  --recipe ./public-minimal.recipe.json --inputs ./local-inputs \
+  --output ./public-minimal-output
+```
+
+Import `./public-minimal-output/family.mcaddon` into a **fresh test world**:
+it nests four `.mcpack` files (2 BP and 2 RP) and writes source,
+manifest, output SHA256, UUID/version and player-owner evidence to
+`./public-minimal-output/receipt.json`. Enable both pairs in the world.
+The G212 manifests require Bedrock compatible with
+`min_engine_version [1,26,60]`, `@minecraft/server 2.12.0-beta`,
+`@minecraft/server-ui 2.2.0`, Beta APIs and Points of Interest
+experiments.
+
+This is **not** a freely redistributable modified Cookery archive: download
+the original author content independently, then retain generated Cookery
+and the paired archive locally. Keep the receipts and a stopped-world
+backup; UUIDs and save ownership are unchanged, but real client gameplay,
+rendering, saved-world reopening, BDS and rollback remain separate acceptance
+gates. Do not describe a synthetic fixture test as original-author or
+client PASS. For IE/TACZ, deliberately use their separate optional installers
+and matching reviewed inputs. Do not use them for this profile.
+
+The existing complete family remains selectable by omitting `--profile`
+or providing `--profile full-family`. Explicit historical
+`--descriptor` paths are unchanged.
+
 ## Current G212 installation
+
+**Optional full-family assembly; not a public-minimal prerequisite.**
 
 Use the owned Tavern 0.6.194, Grilling 2.8.212 and World Liquor 0.1.180
 archives named by

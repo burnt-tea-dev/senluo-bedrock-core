@@ -1,8 +1,10 @@
 # Local Cookery adapter
 
-For the current G212 / Cookery 1.6.20012 installation, follow the
+For the current G212 / Cookery 1.6.20012 public pairing, follow the
+[public-minimal commands](FAMILY-ASSEMBLY.md#public-minimal-installation).
+For optional full-family reproduction, follow the
 [current family commands](FAMILY-ASSEMBLY.md#current-g212-installation).
-That route keeps the welcome message and both startup repairs.
+Both routes keep the original welcome message and reviewed startup repairs.
 The examples below document earlier pinned adapters; use their matching
 original toolkit source to reproduce them.
 
