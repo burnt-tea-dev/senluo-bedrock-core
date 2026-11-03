@@ -13,6 +13,13 @@ TACZ, private repair packs and a particular server family are **not required**.
 Cookery's gameplay/host interface remains a genuine dependency, not something
 the installer pretends to remove.
 
+The reviewed two-archive local route now runs through the existing
+`build_owned_family_recipe.py --cookery ... --grilling ... --grilling-source ...
+--vanilla-source ... --output ...` command. The two source directories are
+build references (canonical Grilling composer and official vanilla player),
+not extra installed addons. It produces the same four-pack local candidate,
+not a generic promise for arbitrary Grilling or author archive versions.
+
 The current source candidate also composes Grilling's player display into its
 own RP using the existing canonical composer and a pinned official vanilla
 reference. That reference is a **build input**, not a third addon installed in
