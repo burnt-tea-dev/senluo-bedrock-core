@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-03",
+  "owner_pr": 42,
+  "source_commit": "2e3744e9aa3192bbb02706b1a0ca45ec550c772f",
+  "baseline_failure_run": "https://github.com/burnt-tea-dev/senluo-bedrock-core/actions/runs/41637515406",
+  "repaired_source_run": "https://github.com/burnt-tea-dev/senluo-bedrock-core/actions/runs/41639953590",
+  "repaired_artifact_sha256": "800cfabfcd196dfe93a230ead5fd4442f3e8debcdfbfc864efc1e69a56e113b2",
+  "scope": "Actual author input and canonical Grilling source; archive/resource-player contract and deterministic reconstruction, not a game client",
+  "inputs": {
+    "cookery_original_1_6_4_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
+    "grilling_source_commit": "6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3",
+    "grilling_input_sha256": "ba073d40ad2bbf3ef8f68ea1121c3f9d9d81dd10acdb4085eb2bf15b0c000643",
+    "cookery_adapted_sha256": "a13cf4e8f48308c73c0e9acf72352026a0bd0becc9a5c89fff1670e7d9e3c144",
+    "vanilla_reference_repository": "Mojang/bedrock-samples",
+    "vanilla_reference_commit": "15701fa9c13923f12662984c32c124327e40e3d3",
+    "vanilla_reference_engine": "1.26.60.5"
+  },
+  "baseline": {
+    "aggregate_sha256": "96856304f186320014636d3cca81f2e8429edee433780c761de82bb1b029423e",
+    "pack_count": 4,
+    "resource_players": [],
+    "resource_player_contract": "FAIL"
+  },
+  "repaired": {
+    "grilling_pair_version": [2, 8, 218],
+    "aggregate_sha256": "9dca47ba396ede83a6dfd8146cef58474aa77555de154a400fe28289496ee822",
+    "pack_count": 4,
+    "resource_player_owner": "grilling-rp",
+    "resource_player_path": "entity/player.entity.json",
+    "resource_player_sha256": "ae12f37bef12204f66bcdc20c5f0fc1356c70c09e3cd3d42f6692dcab150f5bd",
+    "missing_public_variables": [],
+    "missing_animations": [],
+    "resource_player_contract": "PASS",
+    "repeat_build_identical": true,
+    "original_cookery_unchanged": true,
+    "vanilla_materials_textures_geometry_render_controllers_attachables_preserved": true,
+    "vanilla_license_preserved": true
+  },
+  "unselected_addons": ["Tavern", "World Liquor", "Immersive Eating", "TACZ", "private Senluo integration"],
+  "client": "NOT-RUN",
+  "bds": "NOT-RUN",
+  "saved_world_upgrade_restart": "NOT-RUN",
+  "live": "NOT-DEPLOYED",
+  "distribution": "No author archives, composed player definitions, generated game packs or worlds are committed or uploaded by this verification. Only owned source and this deidentified report were retained."
+}
