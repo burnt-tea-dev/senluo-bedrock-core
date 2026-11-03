@@ -9,6 +9,73 @@ the SDK version in `sdk.json` and its release history remain separate.
 <a id="current-g206-installation"></a>
 <a id="current-g208-installation"></a>
 
+## Public-minimal: Grilling + Cookery only (opt-in)
+
+For an ordinary player **without** Tavern, World Liquor (世界名酒),
+Immersive Eating, TACZ or private Senluo repairs, use the existing recipe builder
+with `--profile public-minimal`. This profile selects only the G212 BP/RP and
+locally adapted Cookery 1.6.4 BP/RP from the **unchanged**, SHA-pinned current
+family descriptor. It does not run `install_player_presentation.py` (`--ie`)
+or any TACZ composer, and does not require their archives.
+
+The author Cookery archive needs its public host API connected locally; merely
+importing an unmodified Cookery 1.6.4 plus ordinary Grilling is **not** yet an
+equivalent working installation. Obtain clean Cookery 1.6.4 (CurseForge file
+9317031) directly from its author. Use a clean Grilling checkout at
+`aa8a07ad223c993c05b0d356615d38e990148588` (source candidate, not a
+published gameplay release) or the independently verified matching Grilling
+input archive. Only those two archives go into `local-inputs`.
+
+```sh
+mkdir -p local-inputs
+python3 tools/build_grilling_input.py \
+  --source /path/to/grilling \
+  --output local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon
+python3 tools/install_cookery_from_descriptor.py \
+  --cookery /path/to/original-cookery-1.6.4.mcaddon \
+  --grilling local-inputs/Kaleidoscope_Grilling_Unofficial_2.8.212_baseline1.mcaddon \
+  --output local-inputs/cookery-station-performance-20012.mcaddon
+python3 tools/build_owned_family_recipe.py \
+  --profile public-minimal --inputs local-inputs \
+  --output public-minimal.recipe.json
+python3 tools/assemble_family.py \
+  --recipe public-minimal.recipe.json --inputs local-inputs \
+  --output public-minimal-output
+```
+
+Import `public-minimal-output/public-minimal.mcaddon` into Minecraft, or
+import its four individual `.mcpack` files. Enable **both BP/RP sides of
+Grilling and Cookery** in the world. The two generated world-pack JSON files
+record the reviewed priority; the tool does not edit an existing world.
+Keep `public-minimal.recipe.json` and `public-minimal-output/receipt.json`
+with the candidate. Neither generated archive is a distributable author
+release.
+
+**Manifest contract:** The original Grilling BP/RP declare dependency on
+Cookery `[1,6,4]`, while the required host-API install emits local Cookery
+`[1,6,20012]`. This public profile *only* rewrites the two matching Cookery
+dependency versions in the **generated Grilling manifest copies**, with
+original SHA256, transformed SHA256, and exact JSON operations recorded in the
+recipe/receipt. All pack/module UUIDs, original source archives and non-manifest
+payloads remain unchanged. Missing or unrelated UUID dependencies, unreviewed
+versions and changed input hashes are rejected; the full-family and historical
+recipes are not rewritten.
+
+Use Minecraft/Bedrock with the matching 1.26.60 engine capability, Beta APIs
+(`@minecraft/server` `2.12.0-beta`) and Points of Interest experimental
+features where required. A successful recipe/ZIP build is **not** Java gameplay,
+client rendering/audio or BDS compatibility acceptance; see Grilling #342.
+
+**Rollback:** Back up a stopped world first, trial the new packs in a clean
+world or copy, and keep the original author download unchanged. To back out,
+disable the new four local packs and restore the previous pack selection and
+saved-world backup. Do not mix the local Cookery `1.6.20012` identity with an
+older Grilling or historical family selector.
+
+The existing full-family instructions below remain for maintainers and
+explicitly selected optional compatibility. The default (no `--profile`)
+still builds the complete historical/family recipe.
+
 ## Current G212 installation
 
 Use the owned Tavern 0.6.194, Grilling 2.8.212 and World Liquor 0.1.180
