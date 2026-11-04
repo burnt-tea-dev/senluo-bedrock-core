@@ -34,9 +34,9 @@ jobs:
           for dir in core grilling vanilla; do
             git -C "$dir" rev-parse HEAD HEAD^{tree} > "$RUNNER_TEMP/public-source/${dir}-identity.txt"
             git -C "$dir" archive HEAD > "$RUNNER_TEMP/public-source/${dir}.tar"
-            # Only immutable Git objects/refs required by source identity checks.
-            # Never archive config, credentials, hooks, logs or runner environment.
-            git -C "$dir" rev-parse HEAD > "$dir/.git/HEAD"
+            # Only immutable objects/refs; no config, credentials, hooks or logs.
+            sha="$(git -C "$dir" rev-parse HEAD)"
+            printf '%s\n' "$sha" > "$dir/.git/HEAD"
             cd "$dir"
             items=(.git/HEAD .git/objects)
             for name in shallow packed-refs refs; do
