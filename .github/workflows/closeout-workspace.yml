@@ -1,0 +1,56 @@
+name: Temporary public-source closeout
+on:
+  push:
+    branches: [integration/g219-public-closeout-20261104]
+    paths: [.github/workflows/closeout-workspace.yml]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          path: core
+      - uses: actions/checkout@v4
+        with:
+          repository: burnt-tea-dev/kaleidoscope-grilling-unofficial
+          ref: 53a5dea20e777367fe2d11137b07085ba9e752ef
+          persist-credentials: false
+          path: grilling
+      - uses: actions/checkout@v4
+        with:
+          repository: Mojang/bedrock-samples
+          ref: 15701fa9c13923f12662984c32c124327e40e3d3
+          persist-credentials: false
+          path: vanilla
+      - name: Export source and minimal Git identity, never credentials or author addon archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/public-source"
+          for dir in core grilling vanilla; do
+            git -C "$dir" rev-parse HEAD HEAD^{tree} > "$RUNNER_TEMP/public-source/${dir}-identity.txt"
+            git -C "$dir" archive HEAD > "$RUNNER_TEMP/public-source/${dir}.tar"
+            # Only immutable Git objects/refs required by source identity checks.
+            # Never archive config, credentials, hooks, logs or runner environment.
+            git -C "$dir" rev-parse HEAD > "$dir/.git/HEAD"
+            cd "$dir"
+            items=(.git/HEAD .git/objects)
+            for name in shallow packed-refs refs; do
+              if test -e ".git/$name"; then items+=(".git/$name"); fi
+            done
+            tar -rf "$RUNNER_TEMP/public-source/${dir}.tar" "${items[@]}"
+            cd ..
+            gzip -n "$RUNNER_TEMP/public-source/${dir}.tar"
+          done
+          sha256sum "$RUNNER_TEMP/public-source/"*.tar.gz > "$RUNNER_TEMP/public-source/SHA256SUMS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-source-closeout
+          path: ${{ runner.temp }}/public-source/
+          retention-days: 1
+# Temporary source transport. No Cookery/IE/TACZ archive, private family, world,
+# release or deployment. Removed from the final reviewed source tree.
