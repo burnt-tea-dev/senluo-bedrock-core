@@ -97,12 +97,14 @@ class PublicMinimalTests(unittest.TestCase):
 
     def test_real_public_profile_is_two_inputs_and_four_pinned_packs(self):
         public = json.loads(builder.PUBLIC_MINIMAL_DESCRIPTOR.read_text())
-        source = json.loads((ROOT / 'adapters/public-minimal-grilling-g213-cookery20012.json').read_text())
+        adapter = json.loads(builder.PUBLIC_COOKERY_DESCRIPTOR.read_text())
         self.assertEqual(set(public['inputs']), {'grilling', 'cookery'})
         self.assertEqual({p['id'] for p in public['packs']},
                          {'grilling-bp', 'grilling-rp', 'cookery-bp', 'cookery-rp'})
-        self.assertEqual(public['inputs']['cookery'], source['inputs']['cookery'])
-        self.assertEqual(public['inputs']['grilling'], source['inputs']['grilling'])
+        self.assertEqual(public['inputs']['grilling']['sha256'], adapter['companion']['archive_sha256'])
+        self.assertEqual(public['player_presentation']['source'], {key: adapter['companion']['source'][key] for key in ('commit', 'git_tree')})
+        for pack in public['packs']:
+            self.assertEqual(pack['version'], adapter['companion']['version'] if pack['input'] == 'grilling' else adapter['output_version'])
         self.assertEqual(public['required_behavior_player_owner'], 'grilling-bp')
 
     def test_reproduces_missing_dependency_rewrite_then_builds_four_pack_pair(self):
@@ -202,9 +204,9 @@ class PublicMinimalTests(unittest.TestCase):
         self.assertEqual([p['version'] for p in public['packs'] if p['input'] == 'grilling'],
                          [[2, 8, 213], [2, 8, 213]])
 
-    @unittest.skipUnless(os.environ.get('PUBLIC_MINIMAL_INPUTS'), 'Real public-minimal archives required')
+    @unittest.skipUnless(os.environ.get('HISTORICAL_G213_INPUTS'), 'Historical G213 archives required')
     def test_real_g213_pair_repeatability_and_manifest_closure(self):
-        inputs = Path(os.environ['PUBLIC_MINIMAL_INPUTS'])
+        inputs = Path(os.environ['HISTORICAL_G213_INPUTS'])
         descriptor = json.loads((ROOT / 'adapters/public-minimal-grilling-g213-cookery20012.json').read_text())
         self.assertEqual({p.name for p in inputs.iterdir()},
                          {p['filename'] for p in descriptor['inputs'].values()})

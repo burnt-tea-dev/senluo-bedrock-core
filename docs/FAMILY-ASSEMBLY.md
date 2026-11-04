@@ -18,7 +18,7 @@ separate, explicit integration rather than silent replacement.
 
 ### What was missing, and what this route changes
 
-The previous G213 four-pack output assembled successfully but contained **no
+The historical G213 package-only four-pack output assembled successfully but contained **no
 resource `minecraft:player` definition**. Its behavior-player ownership and
 manifest closure checks could not prove that held food, plates and oil had the
 required public variables and animation aliases. The original failure and the
@@ -33,8 +33,8 @@ geometry, render controllers and attachables are retained. The assembler
 requires exactly one resource-player owner with the declared public variables
 and animation aliases; a competing player is not silently overwritten.
 
-The source input remains G213, but the local output has a **new paired
-Grilling identity 2.8.218 (G218)**. Both existing Grilling UUIDs, module UUIDs,
+The source input is now canonical G219, but the local output has a **new paired
+Grilling identity 2.8.220 (G220)**. Both existing Grilling UUIDs, module UUIDs,
 item/entity IDs, gameplay scripts and save owners remain. Owning manifests and
 mutual dependency versions advance together; Cookery dependencies are rebound
 from original `[1,6,4]` to the locally adapted `[1,6,20012]`. The original
@@ -43,9 +43,9 @@ archives and old G212/G213 output identities are never overwritten.
 ### Build references and genuine addon inputs
 
 Use a clean Grilling source checkout at
-`6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3` (tree
-`9b7cd7c6e6be0a8a808fb73c27c67af9c3a1b224`). Its original input archive hash is
-`ba073d40ad2bbf3ef8f68ea1121c3f9d9d81dd10acdb4085eb2bf15b0c000643`.
+`53a5dea20e777367fe2d11137b07085ba9e752ef` (tree
+`cee2d8b4e8d5e43222b19cafaf57e28c780c31a0`). Its original input archive hash is
+`72443b1f5e32ab36736c57a2635b5a7bf0a2d409ee221e5b2f5f2fedb74b0d36`.
 
 Obtain clean Cookery 1.6.4 from
 [the author's project](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial),
@@ -69,14 +69,14 @@ player definition is published in Core's source repository.
 ### Direct local build (recommended)
 
 Once you have the **clean original Cookery 1.6.4 archive** and the reviewed
-**Grilling G213** archive, the existing builder can perform the Cookery local
-adaptation, exact two-input recipe, complete G218 player-RP composition and
+**Grilling G219** archive, the existing builder can perform the Cookery local
+adaptation, exact two-input recipe, complete G220 player-RP composition and
 four-pack assembly **in one command**:
 
 ```sh
 python tools/build_owned_family_recipe.py \
   --cookery /path/to/original-cookery-1.6.4.mcaddon \
-  --grilling /path/to/grilling-2.8.213.mcaddon \
+  --grilling /path/to/grilling-2.8.219.mcaddon \
   --grilling-source ./grilling --vanilla-source ./vanilla \
   --output ./public-minimal-output
 ```
@@ -95,21 +95,21 @@ From this candidate's Core source checkout (Python 3 and Node.js available):
 
 ```sh
 git clone https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial.git grilling
-git -C grilling checkout 6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3
+git -C grilling checkout 53a5dea20e777367fe2d11137b07085ba9e752ef
 git clone https://github.com/Mojang/bedrock-samples.git vanilla
 git -C vanilla checkout 15701fa9c13923f12662984c32c124327e40e3d3
 mkdir -p local-inputs
 
 python tools/build_grilling_input.py \
   --source ./grilling \
-  --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json \
-  --output ./local-inputs/grilling-2.8.213.mcaddon
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json \
+  --output ./local-inputs/grilling-2.8.219.mcaddon
 
 python tools/install_cookery_from_descriptor.py \
   --cookery /path/to/clean-original-Cookery-1.6.4.mcaddon \
-  --grilling ./local-inputs/grilling-2.8.213.mcaddon \
-  --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json \
-  --output ./local-inputs/cookery-g213.mcaddon
+  --grilling ./local-inputs/grilling-2.8.219.mcaddon \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json \
+  --output ./local-inputs/cookery-g219.mcaddon
 
 python tools/build_owned_family_recipe.py \
   --profile public-minimal --grilling-source ./grilling --vanilla-source ./vanilla \
@@ -126,11 +126,15 @@ files; enable both BP/RP pairs. Use the descriptor's order, Beta APIs and Points
 of Interest requirements. Grilling declares minimum engine `[1,26,60]`,
 `@minecraft/server 2.12.0-beta` and `@minecraft/server-ui 2.2.0`.
 
-The fixed-input assembled output SHA256 is
-`9dca47ba396ede83a6dfd8146cef58474aa77555de154a400fe28289496ee822`.
+The G219 input is checked against the new descriptor. The local output is
+G220; its hash is recorded by the actual assembler receipt, not inherited from
+the historical G218 result. The unchanged Cookery20012 adapter bytes are
+retained because the exact host declaration and all 16 copied helpers match.
+Real-author reconstruction is checked separately from source-unit tests.
 Keep `receipt.json`: it distinguishes source inputs, transformed manifests,
 new output identities, behavior-player owner and resource-player owner.
-Reproduction succeeded without downloading IE, TACZ, Tavern or 世界名酒.
+The public route does not download IE, TACZ, Tavern or 世界名酒.
+The G213/G218 reproduction report remains historical evidence only.
 **Actual client rendering, audio, normal gameplay, BDS, upgrade/restart and
 multiplayer remain NOT-RUN for this candidate.** Test a disposable world, not
 LIVE; retain a stopped-world backup before any later upgrade.
@@ -154,6 +158,12 @@ Those profiles have their own exact output identities and acceptance scope;
 they do not establish compatibility with every third-party player override.
 
 ## Historical recipes and package-only probes
+
+`public-minimal-player.json` preserves the previous G213 → G218 player-complete
+recipe. Select it explicitly with the original source references; the new
+default is `public-minimal-g219-player.json`. Old descriptors and all previously
+published identities remain unchanged.
+
 
 Historical G203/G205 startup/decoding/family instructions are preserved at
 [the fixed earlier source](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/7f015e92ed7536e5ed64317338eda55968e0c4ae/docs/FAMILY-ASSEMBLY.md#historical-recipes).

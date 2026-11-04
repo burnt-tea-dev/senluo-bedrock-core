@@ -1,0 +1,309 @@
+{
+  "schema": 1,
+  "id": "senluo-core:cookery-1.6.4-grilling-2.8.219-station-performance",
+  "toolkit_version": "0.32.0",
+  "archive_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
+  "host_uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+  "resource_uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+  "author_version": [
+    1,
+    6,
+    4
+  ],
+  "output_version": [
+    1,
+    6,
+    20012
+  ],
+  "prefixes": {
+    "BP": "Kaleidoscope Cookery v1.6.4 [BP]/",
+    "RP": "Kaleidoscope Cookery v1.6.4 [RP]/"
+  },
+  "companion": {
+    "bp_uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+    "version": [
+      2,
+      8,
+      219
+    ],
+    "rp_uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+    "rp_version": [
+      2,
+      8,
+      219
+    ],
+    "spec_path": "host-extensions/board-api.json",
+    "spec_sha256": "2b1399e7a3aa6a0c22ff634436ebcb3e2913eba1457c34c94d65cb6105c66f49",
+    "source": {
+      "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+      "commit": "53a5dea20e777367fe2d11137b07085ba9e752ef",
+      "git_tree": "cee2d8b4e8d5e43222b19cafaf57e28c780c31a0",
+      "resource_tree_sha256": "2699a11b122799fba739a4ebdfba67d0eb464c83a3c2f633511bb667f19a9fc1",
+      "resource_file_count": 2865
+    },
+    "runtime_trees": {
+      "BP": {
+        "sha256": "22300fc960f77df146a3ec4ffa7a18cf7efa148b32f0b3d2fd447392bcc79e57",
+        "files": 794
+      },
+      "RP": {
+        "sha256": "2699a11b122799fba739a4ebdfba67d0eb464c83a3c2f633511bb667f19a9fc1",
+        "files": 2865
+      }
+    },
+    "archive_sha256": "72443b1f5e32ab36736c57a2635b5a7bf0a2d409ee221e5b2f5f2fedb74b0d36"
+  },
+  "owned_helpers": {
+    "scripts/host_api/board_api_core.js": "bc7298ec2843f9eb0948da6dc99e52fe71ae9ffcb1afd313b85bd8cf91717017",
+    "scripts/host_api/board_api_runtime.js": "be127f35dd42676729cfc059d6af05bd08d32ab71e3d8199a4bcfa4b3ef6705b",
+    "scripts/host_api/oil_api_core.js": "26fb0d08566314fe5d0644eb371ce1f6694c85d291ed69b482045a5b194f362c",
+    "scripts/host_api/oil_api_host.js": "21ed621fc7eb622ac91dfd2093ce19fc6f72f469dbaa78314f12c28337f21bdc",
+    "scripts/host_api/food_api_core.js": "63794a5c86263a058f1424119cd3a5445db7a70fc64bb9d32c6a11fc9a160542",
+    "scripts/host_api/cuisine_api_host.js": "ca7a1108fa3e136262fc566c579ddd43c43bdbf4cb62e2144ee530c13f3d9d40",
+    "scripts/host_api/guide_labels_core.js": "f1a301c0fc23f778568710e8ff322b1c93cae02d42df3c8119901d41f0e3cd4e",
+    "scripts/host_api/ingredient_api_host.js": "d65de1186d4c761122b871b11f9941d9c90af7c445e3c2d67d848682ee484fcf",
+    "scripts/food/wok_food_core.js": "0b99b672acce389f3831107bcea4f6cfbf4cd66770cd1e8bf4528224c9aceffe",
+    "scripts/host_api/pot_api_core.js": "177d343ae463b0751ca3a4d75b50f9581a9da0ce99bea22c943e7784e91df4fa",
+    "scripts/core/persist.js": "51d82fbe9c8e80a9c11d5cd4bf4bd4726fca29e5516911c8bcbbcbbd5a529df3",
+    "scripts/core/persist_keys.js": "c9286bd2459ba820caf0d8a04806c96917a112c4a8b6f5ab025a07c29c11f4ad",
+    "scripts/host_api/pot_api_host.js": "eb2372a104b90a959b0dec531d90e432b21610909de1e614b94c52dc6c6aa886",
+    "scripts/host_api/cuisine_quality_core.js": "5819297f2c64d238cd34cf6c8ba04b35fb2ac7daefd445b4ea7b58219b7ccda2",
+    "scripts/host_api/millstone_api_core.js": "bb43b3a7fd9c172171fac83c3821787fb53e4a8e0047da5c4bd77d2718b4009b",
+    "scripts/host_api/event_router.js": "666bc03cdd7bc93a9843feba71de5b0c48e5f1b5173c6529d6beeb43308227b9"
+  },
+  "author_url": "https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial",
+  "distribution": "Generated author archive remains user-local. Adds the same owned station bookkeeping used by the server; recipes, processing ticks, guide/welcome, save ownership and native item payloads remain unchanged. Unrelated Cookery/ChineseFood author repairs are outside the owned-port parity scope.",
+  "post_adapter": {
+    "helper_path": "src/host_api/cookery-recipe-ingress.js",
+    "helper_sha256": "d378220fe2560d292ab1797884516686bc29841341a2f8133894320faf75d7cd",
+    "helper_destination": "scripts/api/senluo_guide_startup.js",
+    "preimages": {
+      "scripts/api/extensionRegistry.js": "7f585f6433b27c89f6885a61833fa3bb382ac69966a9698fba3f566f17555d13",
+      "scripts/api/guidebookExtensionRegistry.js": "fee24bd265e46d0e4c8fcad2d8c03892362dd60f1e2f50a315509e401173e2ab"
+    },
+    "postimages": {
+      "scripts/api/extensionRegistry.js": "d521cbfd6fbb7508ecaa6c0ba8e3d82abb79de60c25e84e586786caa777faac3",
+      "scripts/api/guidebookExtensionRegistry.js": "cc105f5368f542f27ea318427faaa79a47ea6df8e79f9519b49db46a3625d6f9"
+    },
+    "imports": {
+      "scripts/api/extensionRegistry.js": "import {createCookeryReadyBroadcaster,createCookeryDisplayWorkQueue,createCookeryRecipeOrder,createCookeryRecipeWorkQueue} from \"./senluo_guide_startup.js\";\n",
+      "scripts/api/guidebookExtensionRegistry.js": "import {createCookeryGuideWorkQueue,createCookeryReadyBroadcaster} from \"./senluo_guide_startup.js\";\n"
+    },
+    "insertions": [
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "anchor": "function sendReady",
+        "position": "after",
+        "text": "Now"
+      },
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "anchor": "function sendReadyNow(){",
+        "position": "before",
+        "text": "const sendReady=createCookeryReadyBroadcaster(system,sendReadyNow);\n"
+      },
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "anchor": "const sendReady=createCookeryReadyBroadcaster(system,sendReadyNow);",
+        "position": "before",
+        "text": "const senluoDisplayWorkQueue=createCookeryDisplayWorkQueue(system,registerExtensionDisplayRule);\n"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": " normalizeLocaleMap(raw, valueNormalizer) {",
+        "position": "before",
+        "text": "*"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": " normalizeExtension(raw, source) {",
+        "position": "before",
+        "text": "*"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "  for (const [locale, values] of Object.entries(raw)) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "    for (const [key, value] of Object.entries(values)) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "  for (const c of Array.isArray(raw.categories) ? raw.categories : []) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "  for (const e of Array.isArray(raw.entries) ? raw.entries : []) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "    for(const r of Array.isArray(e?.recipes)?e.recipes:[]){",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "      for(const [locale,steps] of Object.entries(e.mechanicsByLocale)){",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "  for (const a of Array.isArray(raw.actions) ? raw.actions : []) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "    for (const field of Array.isArray(f?.fields) ? f.fields : []) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "        for (const opt of Array.isArray(field?.options) ? field.options : []) {",
+        "position": "after",
+        "text": "\n    yield;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "normalizeLocaleMap(raw.names,",
+        "position": "before",
+        "text": "yield* "
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "normalizeLocaleMap(raw.text,",
+        "position": "before",
+        "text": "yield* "
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "  if (!rec || rec.revision !== revision || rec.received !== rec.chunks) return;",
+        "position": "after",
+        "text": "\n  senluoGuideWorkQueue.enqueue(key,rec);return;"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "system.afterEvents.scriptEventReceive.subscribe(ev => {",
+        "position": "before",
+        "text": "const senluoGuideWorkQueue=createCookeryGuideWorkQueue(system,{normalize:normalizeExtension,pending,extensions});\n\n"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": ");\n\n// Drop incomplete transfers after 30 seconds.",
+        "position": "before",
+        "text": ",{namespaces:['kaleidoscope_cookery']}"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "function sendReady",
+        "position": "after",
+        "text": "Now"
+      },
+      {
+        "path": "scripts/api/guidebookExtensionRegistry.js",
+        "anchor": "function sendReadyNow() {",
+        "position": "before",
+        "text": "const sendReady=createCookeryReadyBroadcaster(system,sendReadyNow);\n"
+      },
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "anchor": "function rebuildCaches(){",
+        "position": "before",
+        "text": "const senluoRecipeOrder=createCookeryRecipeOrder();\n"
+      },
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "anchor": "const senluoDisplayWorkQueue=",
+        "position": "before",
+        "text": "const senluoRecipeWorkQueue=createCookeryRecipeWorkQueue(system,registerExtensionRecipe);\n"
+      }
+    ],
+    "text_replacements": [
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "before": "   const payload=JSON.parse(String(ev.message??\"\"));\n   const result=registerExtensionDisplayRule(payload);\n   if(!result.ok)console.warn(`[Kaleidoscope Cookery] Rejected extension display rule (${result.reason}).`);",
+        "after": "   senluoDisplayWorkQueue.enqueue(ev.message);"
+      },
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "before": "const ordered=m=>[...m.entries()].sort(([a],[b])=>a.localeCompare(b)).map(([,r])=>r);",
+        "after": "const ordered=m=>senluoRecipeOrder.values(m);"
+      },
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "before": "map.set(recipeMapKey(kind,source,recipe.id),Object.freeze(recipe));",
+        "after": "senluoRecipeOrder.set(map,recipeMapKey(kind,source,recipe.id),Object.freeze(recipe));"
+      },
+      {
+        "path": "scripts/api/extensionRegistry.js",
+        "before": "  const payload=JSON.parse(String(ev.message??\"\"));\n  const result=registerExtensionRecipe(payload);\n  if(!result.ok)console.warn(`[Kaleidoscope Cookery] Rejected extension recipe (${result.reason}).`);",
+        "after": "  senluoRecipeWorkQueue.enqueue(ev.message);"
+      }
+    ]
+  },
+  "behavior_min_engine_version": [
+    1,
+    26,
+    60
+  ],
+  "station_adapter": {
+    "helper_path": "src/host_api/cookery-station-performance.js",
+    "helper_sha256": "8d9e26a4dccd1605dd0b4499fdecbec2e5af5b3d9fe894d77d80c394f6eaebbf",
+    "helper_destination": "scripts/api/senluo_station_performance.js",
+    "preimages": {
+      "scripts/custom_components/blocks/directStation.js": "f59cc187375f55aa68878992d97d85792f5d268096671d2f97e41f6e86576302"
+    },
+    "postimages": {
+      "scripts/custom_components/blocks/directStation.js": "f0f5c15e197291f86dc351fd7d5b800a7c5b336d9930293220450637650b5d6c"
+    },
+    "imports": {
+      "scripts/custom_components/blocks/directStation.js": "import {createCookeryStationPerformance} from \"../../api/senluo_station_performance.js\";\n"
+    },
+    "insertions": [
+      {
+        "path": "scripts/custom_components/blocks/directStation.js",
+        "anchor": "const STEAMER_DISPLAY=\"kaleidoscope_cookery:steamer_item_display\";",
+        "position": "after",
+        "text": "\nconst stationPerformance=createCookeryStationPerformance(world,system,[DISPLAY,POT_DISPLAY,STOCKPOT_DISPLAY,STEAMER_DISPLAY]);"
+      }
+    ],
+    "text_replacements": [
+      {
+        "path": "scripts/custom_components/blocks/directStation.js",
+        "before": "try{world.setDynamicProperty(k(b),Object.keys(v).length?JSON.stringify(v):undefined);}catch{}",
+        "after": "try{stationPerformance.writeState(k(b),v);}catch{}"
+      },
+      {
+        "path": "scripts/custom_components/blocks/directStation.js",
+        "before": "function displays(b){\n try{\n  const q={location:center(b),maxDistance:2.5};\n  return [\n   ...b.dimension.getEntities({...q,type:DISPLAY}),\n   ...b.dimension.getEntities({...q,type:POT_DISPLAY}),\n   ...b.dimension.getEntities({...q,type:STOCKPOT_DISPLAY}),\n   ...b.dimension.getEntities({...q,type:STEAMER_DISPLAY})\n  ];\n }catch{return[];}\n}",
+        "after": "function displays(b){try{return stationPerformance.displays(b);}catch{return[];}}"
+      },
+      {
+        "path": "scripts/custom_components/blocks/directStation.js",
+        "before": "   }else{\n    e.teleport({x:b.x+.5+w.ox,y:b.y+w.y,z:b.z+.5+w.oz},{rotation:{x:0,y:w.rotY}});\n   }\n   e.setRotation({x:0,y:w.rotY});",
+        "after": "   }"
+      },
+      {
+        "path": "scripts/custom_components/blocks/directStation.js",
+        "before": "   if(kind===\"pot\")e.setProperty(\"kaleidoscope_cookery:wok_item_count\",Math.max(1,Math.min(9,items.length)));",
+        "after": ""
+      },
+      {
+        "path": "scripts/custom_components/blocks/directStation.js",
+        "before": "   e.runCommand(`replaceitem entity @s slot.weapon.mainhand 0 ${w.id}`);",
+        "after": "   stationPerformance.syncItem(b,e,{x:b.x+.5+w.ox,y:b.y+w.y,z:b.z+.5+w.oz},{x:0,y:w.rotY},w.id,kind===\"pot\"?Math.max(1,Math.min(9,items.length)):undefined);"
+      }
+    ]
+  }
+}

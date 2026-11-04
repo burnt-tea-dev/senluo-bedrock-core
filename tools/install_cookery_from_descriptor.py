@@ -9,7 +9,7 @@ import zipfile
 from install_cookery import _atomic_new, _safe_name, _tree_fingerprint, apply_archive, sha256
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DESCRIPTOR = ROOT / "adapters/cookery-1.6.4-grilling-2.8.212-station-performance.json"
+DEFAULT_DESCRIPTOR = ROOT / "adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json"
 
 
 def apply_post_adapter(output, descriptor):
