@@ -21,118 +21,37 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Get exact public build references and original author input
+      - name: Repeat exact real-input closeout with capability-based pair regression
         run: |
-          set -euo pipefail
-          git clone --quiet https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial /tmp/grilling
-          git -C /tmp/grilling checkout --quiet bf97a9fd9d4a75a379363fa69811455303c36155
-          git clone --quiet https://github.com/Mojang/bedrock-samples /tmp/vanilla
-          git -C /tmp/vanilla checkout --quiet 15701fa9c13923f12662984c32c124327e40e3d3
-          curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9317/31/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' --output /tmp/cookery-original.mcaddon
-          echo 'aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83  /tmp/cookery-original.mcaddon' | sha256sum -c -
-      - name: Add exact new pairing and absorb scoped optional TACZ audit
-        run: |
-          python - <<'PY'
-          import json,pathlib,subprocess,sys,hashlib,copy
-          root=pathlib.Path('.'); source=pathlib.Path('/tmp/grilling')
-          target=json.loads((root/'.repo-target.json').read_text())
-          assert target['repository_id']==1439792715 and target['repository']=='burnt-tea-dev/senluo-bedrock-core'
-          sha='b32342fb4012bedda6638eba3a517a6e9759eaf1'
-          base=subprocess.check_output(['git','merge-base','origin/main',sha]).decode().strip()
-          paths=['tools/install_tacz.py','tests/test_tacz_adapter.py','docs/PORT-ADAPTERS.md','adapters/tacz-1.0.3-grilling-2.8.212.json']
-          patch=subprocess.check_output(['git','diff','--binary',base,sha,'--',*paths])
-          subprocess.run(['git','apply','--3way','--index'],input=patch,check=True)
-          baseline=json.loads((source/'baseline.json').read_text()); assert baseline['version']==[2,8,219]
-          commit=subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD']).decode().strip()
-          tree=subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD^{tree}']).decode().strip()
-          adapter=json.loads((root/'adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json').read_text())
-          adapter['id']=adapter['id'].replace('2.8.213','2.8.219');adapter['toolkit_version']='0.32.0'
-          companion=adapter['companion'];companion['version']=companion['rp_version']=[2,8,219]
-          companion['runtime_trees']=baseline['source_trees']
-          companion['source'].update(commit=commit,git_tree=tree,resource_tree_sha256=baseline['source_trees']['RP']['sha256'],resource_file_count=baseline['source_trees']['RP']['files'])
-          companion.pop('archive_sha256')
-          sys.path.insert(0,str(root/'tools'))
-          from build_grilling_input import build
-          from install_cookery import sha256
-          raw=build(source,adapter);companion['archive_sha256']=sha256(raw)
-          pathlib.Path('/tmp/grilling-2.8.219.mcaddon').write_bytes(raw)
-          adapter_path='adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json'
-          (root/adapter_path).write_text(json.dumps(adapter,indent=2)+'\n')
-          public=json.loads((root/'adapters/public-minimal-player.json').read_text())
-          public['id']='senluo-core:public-minimal-g219-player';public['toolkit_version']='0.32.0';public['recipe_version']='g219-to-g220-cookery20012-player-r1'
-          public['inputs']['grilling'].update(filename='grilling-2.8.219.mcaddon',sha256=sha256(raw))
-          public['inputs']['cookery']['filename']='cookery-g219.mcaddon'
-          for p in public['packs']:
-              if p['input']=='grilling':
-                  p['version']=[2,8,219]
-                  for module in p['modules']:module['version']=[2,8,219]
-          public['candidate_provenance'].update(grilling_commit=commit,grilling_git_tree=tree,grilling_input_archive_sha256=sha256(raw),status='Source integration; real-input package validation separate from BDS/client acceptance')
-          public['player_presentation']['source']={'commit':commit,'git_tree':tree}
-          public['player_presentation']['output_version']=[2,8,220]
-          public_path='adapters/public-minimal-g219-player.json'
-          (root/public_path).write_text(json.dumps(public,indent=2)+'\n')
-          path=root/'tools/build_owned_family_recipe.py';text=path.read_text()
-          assert text.count("PUBLIC_MINIMAL_DESCRIPTOR = ROOT / 'adapters/public-minimal-player.json'")==1
-          text=text.replace("PUBLIC_MINIMAL_DESCRIPTOR = ROOT / 'adapters/public-minimal-player.json'", "PUBLIC_MINIMAL_DESCRIPTOR = ROOT / '"+public_path+"'")
-          text=text.replace("PUBLIC_COOKERY_DESCRIPTOR = ROOT / 'adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json'", "PUBLIC_COOKERY_DESCRIPTOR = ROOT / '"+adapter_path+"'")
-          text=text.replace('reviewed G218 four-pack route','reviewed public four-pack route');path.write_text(text)
-          publication=json.loads((root/'PUBLICATION.json').read_text())
-          publication['files']+= [name for name in [adapter_path,public_path] if name not in publication['files']]
-          (root/'PUBLICATION.json').write_text(json.dumps(publication,indent=2)+'\n')
-          package=json.loads((root/'package.json').read_text());package['version']='0.32.0';(root/'package.json').write_text(json.dumps(package,indent=2)+'\n')
-          guide=root/'docs/FAMILY-ASSEMBLY.md'
-          addition='''\n## Integrated public candidate: G219 source to local G220\n\nToolkit 0.32.0 direct mode uses the integrated G219 source (bf97a9fd9d4a75a379363fa69811455303c36155) and produces the fresh local Grilling 2.8.220 BP/RP with Cookery 1.6.20012. It includes the reviewed output-receipt, cooked-skewer, seasoning-bottle and oil-slot fixes together. Only Grilling and Cookery are installed; Mojang and Grilling checkouts are build references, not additional addons. IE/TACZ remain opt-in, and the existing TACZ+IE profile is not certified for G220.\n\nUse the existing direct command with --cookery, --grilling, --grilling-source, --vanilla-source and --output. Export the exact G219 input with tools/build_grilling_input.py and adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json. Historical G213/G218 descriptors remain unchanged and can be selected explicitly. Do not substitute an old G218 acceptance receipt for G220.\n\nNo Release or LIVE deployment is implied. Actual BDS, saved-world upgrade/restart, client FP/TP, audio and multiplayer acceptance remain NOT-RUN until recorded for this exact output.\n'''
-          guide.write_text(guide.read_text()+addition)
-          (root/'.github/workflows/public-closeout-once.yml').unlink()
-          print('SOURCE',commit,tree,'GRILLING_INPUT_SHA256',sha256(raw))
+          python -u - <<'PY'
+          import pathlib,subprocess,re,textwrap
+          raw=subprocess.check_output(['git','show','2dce060b26c40c23f578fc0b7fe5884fc058a680:.github/workflows/public-closeout-once.yml']).decode()
+          steps=re.findall(r'^      - name: ([^\n]+)\n        run: \|\n(.*?)(?=^      - (?:name:|uses:)|\Z)',raw,re.M|re.S)
+          assert len(steps)==5, [x[0] for x in steps]
+          for name,body in steps:
+              print('CLOSEOUT STEP:',name,flush=True)
+              subprocess.run(['bash','-euo','pipefail','-c',textwrap.dedent(body)],check=True)
+              if name=='Add exact new pairing and absorb scoped optional TACZ audit':
+                  path=pathlib.Path('tests/test_public_minimal.py');text=path.read_text()
+                  old="source = json.loads((ROOT / 'adapters/public-minimal-grilling-g213-cookery20012.json').read_text())"
+                  assert text.count(old)==1
+                  text=text.replace(old,"source = json.loads(builder.PUBLIC_COOKERY_DESCRIPTOR.read_text())")
+                  old="self.assertEqual(public['inputs']['cookery'], source['inputs']['cookery'])\n        self.assertEqual(public['inputs']['grilling'], source['inputs']['grilling'])"
+                  new="""self.assertEqual(public['inputs']['grilling']['sha256'], source['companion']['archive_sha256'])
+                  self.assertEqual(public['player_presentation']['source']['commit'], source['companion']['source']['commit'])
+                  self.assertEqual(public['player_presentation']['source']['git_tree'], source['companion']['source']['git_tree'])
+                  for pack in public['packs']:
+                      expected = source['companion']['version'] if pack['input'] == 'grilling' else source['output_version']
+                      self.assertEqual(pack['version'], expected)
+                  for rule in public['dependency_rewrites'].values():
+                      self.assertEqual(rule['before'], source['author_version'])
+                      self.assertEqual(rule['after'], source['output_version'])"""
+                  new=textwrap.dedent(new)
+                  # First line is already indented by its original location.
+                  lines=new.splitlines();new=lines[0]+'\n'+'\n'.join('        '+row for row in lines[1:])
+                  assert text.count(old)==1
+                  path.write_text(text.replace(old,new))
           PY
-      - name: Real author direct installation twice; no optional Addons
-        run: |
-          set -euo pipefail
-          python tools/build_owned_family_recipe.py --cookery /tmp/cookery-original.mcaddon --grilling /tmp/grilling-2.8.219.mcaddon --grilling-source /tmp/grilling --vanilla-source /tmp/vanilla --output /tmp/public-one
-          python tools/build_owned_family_recipe.py --cookery /tmp/cookery-original.mcaddon --grilling /tmp/grilling-2.8.219.mcaddon --grilling-source /tmp/grilling --vanilla-source /tmp/vanilla --output /tmp/public-two
-          python - <<'PY'
-          import json,pathlib,hashlib,zipfile
-          one=pathlib.Path('/tmp/public-one');two=pathlib.Path('/tmp/public-two')
-          assert (one/'public-minimal.mcaddon').read_bytes()==(two/'public-minimal.mcaddon').read_bytes()
-          receipt=json.loads((one/'receipt.json').read_text())
-          assert len(receipt['packs'])==4
-          assert receipt['resource_player_definition']['pack_id']=='grilling-rp'
-          assert receipt['behavior_player_definition']['pack_id']=='grilling-bp'
-          for pack in receipt['packs']:
-              if pack['id'].startswith('grilling'):assert pack['version']==[2,8,220]
-          digest=hashlib.sha256((one/'public-minimal.mcaddon').read_bytes()).hexdigest()
-          assert hashlib.sha256(pathlib.Path('/tmp/cookery-original.mcaddon').read_bytes()).hexdigest()=='aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83'
-          summary={'grilling_source':'bf97a9fd9d4a75a379363fa69811455303c36155','local_grilling_version':[2,8,220],'pack_count':4,'aggregate_sha256':digest,'repeat_build':'PASS','original_author_unchanged':'PASS','resource_player':'PASS','client':'NOT-RUN','bds':'NOT-RUN','saved_world':'NOT-RUN','live':'NOT-DEPLOYED'}
-          pathlib.Path('/tmp/public-closeout-summary.json').write_text(json.dumps(summary,indent=2)+'\n');print(json.dumps(summary))
-          PY
-      - name: Existing source tests and fresh toolkit inventory
-        run: |
-          python - <<'PY'
-          import subprocess,pathlib,json,hashlib,sys
-          for command in [['npm','test'],['python','-m','unittest','discover','-s','tests','-p','test_*.py']]:
-              result=subprocess.run(command,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
-              print('COMMAND',command,'EXIT',result.returncode);print(result.stdout[-16000:] if result.returncode else result.stdout[-1200:])
-              if result.returncode:sys.exit(result.returncode)
-          publication=json.loads(pathlib.Path('PUBLICATION.json').read_text()); history=json.loads(pathlib.Path('release-history.json').read_text());assert '0.32.0' not in history
-          previous=history['0.31.0'];entry={k:v for k,v in previous.items() if k!='payloads'}
-          entry.update(toolkit_version='0.32.0',sdk_version=json.loads(pathlib.Path('sdk.json').read_text())['version'])
-          entry['payloads']={name:hashlib.sha256(pathlib.Path(name).read_bytes()).hexdigest() for name in publication['files'] if name!='release-history.json'}
-          history['0.32.0']=entry;pathlib.Path('release-history.json').write_text(json.dumps(history,indent=2)+'\n')
-          PY
-          git add -A
-          python tools/build_release.py --output /tmp/toolkit-closeout
-          git diff --cached --check
-      - name: Push only tested source to integration branch
-        run: |
-          set -euo pipefail
-          test "$(git branch --show-current)" = integration/public-g219-closeout-20261104
-          git config user.name 'Senluo public integration'
-          git config user.email 'noreply@users.noreply.github.com'
-          git add -A
-          git commit -m 'Core0.32: pair integrated G219 as public G220 and isolate optional TACZ audit'
-          git push origin HEAD:refs/heads/integration/public-g219-closeout-20261104
-          git log -1 --format='%H %T %s'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
