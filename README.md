@@ -29,7 +29,7 @@ IE/TACZ-specific player routes are not executed in the public profile.
 **Status: implemented source candidate, not a published one-click addon.**
 Actual original-author input reconstruction, unique BP/RP player ownership,
 held-state public variables/animation aliases and repeatability have been
-checked. [The report](docs/validation-public-player-20261103.json) retains the
+checked. The current G219 source produces local G220; [its real-input closeout](https://github.com/burnt-tea-dev/senluo-bedrock-core/pull/46) records the exact candidate. [The historical G213/G218 report](docs/validation-public-player-20261103.json) retains the
 original package-only FAIL and the repaired structural PASS. Native rendering,
 normal survival gameplay, sound, saved-world upgrade/restart and multiplayer
 remain **NOT-RUN** for this candidate. Building a ZIP is not client acceptance.
