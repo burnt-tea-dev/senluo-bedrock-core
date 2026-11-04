@@ -4,15 +4,19 @@ on:
     branches: [integration/g219-public-closeout-20261104]
     paths: [.github/workflows/closeout-workspace.yml]
 permissions:
-  contents: read
+  contents: write
 jobs:
-  source:
+  reconcile:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: core
+        shell: bash
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          fetch-depth: 0
           path: core
       - uses: actions/checkout@v4
         with:
@@ -26,31 +30,88 @@ jobs:
           ref: 15701fa9c13923f12662984c32c124327e40e3d3
           persist-credentials: false
           path: vanilla
-      - name: Export source and minimal Git identity, never credentials or author addon archives
-        shell: bash
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reproduce reviewed profile against the actual canonical G219 source
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/public-source"
-          for dir in core grilling vanilla; do
-            git -C "$dir" rev-parse HEAD HEAD^{tree} > "$RUNNER_TEMP/public-source/${dir}-identity.txt"
-            git -C "$dir" archive HEAD > "$RUNNER_TEMP/public-source/${dir}.tar"
-            # Only immutable objects/refs; no config, credentials, hooks or logs.
-            sha="$(git -C "$dir" rev-parse HEAD)"
-            printf '%s\n' "$sha" > "$dir/.git/HEAD"
-            cd "$dir"
-            items=(.git/HEAD .git/objects)
-            for name in shallow packed-refs refs; do
-              if test -e ".git/$name"; then items+=(".git/$name"); fi
-            done
-            tar -rf "$RUNNER_TEMP/public-source/${dir}.tar" "${items[@]}"
-            cd ..
-            gzip -n "$RUNNER_TEMP/public-source/${dir}.tar"
+          test "$(git rev-parse origin/main)" = af5ac9c70b8b9e1e04a5e835c563761c06f4beac
+          mkdir -p "$RUNNER_TEMP/public-closeout-receipts" "$RUNNER_TEMP/public-inputs"
+          python .github/closeout/update-profile.py | tee "$RUNNER_TEMP/public-closeout-receipts/profile.json"
+          rm -rf .github/closeout .github/workflows/closeout-workspace.yml
+          git add -A
+          git diff --cached --check
+          test "$(git write-tree)" = a8b4bdf362820a248187dc7b2f172f4580c75fd8
+          git config user.name 'Cary integration'
+          git config user.email '97009482+casama233@users.noreply.github.com'
+          git commit -m 'fix: pair current public installer with merged G219 gameplay and complete G220 player output'
+          git rev-parse HEAD HEAD^{tree} > "$RUNNER_TEMP/public-closeout-receipts/source.txt"
+      - name: Execute existing source tests and immutable toolkit build
+        run: |
+          set -euo pipefail
+          node --test tests/*.test.mjs 2>&1 | tee "$RUNNER_TEMP/public-closeout-receipts/node.log"
+          python -m unittest discover -s tests -p 'test_*.py' -v 2>&1 | tee "$RUNNER_TEMP/public-closeout-receipts/python.log"
+          python tools/build_release.py --output "$RUNNER_TEMP/toolkit032" | tee "$RUNNER_TEMP/public-closeout-receipts/toolkit-build.json"
+      - name: Reconstruct the actual clean-author Cookery pair without optional addons
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9317/31/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' --output "$RUNNER_TEMP/cookery-original.mcaddon"
+          echo "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83  $RUNNER_TEMP/cookery-original.mcaddon" | sha256sum -c -
+          python tools/build_grilling_input.py --source ../grilling --descriptor adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json --output "$RUNNER_TEMP/public-inputs/grilling-2.8.219.mcaddon"
+          python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery-original.mcaddon" --grilling "$RUNNER_TEMP/public-inputs/grilling-2.8.219.mcaddon" --descriptor adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json --output "$RUNNER_TEMP/public-inputs/cookery-g219.mcaddon"
+          echo "a13cf4e8f48308c73c0e9acf72352026a0bd0becc9a5c89fff1670e7d9e3c144  $RUNNER_TEMP/public-inputs/cookery-g219.mcaddon" | sha256sum -c -
+          mv "$RUNNER_TEMP/public-inputs/cookery-g219.mcaddon.receipt.json" "$RUNNER_TEMP/cookery-adapter.receipt.json"
+      - name: Exercise actual player-complete recipe and real station adapter
+        env:
+          PUBLIC_MINIMAL_INPUTS: ${{ runner.temp }}/public-inputs
+          PUBLIC_PLAYER_GRILLING_SOURCE: ../grilling
+          PUBLIC_PLAYER_VANILLA_SOURCE: ../vanilla
+          COOKERY_ORIGINAL_ARCHIVE: ${{ runner.temp }}/cookery-original.mcaddon
+          GRILLING_ADAPTED_ARCHIVE: ${{ runner.temp }}/public-inputs/grilling-2.8.219.mcaddon
+          COOKERY_TEST_DESCRIPTOR: adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_public_minimal.py -v 2>&1 | tee "$RUNNER_TEMP/public-closeout-receipts/real-public.log"
+          python -m unittest discover -s tests -p test_cookery_station_adapter.py -v 2>&1 | tee "$RUNNER_TEMP/public-closeout-receipts/real-station.log"
+      - name: Repeat the actual one-command public installation with untouched originals
+        run: |
+          set -euo pipefail
+          for iteration in 1 2; do
+            python tools/build_owned_family_recipe.py --cookery "$RUNNER_TEMP/cookery-original.mcaddon" --grilling "$RUNNER_TEMP/public-inputs/grilling-2.8.219.mcaddon" --grilling-source ../grilling --vanilla-source ../vanilla --output "$RUNNER_TEMP/direct-public-$iteration"
           done
-          sha256sum "$RUNNER_TEMP/public-source/"*.tar.gz > "$RUNNER_TEMP/public-source/SHA256SUMS"
+          cmp "$RUNNER_TEMP/direct-public-1/public-minimal.mcaddon" "$RUNNER_TEMP/direct-public-2/public-minimal.mcaddon"
+          echo "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83  $RUNNER_TEMP/cookery-original.mcaddon" | sha256sum -c -
+          python - <<'PY'
+          import hashlib,json,os,pathlib,zipfile
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])
+          output=root/'direct-public-1'
+          receipt=json.loads((output/'receipt.json').read_text())
+          assert len(receipt['packs'])==4
+          assert receipt['behavior_player_definition']['pack_id']=='grilling-bp'
+          assert receipt['resource_player_definition']['pack_id']=='grilling-rp'
+          archive=output/'public-minimal.mcaddon'
+          with zipfile.ZipFile(archive) as z: assert len(z.namelist())==4
+          summary={'source':'53a5dea20e777367fe2d11137b07085ba9e752ef','grilling_input':'2.8.219','grilling_local_output':'2.8.220','cookery_local_output':'1.6.20012','packs':4,'behavior_player_owner':'grilling-bp','resource_player_owner':'grilling-rp','aggregate_sha256':hashlib.sha256(archive.read_bytes()).hexdigest(),'repeatable':True,'original_cookery_unchanged':True,'bds':'NOT_RUN','client':'NOT_RUN','saved_world':'NOT_RUN','live':False}
+          (root/'public-closeout-receipts/real-install.json').write_text(json.dumps(summary,indent=2)+'\n')
+          print(json.dumps(summary))
+          PY
+          git diff --exit-code
+      - name: Fast-forward only the dedicated reconciliation branch
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = af5ac9c70b8b9e1e04a5e835c563761c06f4beac
+          git push origin HEAD:refs/heads/integration/g219-public-closeout-20261104
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: public-source-closeout
-          path: ${{ runner.temp }}/public-source/
-          retention-days: 1
-# Temporary source transport. No Cookery/IE/TACZ archive, private family, world,
-# release or deployment. Removed from the final reviewed source tree.
+          name: public-closeout-test-receipts
+          path: ${{ runner.temp }}/public-closeout-receipts/
+          retention-days: 3
+# Only test logs and sanitized hashes leave the runner. Original/adapted Cookery,
+# aggregate packs, complete player files and worlds are never uploaded.
+# Temporary executor is removed from the verified tree. No Release/tag/LIVE.
