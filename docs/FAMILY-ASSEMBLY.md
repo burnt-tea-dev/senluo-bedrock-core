@@ -186,3 +186,11 @@ The existing immutable toolkit history is not rewritten to bless these newer
 source bytes. Toolkit 0.30.0's source allowlist now includes the public player descriptor
 and its review evidence, with pinned content hashes. This PR prepares those
 release inputs; it does not create a Release or ship any author archive.
+
+## Integrated public candidate: G219 source to local G220
+
+Toolkit 0.32.0 direct mode uses the integrated G219 source (bf97a9fd9d4a75a379363fa69811455303c36155) and produces the fresh local Grilling 2.8.220 BP/RP with Cookery 1.6.20012. It includes the reviewed output-receipt, cooked-skewer, seasoning-bottle and oil-slot fixes together. Only Grilling and Cookery are installed; Mojang and Grilling checkouts are build references, not additional addons. IE/TACZ remain opt-in, and the existing TACZ+IE profile is not certified for G220.
+
+Use the existing direct command with --cookery, --grilling, --grilling-source, --vanilla-source and --output. Export the exact G219 input with tools/build_grilling_input.py and adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json. Historical G213/G218 descriptors remain unchanged and can be selected explicitly. Do not substitute an old G218 acceptance receipt for G220.
+
+No Release or LIVE deployment is implied. Actual BDS, saved-world upgrade/restart, client FP/TP, audio and multiplayer acceptance remain NOT-RUN until recorded for this exact output.

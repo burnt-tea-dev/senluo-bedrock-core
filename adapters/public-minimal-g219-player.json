@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "id": "senluo-core:public-minimal-g219-player",
+  "toolkit_version": "0.32.0",
+  "profile": "public-minimal",
+  "recipe_version": "g219-to-g220-cookery20012-player-r1",
+  "scope": "Public Grilling+Cookery only; compose standalone Grilling RP from official vanilla build reference, without IE/TACZ or private family.",
+  "inputs": {
+    "grilling": {
+      "filename": "grilling-2.8.219.mcaddon",
+      "sha256": "72443b1f5e32ab36736c57a2635b5a7bf0a2d409ee221e5b2f5f2fedb74b0d36",
+      "distribution": "owned-public-source-candidate"
+    },
+    "cookery": {
+      "filename": "cookery-g219.mcaddon",
+      "sha256": "a13cf4e8f48308c73c0e9acf72352026a0bd0becc9a5c89fff1670e7d9e3c144",
+      "distribution": "user-local-only-original-author-input-required"
+    }
+  },
+  "packs": [
+    {
+      "id": "grilling-bp",
+      "input": "grilling",
+      "uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+      "version": [
+        2,
+        8,
+        219
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "dcf70052-c592-56e3-84d2-2a9b86abe7ab",
+          "version": [
+            2,
+            8,
+            219
+          ]
+        },
+        {
+          "uuid": "d0bb6818-8187-5d20-8e1f-a2ab7b517795",
+          "version": [
+            2,
+            8,
+            219
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grilling-rp",
+      "input": "grilling",
+      "uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+      "version": [
+        2,
+        8,
+        219
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "e7d592db-f4a0-53ce-8b0a-cab7a0cee8d7",
+          "version": [
+            2,
+            8,
+            219
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cookery-rp",
+      "input": "cookery",
+      "uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+      "version": [
+        1,
+        6,
+        20012
+      ],
+      "side": "RP",
+      "modules": [
+        {
+          "uuid": "b25e061d-b15a-48c1-a6de-dcc15a9276d4",
+          "version": [
+            1,
+            6,
+            20012
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cookery-bp",
+      "input": "cookery",
+      "uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+      "version": [
+        1,
+        6,
+        20012
+      ],
+      "side": "BP",
+      "modules": [
+        {
+          "uuid": "45b88a1d-d195-42c1-acd2-afd385791439",
+          "version": [
+            1,
+            6,
+            20012
+          ]
+        }
+      ]
+    }
+  ],
+  "order": {
+    "BP": [
+      "grilling-bp",
+      "cookery-bp"
+    ],
+    "RP": [
+      "grilling-rp",
+      "cookery-rp"
+    ]
+  },
+  "dependency_rewrites": {
+    "grilling-bp": {
+      "uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+      "before": [
+        1,
+        6,
+        4
+      ],
+      "after": [
+        1,
+        6,
+        20012
+      ]
+    },
+    "grilling-rp": {
+      "uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+      "before": [
+        1,
+        6,
+        4
+      ],
+      "after": [
+        1,
+        6,
+        20012
+      ]
+    }
+  },
+  "require_closed_pack_dependencies": true,
+  "required_behavior_player_owner": "grilling-bp",
+  "candidate_provenance": {
+    "grilling_repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
+    "grilling_commit": "bf97a9fd9d4a75a379363fa69811455303c36155",
+    "grilling_git_tree": "3be58cd17109fc692ad0a91ec09f7a737164fe8d",
+    "grilling_input_archive_sha256": "72443b1f5e32ab36736c57a2635b5a7bf0a2d409ee221e5b2f5f2fedb74b0d36",
+    "status": "Source integration; real-input package validation separate from BDS/client acceptance"
+  },
+  "distribution": "Public source recipe for user-local generated paired BP/RP only. Clean Cookery author archive and adapted Cookery input are never uploaded/released; source SHA and manifests are checked before assembly. No client/gameplay PASS is implied.",
+  "aggregate_filename": "public-minimal.mcaddon",
+  "player_presentation": {
+    "output_version": [
+      2,
+      8,
+      220
+    ],
+    "source": {
+      "commit": "bf97a9fd9d4a75a379363fa69811455303c36155",
+      "git_tree": "3be58cd17109fc692ad0a91ec09f7a737164fe8d"
+    },
+    "vanilla": {
+      "repository": "Mojang/bedrock-samples",
+      "commit": "15701fa9c13923f12662984c32c124327e40e3d3",
+      "engine_reference": "1.26.60.5",
+      "player_blob_sha1": "c5d368d1f32cce943ef4473fb1e75594c8bee222",
+      "license_blob_sha1": "ed3f1b782fb19fbc5d69f5b1343b056fc23c61fd"
+    }
+  }
+}

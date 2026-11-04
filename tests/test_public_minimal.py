@@ -97,12 +97,19 @@ class PublicMinimalTests(unittest.TestCase):
 
     def test_real_public_profile_is_two_inputs_and_four_pinned_packs(self):
         public = json.loads(builder.PUBLIC_MINIMAL_DESCRIPTOR.read_text())
-        source = json.loads((ROOT / 'adapters/public-minimal-grilling-g213-cookery20012.json').read_text())
+        source = json.loads(builder.PUBLIC_COOKERY_DESCRIPTOR.read_text())
         self.assertEqual(set(public['inputs']), {'grilling', 'cookery'})
         self.assertEqual({p['id'] for p in public['packs']},
                          {'grilling-bp', 'grilling-rp', 'cookery-bp', 'cookery-rp'})
-        self.assertEqual(public['inputs']['cookery'], source['inputs']['cookery'])
-        self.assertEqual(public['inputs']['grilling'], source['inputs']['grilling'])
+        self.assertEqual(public['inputs']['grilling']['sha256'], source['companion']['archive_sha256'])
+        self.assertEqual(public['player_presentation']['source']['commit'], source['companion']['source']['commit'])
+        self.assertEqual(public['player_presentation']['source']['git_tree'], source['companion']['source']['git_tree'])
+        for pack in public['packs']:
+            expected = source['companion']['version'] if pack['input'] == 'grilling' else source['output_version']
+            self.assertEqual(pack['version'], expected)
+        for rule in public['dependency_rewrites'].values():
+            self.assertEqual(rule['before'], source['author_version'])
+            self.assertEqual(rule['after'], source['output_version'])
         self.assertEqual(public['required_behavior_player_owner'], 'grilling-bp')
 
     def test_reproduces_missing_dependency_rewrite_then_builds_four_pack_pair(self):
