@@ -2,6 +2,15 @@
   "schema": 1,
   "id": "senluo-core:tacz-1.0.3-grilling-2.8.212",
   "toolkit_version": "0.25.0",
+  "optional_profile": {
+    "id": "tacz-1.0.3-with-ie-1.1.0",
+    "selection": "explicit",
+    "requires_ie": true,
+    "supports_tacz_without_ie": false,
+    "host_player": "pinned IE 1.1.0 player resource definition",
+    "public_minimal_dependency": false,
+    "note": "Only the explicit local TACZ+IE adapter is reviewed; no generic third-party player composition or client acceptance is implied."
+  },
   "immersive_eating": {
     "archive_sha256": "81575e63b40e2db4f58f0ab37b2aaa1854ff6ad564ba15e0acefa1f63c2f2fbf",
     "version": [

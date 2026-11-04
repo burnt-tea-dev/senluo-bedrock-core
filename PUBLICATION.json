@@ -86,7 +86,9 @@
     "tools/install_player_presentation.py",
     "tools/install_tacz.py",
     "tools/tacz_startup.py",
-    "tools/verify_archive_portability.py"
+    "tools/verify_archive_portability.py",
+    "adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json",
+    "adapters/public-minimal-g219-player.json"
   ],
   "rule": "Only these reviewed source/SDK/tool files are distributable. Original and generated author archives are never release assets."
 }

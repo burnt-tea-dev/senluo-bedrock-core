@@ -9,7 +9,7 @@ import unittest
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from install_tacz import adapt_files, apply_archive, repair_ui, repair_sound_definitions, repair_attachable_textures, source_sound_files, _source_files, repair_projectile_hit, FP, OFFHAND_FP
+from install_tacz import adapt_files, apply_archive, compare_author_members, repair_ui, repair_sound_definitions, repair_attachable_textures, source_sound_files, _source_files, repair_projectile_hit, FP, OFFHAND_FP
 from assemble_family import read_definition
 
 
@@ -187,7 +187,10 @@ async function load(root){
                 'modules': [{'uuid': uid + '-module', 'type': 'data' if side == 'BP' else 'resources', 'version': [1, 0, 3]}],
                 'dependencies': [{'uuid': peer, 'version': [1, 0, 3]}, {'module_name': '@minecraft/server', 'version': '1.18.0'}],
                 'metadata': {'authors': ['Original author']}})
-        originals.update({'Author BP/entities/plalyer.json': b'original player',
+        originals.update({'Author BP/entities/plalyer.json': encoded({'minecraft:entity': {'description': {
+                              'identifier': 'minecraft:player', 'properties': {
+                                  'field:' + str(i): {'type': 'int', 'default': 0, 'range': [0, 1]}
+                                  for i in range(24)}}}}),
                           'Author BP/entities/bullet/awp.json': b'// Original author comment.\n' + encoded({'minecraft:entity': {'components': {
                               'minecraft:break_blocks': {'breakable_blocks': ['glass', 'glass_panel', 'stained_glass', 'stained_glass_panel', 'wheat']},
                               'minecraft:physics': {}}}}),
@@ -258,6 +261,70 @@ async function load(root){
             self.assertIn({'uuid': 'g-' + side.lower(), 'version': [2, 8, 206]}, manifest['dependencies'])
             self.assertIn({'uuid': 'ie-' + side.lower(), 'version': [1, 1, 20002]}, manifest['dependencies'])
         self.assertEqual(receipt['player_properties'], 28)
+
+    def test_member_ledger_accounts_for_every_author_change(self):
+        originals, composed, controller, descriptor = self.fixture()
+        output, receipt = adapt_files(originals, composed, controller, descriptor)
+        ledger = receipt['member_diff']
+        self.assertEqual(ledger['Author BP/entities/plalyer.json']['operation'], 'removed')
+        self.assertEqual(ledger['Author BP/entities/player.json']['operation'], 'added')
+        self.assertEqual(ledger['Author BP/entities/player.json']['category'], 'cross_addon_player_owner')
+        self.assertEqual(ledger['Author BP/entities/bullet/awp.json']['category'],
+                         'native_tacz_block_registry_repair')
+        self.assertEqual(ledger['Author RP/render_controllers/kg_tacz_offhand.render_controllers.json']['operation'],
+                         'added')
+        self.assertNotIn('Author BP/scripts/main.js', ledger)
+        self.assertNotIn('Author RP/textures/skin.png', ledger)
+        self.assertEqual(receipt['diff_summary']['changed_members'], len(ledger))
+        self.assertEqual(receipt['diff_summary']['unchanged_author_members'],
+                         sum(path in output and output[path] == raw for path, raw in originals.items()))
+        blank, totals = compare_author_members(originals, originals, descriptor)
+        self.assertEqual(blank, {})
+        self.assertEqual(totals['changed_members'], 0)
+        self.assertEqual(totals['unchanged_author_members'], len(originals))
+
+    def test_unknown_player_and_controller_conflicts_are_explicit(self):
+        for failure, message in [
+            ('changed-gun-property', 'Conflicting minecraft:player property'),
+            ('duplicate-fp', 'Conflicting minecraft:player first/third-person'),
+            ('missing-fp', 'Conflicting minecraft:player first/third-person'),
+            ('new-composer-script', 'Unexpected player-composer output path'),
+            ('offhand-controller-collision', 'Conflicting TACZ offhand render-controller file'),
+        ]:
+            originals, composed, controller, descriptor = self.fixture()
+            if failure == 'changed-gun-property':
+                value = json.loads(composed['BP/entities/player.json'])
+                value['minecraft:entity']['description']['properties']['field:0']['default'] = 1
+                composed['BP/entities/player.json'] = encoded(value)
+            elif failure in ('duplicate-fp', 'missing-fp'):
+                value = json.loads(composed['RP/entity/player.entity.json'])
+                routes = value['minecraft:client_entity']['description']['render_controllers']
+                if failure == 'duplicate-fp':
+                    routes.append({FP: 'v.is_first_person'})
+                else:
+                    routes.clear()
+                composed['RP/entity/player.entity.json'] = encoded(value)
+            elif failure == 'new-composer-script':
+                composed['RP/scripts/gun.js'] = b'not a reviewed player-composer output'
+            else:
+                originals['Author RP/render_controllers/kg_tacz_offhand.render_controllers.json'] = b'foreign'
+            with self.subTest(failure=failure), self.assertRaisesRegex(ValueError, message):
+                adapt_files(originals, composed, controller, descriptor)
+
+    def test_unknown_gun_and_save_writes_are_not_accepted(self):
+        originals, composed, controller, descriptor = self.fixture()
+        output, _ = adapt_files(originals, composed, controller, descriptor)
+        output['Author BP/items/akm.json'] = b'new gun mechanics'
+        with self.assertRaisesRegex(ValueError, 'Unreviewed TACZ output member'):
+            compare_author_members(originals, output, descriptor)
+
+    def test_current_tacz_descriptor_is_an_explicit_combined_profile(self):
+        descriptor = json.loads((Path(__file__).resolve().parents[1] /
+                                 'adapters/tacz-1.0.3-grilling-2.8.212.json').read_text())
+        self.assertEqual(descriptor['optional_profile']['id'], 'tacz-1.0.3-with-ie-1.1.0')
+        self.assertEqual(descriptor['optional_profile']['selection'], 'explicit')
+        self.assertTrue(descriptor['optional_profile']['requires_ie'])
+        self.assertFalse(descriptor['optional_profile']['supports_tacz_without_ie'])
 
     def test_rejects_unreviewed_player_owner_over_limit_and_unknown_output(self):
         for damage in ('second-player', 'over-limit', 'unknown-output', 'missing-controller'):
