@@ -5,6 +5,9 @@ on:
     paths: [.github/workflows/public-closeout-once.yml]
 permissions:
   contents: write
+concurrency:
+  group: public-g219-closeout
+  cancel-in-progress: true
 jobs:
   pair:
     if: github.repository_id == '1439792715'
@@ -37,20 +40,19 @@ jobs:
                   assert text.count(old)==1
                   text=text.replace(old,"source = json.loads(builder.PUBLIC_COOKERY_DESCRIPTOR.read_text())")
                   old="self.assertEqual(public['inputs']['cookery'], source['inputs']['cookery'])\n        self.assertEqual(public['inputs']['grilling'], source['inputs']['grilling'])"
-                  new="""self.assertEqual(public['inputs']['grilling']['sha256'], source['companion']['archive_sha256'])
-                  self.assertEqual(public['player_presentation']['source']['commit'], source['companion']['source']['commit'])
-                  self.assertEqual(public['player_presentation']['source']['git_tree'], source['companion']['source']['git_tree'])
-                  for pack in public['packs']:
-                      expected = source['companion']['version'] if pack['input'] == 'grilling' else source['output_version']
-                      self.assertEqual(pack['version'], expected)
-                  for rule in public['dependency_rewrites'].values():
-                      self.assertEqual(rule['before'], source['author_version'])
-                      self.assertEqual(rule['after'], source['output_version'])"""
-                  new=textwrap.dedent(new)
-                  # First line is already indented by its original location.
-                  lines=new.splitlines();new=lines[0]+'\n'+'\n'.join('        '+row for row in lines[1:])
+                  new='\n        '.join([
+                      "self.assertEqual(public['inputs']['grilling']['sha256'], source['companion']['archive_sha256'])",
+                      "self.assertEqual(public['player_presentation']['source']['commit'], source['companion']['source']['commit'])",
+                      "self.assertEqual(public['player_presentation']['source']['git_tree'], source['companion']['source']['git_tree'])",
+                      "for pack in public['packs']:",
+                      "    expected = source['companion']['version'] if pack['input'] == 'grilling' else source['output_version']",
+                      "    self.assertEqual(pack['version'], expected)",
+                      "for rule in public['dependency_rewrites'].values():",
+                      "    self.assertEqual(rule['before'], source['author_version'])",
+                      "    self.assertEqual(rule['after'], source['output_version'])"])
                   assert text.count(old)==1
                   path.write_text(text.replace(old,new))
+                  compile(path.read_text(),str(path),'exec')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
