@@ -4,6 +4,28 @@ Core is a build-time tool, not another gameplay pack. The existing
 `build_owned_family_recipe.py` and `assemble_family.py` serve both public and
 optional family installations. They do not deploy a server or change a world.
 
+## Paired manifest releases
+
+An owned-port descriptor can advance a selected pair without composing a
+player. Use `paired_releases` to name the existing BP/RP pack IDs, a fresh
+`version`, and exact `dependency_rewrites` (`uuid`, `before`, `after`). The
+shared planner also serves the player installer and public-player recipe.
+It preserves pack/module UUIDs and every non-manifest byte. Both pack versions,
+module versions and reciprocal dependencies advance together; external
+dependencies change only when their exact input version matches the rule.
+An unused rule or reused output version is rejected. Original archives remain
+unchanged, and the existing recipe records the input, transformations and
+complete output trees. This source capability does not declare a new ready-made
+addon combination or certify native/client behavior.
+
+```json
+"paired_releases": [{
+  "packs": {"BP": "example-bp", "RP": "example-rp"},
+  "version": [1, 0, 2],
+  "dependency_rewrites": [{"uuid": "host-pack-uuid", "before": [2, 0, 0], "after": [2, 0, 1]}]
+}]
+```
+
 ## Public-minimal installation (Grilling + Cookery only)
 
 <a id="public-player-presentation"></a>
