@@ -15,6 +15,7 @@ import zipfile
 
 from export_ie_grilling_compat import export_controller
 from install_cookery import _atomic_new, _read_zip, _safe_name, sha256
+from paired_release import advance_manifest as advance_paired_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DESCRIPTOR = ROOT / 'adapters/ie-grilling-2.8.212.json'
@@ -78,16 +79,7 @@ def compose_players(source, player, descriptor, tacz=None):
 
 
 def advance_manifest(raw, version, paired_uuids, companion, minimum=None):
-    manifest = json.loads(raw)
-    before = manifest['header']['version']
-    if tuple(version) <= tuple(before):
-        raise ValueError('Local adapter needs a fresh increasing paired version')
-    manifest['header']['version'] = version.copy()
-    for module in manifest['modules']:
-        module['version'] = version.copy()
-    for dependency in manifest.get('dependencies', []):
-        if dependency.get('uuid') in paired_uuids:
-            dependency['version'] = version.copy()
+    manifest = json.loads(advance_paired_manifest(raw, version, paired_uuids))
     if minimum is not None:
         if tuple(minimum) < tuple(manifest['header']['min_engine_version']):
             raise ValueError('Cannot lower the author engine requirement')
