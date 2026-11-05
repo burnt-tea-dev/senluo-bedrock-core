@@ -1,0 +1,344 @@
+{
+  "schema": 1,
+  "observed_date": "2026-11-05",
+  "toolkit_version": "0.32.0",
+  "sdk_version": "0.1.0",
+  "source_scope": "Reviewed Grilling G234 source, clean original Cookery1.6.4, existing Core adapter/composer; no family inputs.",
+  "inputs": {
+    "grilling": {
+      "filename": "grilling-2.8.234.mcaddon",
+      "sha256": "c6f153b2ed4596b272524e7ba1c6504f7b76f64ea18f609911ac841a576b0f4d",
+      "distribution": "owned-public-source-candidate"
+    },
+    "cookery": {
+      "filename": "cookery-public.mcaddon",
+      "sha256": "0931f674b8dd1ddfb9ffd64cd5dc5150e087c4913347c102b3ee8c88708ee70d",
+      "distribution": "user-local-only-original-author-input-required"
+    }
+  },
+  "grilling_source": {
+    "commit": "e9d495816dc8961fd86071016a797185f55c7473",
+    "git_tree": "67288d46f7458406a6f0f6f7f6edd0799861a8d8"
+  },
+  "vanilla": {
+    "repository": "Mojang/bedrock-samples",
+    "commit": "15701fa9c13923f12662984c32c124327e40e3d3",
+    "engine_reference": "1.26.60.5",
+    "player_blob_sha1": "c5d368d1f32cce943ef4473fb1e75594c8bee222",
+    "license_blob_sha1": "ed3f1b782fb19fbc5d69f5b1343b056fc23c61fd"
+  },
+  "candidate": {
+    "packs": [
+      {
+        "id": "grilling-bp",
+        "uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+        "version": [
+          2,
+          8,
+          30004
+        ],
+        "side": "BP",
+        "archive": "grilling-bp.mcpack",
+        "tree_sha256": "9b5b21d161753fae30546fa0b98ee8a127756d95a641374f811a41a2a2d944ed",
+        "archive_sha256": "b3b5aea4b011800ba6fe8b72512d357652bf1f5e4bf787b19e73612c25dbf6fb",
+        "archive_bytes": 760062
+      },
+      {
+        "id": "grilling-rp",
+        "uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
+        "version": [
+          2,
+          8,
+          30004
+        ],
+        "side": "RP",
+        "archive": "grilling-rp.mcpack",
+        "tree_sha256": "1c72b23ae68336e84cd62941b6950b1260368433409d7cfb1a16663a5d1964f4",
+        "archive_sha256": "184ff754bd38fa160c60cabfc4f507c5b3949f6afaf411c27b395bd077db3437",
+        "archive_bytes": 14105426
+      },
+      {
+        "id": "cookery-rp",
+        "uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
+        "version": [
+          1,
+          6,
+          20013
+        ],
+        "side": "RP",
+        "archive": "cookery-rp.mcpack",
+        "tree_sha256": "231421b3e85d7d4a7c63f854ef9ebd8954a4c3d4b3c348df2db19486b4f81640",
+        "archive_sha256": "2be416a310ae1500dc2f29520a9b0c643aa7380243a255cca7362af2bf02b747",
+        "archive_bytes": 3258678
+      },
+      {
+        "id": "cookery-bp",
+        "uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
+        "version": [
+          1,
+          6,
+          20013
+        ],
+        "side": "BP",
+        "archive": "cookery-bp.mcpack",
+        "tree_sha256": "b104ef26ce2ec548e45e1575c251420b373e8555b20a84620ff4c73aaae48ccf",
+        "archive_sha256": "f1ee3d1c6a1831e8bf08a48f443c76759c6cc4493edea52c38044387137a79e5",
+        "archive_bytes": 1600694
+      }
+    ],
+    "aggregate_sha256": "169763fdddd9a29ebd5d3fec865fc4e80cddf69478227eed7f92a4dc3b8a9c55",
+    "behavior_player": {
+      "pack_id": "grilling-bp",
+      "uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
+      "path": "entities/player.json",
+      "sha256": "589df66236c178c5456f7bd8de8cc247d0fc94482aa628ed51d699dca8fb856d"
+    },
+    "resource_player": {
+      "pack_id": "grilling-rp",
+      "path": "entity/player.entity.json",
+      "sha256": "ae12f37bef12204f66bcdc20c5f0fc1356c70c09e3cd3d42f6692dcab150f5bd"
+    },
+    "repeat_build_identical": true,
+    "original_archives_unchanged": true
+  },
+  "engine": "BDS 1.26.60.6",
+  "experiments": {
+    "gametest": true,
+    "poi": true,
+    "upcoming_creator_features": true
+  },
+  "production_grilling_modules": {
+    "@minecraft/server": "2.12.0-beta",
+    "@minecraft/server-ui": "2.2.0"
+  },
+  "qa_only_module": "@minecraft/server-gametest1.0.0-beta",
+  "phases": {
+    "baseline": {
+      "checks": [
+        {
+          "name": "original four-pack baseline ignites grill through its production handler and native inventory",
+          "passed": true
+        },
+        {
+          "name": "native insertion debits exactly one raw skewer",
+          "passed": true
+        },
+        {
+          "name": "one original-owner native station inventory exists",
+          "passed": true
+        },
+        {
+          "name": "real grill inventory contains exactly the inserted stack",
+          "passed": true
+        },
+        {
+          "name": "normal shovel interaction extinguishes the stored grill",
+          "passed": true
+        },
+        {
+          "name": "named raw stack and additional lore were retained in the native grill",
+          "passed": true
+        },
+        {
+          "name": "diagnostic player disconnected",
+          "passed": true
+        }
+      ],
+      "normal_stop": true,
+      "returncode": 0,
+      "memory_peak_bytes": 678051840,
+      "oom": 0,
+      "observations": [
+        {
+          "phase": "baseline",
+          "station": {
+            "type": "kaleidoscope_grilling:raw_beef_skewer",
+            "amount": 1,
+            "name": "Public upgrade skewer",
+            "lore": [
+              "External metadata survives pack upgrade"
+            ],
+            "keep": true,
+            "canPlace": [],
+            "canDestroy": []
+          },
+          "chest": {
+            "type": "minecraft:diamond_sword",
+            "amount": 1,
+            "name": "Original public data",
+            "lore": [
+              "Cookery author baseline"
+            ],
+            "origin": "original",
+            "keep": true,
+            "damage": 7,
+            "enchantments": [
+              [
+                "unbreaking",
+                2
+              ]
+            ],
+            "canPlace": [
+              "grass_block"
+            ],
+            "canDestroy": [
+              "andesite",
+              "polished_diorite",
+              "stone",
+              "diorite",
+              "granite",
+              "polished_andesite",
+              "polished_granite"
+            ]
+          }
+        }
+      ]
+    },
+    "first": {
+      "checks": [
+        {
+          "name": "first original grill block survives",
+          "passed": true
+        },
+        {
+          "name": "first exactly one station owner survives",
+          "passed": true
+        },
+        {
+          "name": "first original station ItemStack metadata survives",
+          "passed": true
+        },
+        {
+          "name": "first original chest ItemStack metadata survives",
+          "passed": true
+        },
+        {
+          "name": "first extinguished state survives",
+          "passed": true
+        },
+        {
+          "name": "public Cookery accepts chicken through its production board handler",
+          "passed": true
+        },
+        {
+          "name": "diagnostic player disconnected",
+          "passed": true
+        }
+      ],
+      "normal_stop": true,
+      "returncode": 0,
+      "memory_peak_bytes": 678051840,
+      "oom": 0,
+      "observations": []
+    },
+    "restart": {
+      "checks": [
+        {
+          "name": "restart original grill block survives",
+          "passed": true
+        },
+        {
+          "name": "restart exactly one station owner survives",
+          "passed": true
+        },
+        {
+          "name": "restart original station ItemStack metadata survives",
+          "passed": true
+        },
+        {
+          "name": "restart original chest ItemStack metadata survives",
+          "passed": true
+        },
+        {
+          "name": "restart extinguished state survives",
+          "passed": true
+        },
+        {
+          "name": "saved board completes four cuts and releases original three meat outputs after restart",
+          "passed": true
+        },
+        {
+          "name": "saved board completes original one bone output",
+          "passed": true
+        },
+        {
+          "name": "Grilling board extension supplies native chicken skin without another addon",
+          "passed": true
+        },
+        {
+          "name": "diagnostic player disconnected",
+          "passed": true
+        }
+      ],
+      "normal_stop": true,
+      "returncode": 0,
+      "memory_peak_bytes": 522993664,
+      "oom": 0,
+      "observations": [
+        {
+          "boardOutputs": {
+            "kaleidoscope_cookery:iron_kitchen_knife": 1,
+            "kaleidoscope_cookery:raw_cut_small_meats": 3,
+            "minecraft:bone": 1,
+            "kaleidoscope_grilling:chicken_skin": 3
+          }
+        }
+      ]
+    },
+    "rollback": {
+      "checks": [
+        {
+          "name": "rollback original grill block survives",
+          "passed": true
+        },
+        {
+          "name": "rollback exactly one station owner survives",
+          "passed": true
+        },
+        {
+          "name": "rollback original station ItemStack metadata survives",
+          "passed": true
+        },
+        {
+          "name": "rollback original chest ItemStack metadata survives",
+          "passed": true
+        },
+        {
+          "name": "rollback extinguished state survives",
+          "passed": true
+        },
+        {
+          "name": "diagnostic player disconnected",
+          "passed": true
+        }
+      ],
+      "normal_stop": true,
+      "returncode": 0,
+      "memory_peak_bytes": 686956544,
+      "oom": 0,
+      "observations": []
+    }
+  },
+  "successful_assertions": 29,
+  "same_database": true,
+  "qa_scope": "The four production archives are unchanged. An explicit QA-only Grilling main import/observer/Gametest dependency and Cookery board-handler bridge invoke the unchanged production owners using native SimulatedPlayer/inventories. The simulated interactWithBlock call did not emit the expected before/after events in this configuration; real input and client rendering/audio are not certified.",
+  "native_behavior": "Grill ignite/insert/extinguish, unique original-owner inventory, name/lore/keep flag, nonstackable sword custom DP/enchantment/durability/adventure metadata; author board input/two cuts, saved restart/four cuts and explicit release yielding three meats, one bone and one-to-three Grilling skins; restore original packs without replacing database.",
+  "retained_failures": [
+    "Initial QA omitted required poi experiment; no capability conclusion used.",
+    "Simulated interactWithBlock returned true without expected global interaction events.",
+    "A stackable food fixture incorrectly tried native dynamic properties; corrected to a valid nonstackable sword.",
+    "Observer expected board output on fourth cut; author handler requires the subsequent release interaction."
+  ],
+  "evidence_reuse": "Unchanged successful baseline/first and completed cuts were reused; release and original-pack rollback completed on the same QA database. Earlier failures are retained, not relabelled.",
+  "cleanup": {
+    "temporary_engine_world_removed": true,
+    "production_source_archives_preserved": true
+  },
+  "client": "UNOBSERVED",
+  "live_modified": false,
+  "limitations": [
+    "No full Java parity, arbitrary unknown item NBT, human input, multiplayer performance, or visual/audio claim.",
+    "No real consumer is required to install the diagnostic observer or any family addon.",
+    "Clean author Cookery input and local adaptation are still necessary; generated author packs are not distributed."
+  ]
+}

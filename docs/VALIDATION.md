@@ -1,3 +1,17 @@
+# Current public-minimal route
+
+The [current four-pack validation](validation-public-minimal.json) owns the
+reviewed source, candidate identities and native scope. Grilling source,
+original Cookery input, player composition and deterministic reconstruction
+were exercised without Tavern/IE/TACZ/private inputs. Native handler/inventory
+and original-owner save data passed first load, restart and original-pack
+rollback on one QA database. A saved Cookery board also completed its original
+outputs and Grilling bonus. Human input and client rendering/audio remain
+unobserved; test-only observers are not production dependencies.
+
+The following SDK0.1.0 observation retains its original date/scope and does
+not certify all newer recipes or full-family behavior.
+
 # Validation 0.1.0
 
 The SDK/local-adapter release checks passed on BDS 1.26.60.6. The [machine-readable summary](validation-0.1.0.json) pins inputs, outputs, module hashes and the scope of each check.

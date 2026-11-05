@@ -30,134 +30,106 @@ addon combination or certify native/client behavior.
 
 <a id="public-player-presentation"></a>
 
-**Unreleased source candidate, not a ready-made public Release or client PASS.**
-The current `--profile public-minimal` selects exactly two addons: Grilling
-BP/RP and locally adapted original-author Cookery 1.6.4 BP/RP. Tavern,
-世界名酒, Immersive Eating, TACZ, private repair packs and server family locks
-are neither inputs nor prerequisites. Unrelated addons are not required to be
-on a Senluo combination whitelist; actual player-definition conflicts need
-separate, explicit integration rather than silent replacement.
+This route installs exactly **Grilling BP/RP + locally adapted Cookery BP/RP**.
+Tavern, World Liquor, IE, TACZ, private repair packs and a particular server
+family are not inputs or prerequisites. Core remains a build-time tool, not a
+fifth gameplay addon. Genuine conflicting player definitions need explicit
+integration; unrelated addons do not need to be on a Senluo whitelist.
 
-### What was missing, and what this route changes
+### Reviewed source and output ownership
 
-The previous G213 four-pack output assembled successfully but contained **no
-resource `minecraft:player` definition**. Its behavior-player ownership and
-manifest closure checks could not prove that held food, plates and oil had the
-required public variables and animation aliases. The original failure and the
-repaired source evidence are recorded in
-[the fixed-input report](validation-public-player-20261103.json).
+The current reviewed source and the two input archive hashes are maintained in
+[the public descriptor](../adapters/public-minimal-player.json); the original
+Cookery archive, host edits and companion declarations belong to
+[the public Cookery adapter](../adapters/cookery-public-minimal.json).
+The existing builder, installer, player composer and assembler are reused.
+New reviews update this one active profile instead of introducing another
+version-specific gameplay branch.
 
-This profile uses the existing `install_player_presentation.compose_players`
-entry and Grilling's canonical `compose_held_player.py`, without its IE/TACZ
-branches. A complete official vanilla player reference is composed into
-**Grilling's existing RP**, not a fifth patch pack. Vanilla materials, textures,
-geometry, render controllers and attachables are retained. The assembler
-requires exactly one resource-player owner with the declared public variables
-and animation aliases; a competing player is not silently overwritten.
+The active profile selects the current G234 source. The output advances both
+existing Grilling pack/module versions and rebinds the exact Cookery pair.
+It preserves gameplay bytes and save ownership. The selected source supplies
+the same sixteen reviewed host helpers and board declaration as the former
+G213 route; author originals remain unchanged. Original/adapted Cookery
+archives are user-local inputs and are not public release assets.
 
-The source input remains G213, but the local output has a **new paired
-Grilling identity 2.8.218 (G218)**. Both existing Grilling UUIDs, module UUIDs,
-item/entity IDs, gameplay scripts and save owners remain. Owning manifests and
-mutual dependency versions advance together; Cookery dependencies are rebound
-from original `[1,6,4]` to the locally adapted `[1,6,20012]`. The original
-archives and old G212/G213 output identities are never overwritten.
+Grilling's canonical composer merges the exact official vanilla player into
+**Grilling's existing RP**. IE/TACZ routes are not executed. The assembler
+requires one Grilling behavior-player owner and one complete Grilling resource
+player, including its public variables and animation aliases. It retains
+vanilla materials, textures, geometry, render controllers, attachables and the
+Mojang license. Another player definition is not silently overwritten.
 
-### Build references and genuine addon inputs
+The 2026-11-03 package-only failure and repaired G218 structural result remain
+[historical evidence](validation-public-player-20261103.json). They do not
+certify this updated input or its native gameplay. Engine, save/rollback and
+client evidence must be read at their actual tested scope.
 
-Use a clean Grilling source checkout at
-`6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3` (tree
-`9b7cd7c6e6be0a8a808fb73c27c67af9c3a1b224`). Its original input archive hash is
-`ba073d40ad2bbf3ef8f68ea1121c3f9d9d81dd10acdb4085eb2bf15b0c000643`.
+### Native and saved-world scope
 
-Obtain clean Cookery 1.6.4 from
-[the author's project](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial),
-file 9317031, SHA256
-`aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83`.
-Grilling currently needs Cookery's host-extension interface, so local adaptation
-is still necessary. **This is a remaining installation burden; the family has
-been removed, not magically replaced by an already-published one-click pack.**
-Do not redistribute the original or adapted Cookery archive through this repo.
+[Current validation](validation-public-minimal.json) records real input
+reconstruction and one QA database through original packs, candidate load,
+saved restart and original-pack rollback. It covers the production grill
+handlers with native inventories and a partially cut Cookery board that later
+releases original meat/bone plus Grilling skin. The explicit observer overlays
+are test-only; the distributed four archives contain none of them.
 
-The official Mojang reference is
-[bedrock-samples 15701fa9](https://github.com/Mojang/bedrock-samples/tree/15701fa9c13923f12662984c32c124327e40e3d3),
-whose `version.json` identifies 1.26.60.5. It is **a build reference, not an
-additional addon to enable in the world**. The descriptor verifies the exact
-player and license Git blob identities. The original Mojang license accompanies
-the local composed RP; no author archive, vanilla sample, or generated complete
-player definition is published in Core's source repository.
+This is not a human-click, rendering/audio, arbitrary-NBT or multiplayer PASS.
+Earlier mismatched QA setups remain failures; successful unchanged stages were
+reused. See [the isolated observer](../tests/native/public-minimal.js) when
+reproducing those cases in a disposable, network-isolated test world.
 
-### Commands
+### Local build
 
-### Direct local build (recommended)
+Use Python 3 and Node.js. Obtain clean Cookery 1.6.4 from
+[the original author](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial),
+file 9317031. Its verified archive hash is in the adapter descriptor; do not
+substitute a server-patched archive.
 
-Once you have the **clean original Cookery 1.6.4 archive** and the reviewed
-**Grilling G213** archive, the existing builder can perform the Cookery local
-adaptation, exact two-input recipe, complete G218 player-RP composition and
-four-pack assembly **in one command**:
+From this Core checkout, clone the reviewed references into new local folders:
 
 ```sh
-python tools/build_owned_family_recipe.py \
-  --cookery /path/to/original-cookery-1.6.4.mcaddon \
-  --grilling /path/to/grilling-2.8.213.mcaddon \
+git clone https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial.git grilling
+git -C grilling checkout "$(python3 -c 'import json; print(json.load(open("adapters/public-minimal-player.json"))["player_presentation"]["source"]["commit"])')"
+git clone https://github.com/Mojang/bedrock-samples.git vanilla
+git -C vanilla checkout "$(python3 -c 'import json; print(json.load(open("adapters/public-minimal-player.json"))["player_presentation"]["vanilla"]["commit"])')"
+
+python3 tools/build_grilling_input.py \
+  --source ./grilling --descriptor adapters/cookery-public-minimal.json \
+  --output ./grilling-source.mcaddon
+
+python3 tools/build_owned_family_recipe.py \
+  --cookery /path/to/clean-original-Cookery-1.6.4.mcaddon \
+  --grilling ./grilling-source.mcaddon \
   --grilling-source ./grilling --vanilla-source ./vanilla \
   --output ./public-minimal-output
 ```
 
-The `grilling-source` and `vanilla-source` directories are the exact clean
-build references already identified above; they are **not** additional addons
-for players to install. The output remains `public-minimal.mcaddon` with four
-packs and the completed resource player, plus receipt and installation metadata.
-It does not call the IE/TACZ player adapter, depend on the private family, or
-accept unrelated Grilling builds with unreviewed manifests or changed helpers.
-This is a convenience entry into the **same existing installer and assembler**;
-the separate commands below remain available for reproducing each step.
+The two source folders are build references, not extra enabled addons. The
+vanilla input must contain the complete pinned `resource_pack/entity/player.entity.json`
+and `LICENSE.md`; the descriptor verifies their exact Git blob identities.
+A verified extraction of those official files is also accepted.
 
+Enable all four packs inside `public-minimal-output/public-minimal.mcaddon`.
+The output also contains the per-pack archives, selected pack lists, recipe,
+installation metadata and receipt. Keep those records when diagnosing the
+installed version. The output is a local adaptation, not an official author
+release or a claim that every possible Grilling archive is interchangeable.
 
-From this candidate's Core source checkout (Python 3 and Node.js available):
+Use an engine compatible with the selected manifests. The current Grilling
+source requires **Beta APIs (`gametest`) and Points of Interest (`poi`)**;
+missing a required experiment is a configuration mismatch. The selected
+manifest is authoritative for server/UI module versions. A diagnostic-only
+GameTest observer is not installed in the four-pack production output.
 
-```sh
-git clone https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial.git grilling
-git -C grilling checkout 6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3
-git clone https://github.com/Mojang/bedrock-samples.git vanilla
-git -C vanilla checkout 15701fa9c13923f12662984c32c124327e40e3d3
-mkdir -p local-inputs
+For step-by-step reconstruction, the existing `install_cookery_from_descriptor.py`,
+`build_owned_family_recipe.py --profile public-minimal` and `assemble_family.py`
+commands remain available. Use the active descriptor's filenames and hashes;
+older explicit descriptors retain their own historical inputs.
 
-python tools/build_grilling_input.py \
-  --source ./grilling \
-  --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json \
-  --output ./local-inputs/grilling-2.8.213.mcaddon
+<a id="current-g212-installation"></a>
 
-python tools/install_cookery_from_descriptor.py \
-  --cookery /path/to/clean-original-Cookery-1.6.4.mcaddon \
-  --grilling ./local-inputs/grilling-2.8.213.mcaddon \
-  --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json \
-  --output ./local-inputs/cookery-g213.mcaddon
-
-python tools/build_owned_family_recipe.py \
-  --profile public-minimal --grilling-source ./grilling --vanilla-source ./vanilla \
-  --inputs ./local-inputs --output ./public-minimal.recipe.json
-
-python tools/assemble_family.py \
-  --recipe ./public-minimal.recipe.json --inputs ./local-inputs \
-  --output ./public-minimal-output
-```
-
-The two recipe inputs are still only Grilling and adapted Cookery. The aggregate
-`public-minimal-output/public-minimal.mcaddon` contains exactly four `.mcpack`
-files; enable both BP/RP pairs. Use the descriptor's order, Beta APIs and Points
-of Interest requirements. Grilling declares minimum engine `[1,26,60]`,
-`@minecraft/server 2.12.0-beta` and `@minecraft/server-ui 2.2.0`.
-
-The fixed-input assembled output SHA256 is
-`9dca47ba396ede83a6dfd8146cef58474aa77555de154a400fe28289496ee822`.
-Keep `receipt.json`: it distinguishes source inputs, transformed manifests,
-new output identities, behavior-player owner and resource-player owner.
-Reproduction succeeded without downloading IE, TACZ, Tavern or 世界名酒.
-**Actual client rendering, audio, normal gameplay, BDS, upgrade/restart and
-multiplayer remain NOT-RUN for this candidate.** Test a disposable world, not
-LIVE; retain a stopped-world backup before any later upgrade.
-
-## Current G212 installation
+## Historical G212 installation
 
 <a id="current-g206-installation"></a>
 <a id="current-g208-installation"></a>

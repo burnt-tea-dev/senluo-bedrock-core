@@ -1,19 +1,19 @@
 {
   "schema": 1,
   "id": "senluo-core:public-minimal-player",
-  "toolkit_version": "0.29.0",
+  "toolkit_version": "0.32.0",
   "profile": "public-minimal",
-  "recipe_version": "g213-to-g218-cookery20012-player-r1",
+  "recipe_version": "g234-public-player-r1",
   "scope": "Public Grilling+Cookery only; compose standalone Grilling RP from official vanilla build reference, without IE/TACZ or private family.",
   "inputs": {
     "grilling": {
-      "filename": "grilling-2.8.213.mcaddon",
-      "sha256": "ba073d40ad2bbf3ef8f68ea1121c3f9d9d81dd10acdb4085eb2bf15b0c000643",
+      "filename": "grilling-2.8.234.mcaddon",
+      "sha256": "c6f153b2ed4596b272524e7ba1c6504f7b76f64ea18f609911ac841a576b0f4d",
       "distribution": "owned-public-source-candidate"
     },
     "cookery": {
-      "filename": "cookery-g213.mcaddon",
-      "sha256": "a13cf4e8f48308c73c0e9acf72352026a0bd0becc9a5c89fff1670e7d9e3c144",
+      "filename": "cookery-public.mcaddon",
+      "sha256": "0931f674b8dd1ddfb9ffd64cd5dc5150e087c4913347c102b3ee8c88708ee70d",
       "distribution": "user-local-only-original-author-input-required"
     }
   },
@@ -25,7 +25,7 @@
       "version": [
         2,
         8,
-        213
+        234
       ],
       "side": "BP",
       "modules": [
@@ -34,7 +34,7 @@
           "version": [
             2,
             8,
-            213
+            234
           ]
         },
         {
@@ -42,7 +42,7 @@
           "version": [
             2,
             8,
-            213
+            234
           ]
         }
       ]
@@ -54,7 +54,7 @@
       "version": [
         2,
         8,
-        213
+        234
       ],
       "side": "RP",
       "modules": [
@@ -63,7 +63,7 @@
           "version": [
             2,
             8,
-            213
+            234
           ]
         }
       ]
@@ -75,7 +75,7 @@
       "version": [
         1,
         6,
-        20012
+        20013
       ],
       "side": "RP",
       "modules": [
@@ -84,7 +84,7 @@
           "version": [
             1,
             6,
-            20012
+            20013
           ]
         }
       ]
@@ -96,7 +96,7 @@
       "version": [
         1,
         6,
-        20012
+        20013
       ],
       "side": "BP",
       "modules": [
@@ -105,7 +105,7 @@
           "version": [
             1,
             6,
-            20012
+            20013
           ]
         }
       ]
@@ -132,7 +132,7 @@
       "after": [
         1,
         6,
-        20012
+        20013
       ]
     },
     "grilling-rp": {
@@ -145,7 +145,7 @@
       "after": [
         1,
         6,
-        20012
+        20013
       ]
     }
   },
@@ -153,22 +153,22 @@
   "required_behavior_player_owner": "grilling-bp",
   "candidate_provenance": {
     "grilling_repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
-    "grilling_commit": "6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3",
-    "grilling_git_tree": "9b7cd7c6e6be0a8a808fb73c27c67af9c3a1b224",
-    "grilling_input_archive_sha256": "ba073d40ad2bbf3ef8f68ea1121c3f9d9d81dd10acdb4085eb2bf15b0c000643",
-    "status": "source candidate; not a public Release; full-family and client acceptance remain pending"
+    "grilling_commit": "e9d495816dc8961fd86071016a797185f55c7473",
+    "grilling_git_tree": "67288d46f7458406a6f0f6f7f6edd0799861a8d8",
+    "grilling_input_archive_sha256": "c6f153b2ed4596b272524e7ba1c6504f7b76f64ea18f609911ac841a576b0f4d",
+    "status": "Reviewed current public four-pack route; actual native/save/rollback scope is in docs/validation-public-minimal.json. No general client or Java parity claim."
   },
-  "distribution": "Public source recipe for user-local generated paired BP/RP only. Clean Cookery author archive and adapted Cookery input are never uploaded/released; source SHA and manifests are checked before assembly. No client/gameplay PASS is implied.",
+  "distribution": "Public source recipe for user-local generated paired BP/RP only. Clean original-author and locally adapted Cookery archives are never uploaded/released. Exact identities and input/output trees are checked; current tested scope is in docs/validation-public-minimal.json.",
   "aggregate_filename": "public-minimal.mcaddon",
   "player_presentation": {
     "output_version": [
       2,
       8,
-      218
+      30004
     ],
     "source": {
-      "commit": "6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3",
-      "git_tree": "9b7cd7c6e6be0a8a808fb73c27c67af9c3a1b224"
+      "commit": "e9d495816dc8961fd86071016a797185f55c7473",
+      "git_tree": "67288d46f7458406a6f0f6f7f6edd0799861a8d8"
     },
     "vanilla": {
       "repository": "Mojang/bedrock-samples",

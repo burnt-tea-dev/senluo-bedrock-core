@@ -26,13 +26,19 @@ reference. That reference is a **build input**, not a third addon installed in
 the world. The output still has four packs, with no fifth compatibility layer.
 IE/TACZ-specific player routes are not executed in the public profile.
 
-**Status: implemented source candidate, not a published one-click addon.**
-Actual original-author input reconstruction, unique BP/RP player ownership,
-held-state public variables/animation aliases and repeatability have been
-checked. [The report](docs/validation-public-player-20261103.json) retains the
-original package-only FAIL and the repaired structural PASS. Native rendering,
-normal survival gameplay, sound, saved-world upgrade/restart and multiplayer
-remain **NOT-RUN** for this candidate. Building a ZIP is not client acceptance.
+**Status: current reviewed four-pack source route; no author archive is published.**
+The active profile now uses current G234 source instead of the old G213 input.
+Real original-author reconstruction, unique player ownership and repeatability
+passed. On BDS1.26.60.6, original-owner grill/chest metadata survived candidate
+first load, saved restart and original-pack rollback on one QA database. The
+Cookery board retained partial cutting and released its original meat/bone plus
+Grilling chicken skin. See the [current validation and exact scope](docs/validation-public-minimal.json).
+
+The native observer invokes the unchanged production handlers with real native
+players/inventories; simulated clicks did not emit the expected global events
+in this configuration. Human input, rendering/audio and multiplayer remain
+unobserved. No client acceptance gate is added. The old G218 structural result
+remains dated history, not proof of this candidate's gameplay.
 
 Local adaptation is still needed because the original Cookery archive lacks
 this port's host-extension interface. The source workflow is documented;
@@ -41,7 +47,7 @@ installation burden has already disappeared. Author originals stay unchanged.
 
 ## Optional integrations are separate
 
-[Full-family assembly](docs/FAMILY-ASSEMBLY.md#current-g212-installation),
+[Historical full-family assembly](docs/FAMILY-ASSEMBLY.md#current-g212-installation),
 [owned-port adapters](docs/PORT-ADAPTERS.md), IE and TACZ integration are explicit
 choices, not prerequisites for public Grilling. An actual third-party player
 override may need an adapter. This does not justify a whitelist that excludes
