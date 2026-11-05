@@ -475,3 +475,56 @@ class DirectPublicInstallTests(unittest.TestCase):
                 builder.main(['--cookery', str(cookery), '--grilling', str(grilling),
                               '--output', str(output)])
             self.assertFalse(output.exists())
+
+    @unittest.skipUnless(os.environ.get('COOKERY_ORIGINAL_ARCHIVE')
+                         and os.environ.get('GRILLING_ADAPTED_ARCHIVE')
+                         and os.environ.get('PUBLIC_PLAYER_GRILLING_SOURCE')
+                         and os.environ.get('PUBLIC_PLAYER_VANILLA_SOURCE'),
+                         'Real clean original and pinned public build references required')
+    def test_real_direct_install_repeatability_identity_and_input_rejection(self):
+        cookery = Path(os.environ['COOKERY_ORIGINAL_ARCHIVE'])
+        grilling = Path(os.environ['GRILLING_ADAPTED_ARCHIVE'])
+        source = Path(os.environ['PUBLIC_PLAYER_GRILLING_SOURCE'])
+        vanilla = Path(os.environ['PUBLIC_PLAYER_VANILLA_SOURCE'])
+        descriptor = json.loads(builder.PUBLIC_MINIMAL_DESCRIPTOR.read_text())
+        before = {path: digest(path.read_bytes()) for path in (cookery, grilling)}
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            receipts = [builder.install_public_pair(cookery, grilling, source, vanilla, root / name)
+                        for name in ('first', 'second')]
+            self.assertEqual((root / 'first/public-minimal.mcaddon').read_bytes(),
+                             (root / 'second/public-minimal.mcaddon').read_bytes())
+            for name, receipt in zip(('first', 'second'), receipts):
+                self.assertEqual(len(receipt['packs']), 4)
+                self.assertEqual(receipt['behavior_player_definition']['pack_id'], 'grilling-bp')
+                self.assertEqual(receipt['resource_player_definition']['pack_id'], 'grilling-rp')
+                expected = {p['id']: p for p in descriptor['packs']}
+                actual = {}
+                for pack in receipt['packs']:
+                    with zipfile.ZipFile(root / name / pack['archive']) as archive:
+                        value = json.loads(archive.read('manifest.json'))
+                    spec = expected[pack['id']]
+                    version = (descriptor['player_presentation']['output_version']
+                               if spec['input'] == 'grilling' else spec['version'])
+                    self.assertEqual(value['header']['uuid'], spec['uuid'])
+                    self.assertEqual(value['header']['version'], version)
+                    self.assertEqual({m['uuid'] for m in value['modules']},
+                                     {m['uuid'] for m in spec['modules']})
+                    actual[spec['uuid']] = value
+                for value in actual.values():
+                    for dep in value.get('dependencies', []):
+                        if 'uuid' in dep:
+                            self.assertEqual(dep['version'], actual[dep['uuid']]['header']['version'])
+                self.assertEqual(json.loads((root / name / 'installation.json').read_text())['client'],
+                                 'NOT_RUN')
+            for label, path in (('grilling', grilling), ('cookery', cookery)):
+                wrong = root / (label + '-changed.mcaddon')
+                wrong.write_bytes(path.read_bytes() + b'unreviewed input')
+                output = root / ('rejected-' + label)
+                with self.assertRaises(ValueError):
+                    builder.install_public_pair(wrong if label == 'cookery' else cookery,
+                                                wrong if label == 'grilling' else grilling,
+                                                source, vanilla, output)
+                self.assertFalse(output.exists())
+            self.assertEqual({path: digest(path.read_bytes()) for path in before}, before)
+            self.assertFalse(list(root.glob('.public-install-*')))

@@ -17,32 +17,51 @@ import install_cookery_from_descriptor as cookery_installer
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DESCRIPTOR = ROOT / 'adapters/owned-t194-g212-w180-cookery-station-performance.json'
-PUBLIC_MINIMAL_DESCRIPTOR = ROOT / 'adapters/public-minimal-g219-player.json'
-PUBLIC_COOKERY_DESCRIPTOR = ROOT / 'adapters/cookery-1.6.4-grilling-2.8.219-station-performance.json'
+PUBLIC_MINIMAL_DESCRIPTOR = ROOT / 'adapters/public-minimal-g233-player.json'
+PUBLIC_COOKERY_DESCRIPTOR = ROOT / 'adapters/cookery-1.6.4-grilling-2.8.233-station-performance.json'
 
 
-def _rewrite_manifest_dependency(raw, rule, pack_id):
-    """Pin the exact dependency change; keep the source ZIP immutable."""
-    if (not isinstance(rule, dict) or set(rule) != {'uuid', 'before', 'after'}
-            or not isinstance(rule['uuid'], str)
-            or any(not isinstance(rule[key], list) or len(rule[key]) != 3
-                   or any(type(n) is not int or n < 0 for n in rule[key])
-                   for key in ('before', 'after'))):
-        raise ValueError('invalid dependency rewrite: ' + pack_id)
-    manifest = json.loads(raw)
-    before = manifest.get('dependencies')
-    if not isinstance(before, list):
-        raise ValueError('manifest has no dependencies: ' + pack_id)
-    matches = [i for i, row in enumerate(before)
-               if isinstance(row, dict) and row.get('uuid') == rule['uuid']]
-    if len(matches) != 1 or before[matches[0]].get('version') != rule['before']:
-        raise ValueError('manifest dependency preimage differs: ' + pack_id)
-    after = copy.deepcopy(before)
-    after[matches[0]]['version'] = rule['after'].copy()
-    manifest['dependencies'] = after
-    changed = (json.dumps(manifest, ensure_ascii=False, indent=2) + '\n').encode()
-    return sha256(changed), {'kind': 'json_replace', 'pointer': ['dependencies'],
-                             'before': before, 'after': after}
+from paired_release import plan_pair, rewrite_dependency as _rewrite_manifest_dependency
+
+
+def _advance_recipe_pair(recipe, verified, pair, version, dependency_rewrites=()):
+    packs = {pack['id']: pack for pack in recipe['packs']}
+    if (set(pair) != {'BP', 'RP'} or len(set(pair.values())) != 2
+            or any(key not in packs or packs[key]['side'] != side for side, key in pair.items())):
+        raise ValueError('paired release must select one existing BP and RP')
+    originals, current = {}, {}
+    for side, key in pair.items():
+        spec = packs[key]['files']['manifest.json']
+        raw = _read_archive_source(verified[spec['input']]['path'], spec['members'])
+        originals[side] = raw
+        current[side] = _transform(raw, spec.get('transforms', []), key)
+    planned = plan_pair(current, version, dependency_rewrites)
+    for side, key in pair.items():
+        pack = packs[key]
+        spec = pack['files']['manifest.json']
+        spec.setdefault('transforms', []).extend(planned[side]['transforms'])
+        spec['output_sha256'] = sha256(_transform(originals[side], spec['transforms'], key))
+        pack['version'] = version.copy()
+        pack['modules'] = [{**module, 'version': version.copy()} for module in pack['modules']]
+        hashes = {name: value.get('output_sha256', value['sha256']) for name, value in pack['files'].items()}
+        pack['expected_tree'] = {'files': hashes, 'sha256': _tree_fingerprint(hashes)}
+
+
+def _complete_paired_releases(recipe, descriptor, verified):
+    used = set()
+    releases = descriptor.get('paired_releases', [])
+    if not isinstance(releases, list):
+        raise ValueError('paired_releases must be a list')
+    for release in releases:
+        if not isinstance(release, dict) or set(release) != {'packs', 'version', 'dependency_rewrites'}:
+            raise ValueError('paired release needs packs, version and dependency_rewrites')
+        pair = release['packs']
+        if not isinstance(pair, dict) or used.intersection(pair.values()):
+            raise ValueError('paired releases cannot overlap')
+        _advance_recipe_pair(recipe, verified, pair, release['version'], release['dependency_rewrites'])
+        used.update(pair.values())
+    if releases:
+        recipe['paired_releases'] = copy.deepcopy(releases)
 
 
 def _complete_public_player(recipe, descriptor, verified, grilling_source, vanilla_source):
@@ -99,28 +118,8 @@ def _complete_public_player(recipe, descriptor, verified, grilling_source, vanil
         if name in rp['files']:
             raise ValueError('public player output already exists; do not replace another owner: ' + name)
         rp['files'][name] = {'kind': 'generated', 'content': raw.decode('utf-8'), 'sha256': sha256(raw)}
-    own_uuids = {packs[key]['uuid'] for key in ('grilling-bp', 'grilling-rp')}
-    for key in ('grilling-bp', 'grilling-rp'):
-        pack = packs[key]
-        spec = pack['files']['manifest.json']
-        original = _read_archive_source(verified[spec['input']]['path'], spec['members'])
-        operations = spec.setdefault('transforms', [])
-        manifest = json.loads(_transform(original, operations, key))
-        changes = [(['header', 'version'], manifest['header']['version'], version),
-                   (['modules'], manifest['modules'],
-                    [{**m, 'version': version.copy()} for m in manifest['modules']])]
-        deps = manifest.get('dependencies', [])
-        paired = [{**d, 'version': version.copy()} if d.get('uuid') in own_uuids else d
-                  for d in deps]
-        if paired != deps:
-            changes.append((['dependencies'], deps, paired))
-        operations.extend({'kind': 'json_replace', 'pointer': path, 'before': before, 'after': after}
-                          for path, before, after in changes)
-        spec['output_sha256'] = sha256(_transform(original, operations, key))
-        pack['version'] = version.copy()
-        pack['modules'] = [{**m, 'version': version.copy()} for m in pack['modules']]
-        hashes = {name: value.get('output_sha256', value['sha256']) for name, value in pack['files'].items()}
-        pack['expected_tree'] = {'files': hashes, 'sha256': _tree_fingerprint(hashes)}
+    _advance_recipe_pair(recipe, verified,
+                         {'BP': 'grilling-bp', 'RP': 'grilling-rp'}, version)
     recipe['required_resource_player'] = requirement
     recipe['player_presentation_provenance'] = {
         'composer_source': contract['source'], 'vanilla': refs,
@@ -207,12 +206,13 @@ def build_recipe(descriptor, inputs_dir, *, grilling_source=None, vanilla_source
         if owner not in {row['id'] for row in selected if row['side'] == 'BP'}:
             raise ValueError('required player owner is not a selected behavior pack')
         recipe['required_behavior_player_owner'] = owner
+    _complete_paired_releases(recipe, descriptor, verified)
     _complete_public_player(recipe, descriptor, verified, grilling_source, vanilla_source)
     return recipe
 
 
 def install_public_pair(cookery, grilling, grilling_source, vanilla_source, output):
-    """Build the existing reviewed G220 four-pack route in one local command.
+    """Build the existing reviewed G234 four-pack route in one local command.
 
     Unlike the older package-only prototype, this *requires* the canonical
     player composer and official vanilla reference; it cannot silently produce

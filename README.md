@@ -26,11 +26,11 @@ reference. That reference is a **build input**, not a third addon installed in
 the world. The output still has four packs, with no fifth compatibility layer.
 IE/TACZ-specific player routes are not executed in the public profile.
 
-**Status: canonical G219 input → local G220 player-complete candidate.**
+**Status: canonical G233 input → local G234 player-complete candidate.**
 The public entry now includes the merged gameplay fixes, rather than asking
 users to install the superseded G213 source. Four packs remain the complete
 public set. Historical G213/G218 descriptors and their structural reports are
-preserved, not relabeled as new G219 acceptance. Source tests and clean-author
+preserved, not relabeled as new G233 acceptance. Source tests and clean-author
 reconstruction are separate from **NOT-RUN** native gameplay, rendering, audio,
 saved-world upgrades and multiplayer. No public Release or LIVE change is
 created by this source update.

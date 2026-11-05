@@ -64,6 +64,61 @@ class OwnedFamilyRecipeTests(unittest.TestCase):
                                 if name.startswith(side + '/')}
                     self.assertEqual({name: archive.read(name) for name in archive.namelist()}, expected)
 
+    def test_paired_release_without_player_updates_only_declared_manifest_fields(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            descriptor, entries, source = self.fixture(root)
+            for side, peer in [('BP', 'rp'), ('RP', 'bp')]:
+                name = side + '/manifest.json'
+                manifest = json.loads(entries[name])
+                manifest['header']['name'] = 'Keep original name'
+                manifest['metadata'] = {'authors': ['Original author']}
+                manifest['dependencies'] = [
+                    {'uuid': 'owned-' + peer, 'version': [1, 2, 3]},
+                    {'uuid': 'host-' + side.lower(), 'version': [2, 0, 0]},
+                    {'module_name': '@minecraft/server', 'version': '2.7.0'}]
+                entries[name] = json.dumps(manifest).encode()
+            with zipfile.ZipFile(source, 'w') as archive:
+                for name, raw in entries.items(): archive.writestr(name, raw)
+            original_archive = source.read_bytes()
+            descriptor['inputs']['owned']['sha256'] = hashlib.sha256(original_archive).hexdigest()
+            descriptor['paired_releases'] = [{
+                'packs': {'BP': 'owned-bp', 'RP': 'owned-rp'}, 'version': [1, 2, 4],
+                'dependency_rewrites': [
+                    {'uuid': 'host-bp', 'before': [2, 0, 0], 'after': [2, 0, 1]},
+                    {'uuid': 'host-rp', 'before': [2, 0, 0], 'after': [2, 0, 1]}]}]
+            recipe = builder.build_recipe(descriptor, root)
+            path = root / 'recipe.json'; path.write_text(json.dumps(recipe))
+            output = root / 'assembled'
+            assemble_family.assemble(recipe, path, root, output)
+            for side in ('BP', 'RP'):
+                with zipfile.ZipFile(output / ('owned-' + side.lower() + '.mcpack')) as archive:
+                    for name, raw in entries.items():
+                        if name.startswith(side + '/') and name != side + '/manifest.json':
+                            self.assertEqual(archive.read(name[3:]), raw)
+                    actual = json.loads(archive.read('manifest.json'))
+                    expected = json.loads(entries[side + '/manifest.json'])
+                    expected['header']['version'] = [1, 2, 4]
+                    expected['modules'][0]['version'] = [1, 2, 4]
+                    expected['dependencies'][0]['version'] = [1, 2, 4]
+                    expected['dependencies'][1]['version'] = [2, 0, 1]
+                    self.assertEqual(actual, expected)
+            self.assertEqual(source.read_bytes(), original_archive)
+
+    def test_pair_release_rejects_reused_identity_or_unused_dependency(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            descriptor, _, _ = self.fixture(root)
+            release = {'packs': {'BP': 'owned-bp', 'RP': 'owned-rp'},
+                       'version': [1, 2, 3], 'dependency_rewrites': []}
+            descriptor['paired_releases'] = [release]
+            with self.assertRaisesRegex(ValueError, 'fresh increasing'):
+                builder.build_recipe(descriptor, root)
+            release.update(version=[1, 2, 4], dependency_rewrites=[
+                {'uuid': 'not-selected', 'before': [1, 0, 0], 'after': [2, 0, 0]}])
+            with self.assertRaisesRegex(ValueError, 'unused dependency'):
+                builder.build_recipe(descriptor, root)
+
     def test_rejects_wrong_archive_and_missing_pack(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
