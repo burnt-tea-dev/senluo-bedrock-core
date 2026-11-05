@@ -39,7 +39,7 @@ integration; unrelated addons do not need to be on a Senluo whitelist.
 ### Reviewed source and output ownership
 
 The current reviewed source and the two input archive hashes are maintained in
-[the public descriptor](../adapters/public-minimal-player.json); the original
+[the public descriptor](../adapters/public-minimal.json); the original
 Cookery archive, host edits and companion declarations belong to
 [the public Cookery adapter](../adapters/cookery-public-minimal.json).
 The existing builder, installer, player composer and assembler are reused.
@@ -90,9 +90,9 @@ From this Core checkout, clone the reviewed references into new local folders:
 
 ```sh
 git clone https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial.git grilling
-git -C grilling checkout "$(python3 -c 'import json; print(json.load(open("adapters/public-minimal-player.json"))["player_presentation"]["source"]["commit"])')"
+git -C grilling checkout "$(python3 -c 'import json; print(json.load(open("adapters/public-minimal.json"))["player_presentation"]["source"]["commit"])')"
 git clone https://github.com/Mojang/bedrock-samples.git vanilla
-git -C vanilla checkout "$(python3 -c 'import json; print(json.load(open("adapters/public-minimal-player.json"))["player_presentation"]["vanilla"]["commit"])')"
+git -C vanilla checkout "$(python3 -c 'import json; print(json.load(open("adapters/public-minimal.json"))["player_presentation"]["vanilla"]["commit"])')"
 
 python3 tools/build_grilling_input.py \
   --source ./grilling --descriptor adapters/cookery-public-minimal.json \
@@ -148,6 +148,13 @@ Those profiles have their own exact output identities and acceptance scope;
 they do not establish compatibility with every third-party player override.
 
 ## Historical recipes and package-only probes
+
+`public-minimal-player.json` preserves the previous G213 → G218 player-complete
+recipe. Select it explicitly with the original source references; the new
+active default is `public-minimal.json`; `public-minimal-g219-player.json` and
+`public-minimal-g233-player.json` remain explicit historical inputs. Old descriptors and all previously
+published identities remain unchanged.
+
 
 Historical G203/G205 startup/decoding/family instructions are preserved at
 [the fixed earlier source](https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/7f015e92ed7536e5ed64317338eda55968e0c4ae/docs/FAMILY-ASSEMBLY.md#historical-recipes).

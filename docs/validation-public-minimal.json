@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "observed_date": "2026-11-05",
-  "toolkit_version": "0.32.0",
+  "toolkit_version": "0.34.0",
   "sdk_version": "0.1.0",
   "source_scope": "Reviewed Grilling G234 source, clean original Cookery1.6.4, existing Core adapter/composer; no family inputs.",
   "inputs": {
@@ -329,7 +329,7 @@
     "A stackable food fixture incorrectly tried native dynamic properties; corrected to a valid nonstackable sword.",
     "Observer expected board output on fourth cut; author handler requires the subsequent release interaction."
   ],
-  "evidence_reuse": "Unchanged successful baseline/first and completed cuts were reused; release and original-pack rollback completed on the same QA database. Earlier failures are retained, not relabelled.",
+  "evidence_reuse": "Unchanged successful baseline/first and completed cuts were reused; release and original-pack rollback completed on the same QA database. Earlier failures are retained, not relabelled. The subsequent merge of newer canonical Core sources changes profile metadata/default selection only; candidate game bytes are compared again before delivery.",
   "cleanup": {
     "temporary_engine_world_removed": true,
     "production_source_archives_preserved": true

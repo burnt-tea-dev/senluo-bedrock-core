@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "senluo-core:cookery-public-minimal",
-  "toolkit_version": "0.32.0",
+  "toolkit_version": "0.34.0",
   "archive_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
   "host_uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
   "resource_uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",

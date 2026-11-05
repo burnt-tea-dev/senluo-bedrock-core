@@ -27,7 +27,7 @@ the world. The output still has four packs, with no fifth compatibility layer.
 IE/TACZ-specific player routes are not executed in the public profile.
 
 **Status: current reviewed four-pack source route; no author archive is published.**
-The active profile now uses current G234 source instead of the old G213 input.
+The active profile uses current G234 source; earlier G213/G219/G233 profiles remain explicit historical inputs.
 Real original-author reconstruction, unique player ownership and repeatability
 passed. On BDS1.26.60.6, original-owner grill/chest metadata survived candidate
 first load, saved restart and original-pack rollback on one QA database. The

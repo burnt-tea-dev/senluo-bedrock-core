@@ -17,7 +17,7 @@ import install_cookery_from_descriptor as cookery_installer
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DESCRIPTOR = ROOT / 'adapters/owned-t194-g212-w180-cookery-station-performance.json'
-PUBLIC_MINIMAL_DESCRIPTOR = ROOT / 'adapters/public-minimal-player.json'
+PUBLIC_MINIMAL_DESCRIPTOR = ROOT / 'adapters/public-minimal.json'
 PUBLIC_COOKERY_DESCRIPTOR = ROOT / 'adapters/cookery-public-minimal.json'
 
 
