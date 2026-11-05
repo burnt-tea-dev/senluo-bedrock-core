@@ -1,19 +1,19 @@
 {
   "schema": 1,
   "id": "senluo-core:public-minimal-player",
-  "toolkit_version": "0.35.0",
+  "toolkit_version": "0.36.0",
   "profile": "public-minimal",
-  "recipe_version": "g237-public-player-r1",
+  "recipe_version": "g238-public-player-r1",
   "scope": "Public Grilling+Cookery only; compose standalone Grilling RP from official vanilla build reference, without IE/TACZ or private family.",
   "inputs": {
     "grilling": {
-      "filename": "grilling-2.8.237.mcaddon",
-      "sha256": "02fa13983dbec9a72731b5acae8292477df7ee90200f162f345516c8ced50bb6",
+      "filename": "grilling-2.8.238.mcaddon",
+      "sha256": "dc260e112f4c400ce8549ecc73b7eade25feefa32aa86f9edb23bc495e713bb1",
       "distribution": "owned-public-source-candidate"
     },
     "cookery": {
       "filename": "cookery-public.mcaddon",
-      "sha256": "5104b2b47f0cd91e248af245b58371b523065470696423eb7b8a600414595689",
+      "sha256": "94eae2bb70328e02c5c0f4c73ac15f0c1c69df5fd6f49f4055cb1ecd290c8131",
       "distribution": "user-local-only-original-author-input-required"
     }
   },
@@ -25,7 +25,7 @@
       "version": [
         2,
         8,
-        237
+        238
       ],
       "side": "BP",
       "modules": [
@@ -34,7 +34,7 @@
           "version": [
             2,
             8,
-            237
+            238
           ]
         },
         {
@@ -42,7 +42,7 @@
           "version": [
             2,
             8,
-            237
+            238
           ]
         }
       ]
@@ -54,7 +54,7 @@
       "version": [
         2,
         8,
-        237
+        238
       ],
       "side": "RP",
       "modules": [
@@ -63,7 +63,7 @@
           "version": [
             2,
             8,
-            237
+            238
           ]
         }
       ]
@@ -75,7 +75,7 @@
       "version": [
         1,
         6,
-        20014
+        20015
       ],
       "side": "RP",
       "modules": [
@@ -84,7 +84,7 @@
           "version": [
             1,
             6,
-            20014
+            20015
           ]
         }
       ]
@@ -96,7 +96,7 @@
       "version": [
         1,
         6,
-        20014
+        20015
       ],
       "side": "BP",
       "modules": [
@@ -105,7 +105,7 @@
           "version": [
             1,
             6,
-            20014
+            20015
           ]
         }
       ]
@@ -132,7 +132,7 @@
       "after": [
         1,
         6,
-        20014
+        20015
       ]
     },
     "grilling-rp": {
@@ -145,7 +145,7 @@
       "after": [
         1,
         6,
-        20014
+        20015
       ]
     }
   },
@@ -153,10 +153,10 @@
   "required_behavior_player_owner": "grilling-bp",
   "candidate_provenance": {
     "grilling_repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
-    "grilling_commit": "f4b05f04052dfb786f7021cf15790ab605f6bf3e",
-    "grilling_git_tree": "db71a7ca5a49f87aa5df376ee5fa8299bf90e1aa",
-    "grilling_input_archive_sha256": "02fa13983dbec9a72731b5acae8292477df7ee90200f162f345516c8ced50bb6",
-    "status": "Reviewed public G237 route; native results are retained at their tested source and behavior scope in docs/validation-public-minimal.json."
+    "grilling_commit": "7c2d3c0afcb39db314a1f95fa7f0276272b27eb1",
+    "grilling_git_tree": "6ab76ba8a670da9047bf9ef81ca0044473ffd4a3",
+    "grilling_input_archive_sha256": "dc260e112f4c400ce8549ecc73b7eade25feefa32aa86f9edb23bc495e713bb1",
+    "status": "Reviewed public G238 route; native results are retained at their tested source and behavior scope in docs/validation-public-minimal.json."
   },
   "distribution": "Public source recipe for user-local generated paired BP/RP only. Clean original-author and locally adapted Cookery archives are never uploaded/released. Exact identities and input/output trees are checked; current tested scope is in docs/validation-public-minimal.json.",
   "aggregate_filename": "public-minimal.mcaddon",
@@ -164,11 +164,11 @@
     "output_version": [
       2,
       8,
-      30006
+      30008
     ],
     "source": {
-      "commit": "f4b05f04052dfb786f7021cf15790ab605f6bf3e",
-      "git_tree": "db71a7ca5a49f87aa5df376ee5fa8299bf90e1aa"
+      "commit": "7c2d3c0afcb39db314a1f95fa7f0276272b27eb1",
+      "git_tree": "6ab76ba8a670da9047bf9ef81ca0044473ffd4a3"
     },
     "vanilla": {
       "repository": "Mojang/bedrock-samples",

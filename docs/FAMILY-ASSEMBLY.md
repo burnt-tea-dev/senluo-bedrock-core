@@ -69,7 +69,11 @@ client evidence must be read at their actual tested scope.
 
 [Current validation](validation-public-minimal.json) records real input
 reconstruction and attributes retained engine evidence to its tested source.
-The effect implementation matches the canonical native timing/restart result.
+Warmth timing and persistence retain the canonical native timing/restart result;
+the only change in that effect module is an Ordinary damage explanation comment.
+The new Heavy Metal priority has a separate native observation: eligible held
+totems run first, and confirmed native healing clears effects. Forced-damage
+controls and remaining absorption limits stay explicit in the validation.
 Held-snapshot recovery has production-publisher fault-model regressions; this
 does not establish spontaneous engine API failure or rendered recovery.
 

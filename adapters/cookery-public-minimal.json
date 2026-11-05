@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "id": "senluo-core:cookery-public-minimal",
-  "toolkit_version": "0.35.0",
+  "toolkit_version": "0.36.0",
   "archive_sha256": "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83",
   "host_uuid": "d5c48842-1a22-4965-861e-d8fad49b1e00",
   "resource_uuid": "66b445af-a1d0-4b2f-bd40-a0b13e17a8f0",
@@ -13,7 +13,7 @@
   "output_version": [
     1,
     6,
-    20014
+    20015
   ],
   "prefixes": {
     "BP": "Kaleidoscope Cookery v1.6.4 [BP]/",
@@ -24,34 +24,34 @@
     "version": [
       2,
       8,
-      237
+      238
     ],
     "rp_uuid": "bbbd2d60-52e5-53a6-8b9a-c09b0f516389",
     "rp_version": [
       2,
       8,
-      237
+      238
     ],
     "spec_path": "host-extensions/board-api.json",
     "spec_sha256": "2b1399e7a3aa6a0c22ff634436ebcb3e2913eba1457c34c94d65cb6105c66f49",
     "source": {
       "repository": "burnt-tea-dev/kaleidoscope-grilling-unofficial",
-      "commit": "f4b05f04052dfb786f7021cf15790ab605f6bf3e",
-      "git_tree": "db71a7ca5a49f87aa5df376ee5fa8299bf90e1aa",
-      "resource_tree_sha256": "c4b4dbf62470e7fcc14b566ba8894036f011b52b3eb8517313d270fd81550047",
+      "commit": "7c2d3c0afcb39db314a1f95fa7f0276272b27eb1",
+      "git_tree": "6ab76ba8a670da9047bf9ef81ca0044473ffd4a3",
+      "resource_tree_sha256": "e89ef888799e2ef3430e24092be4bf87a3a6a3fb35ec11cf5ad39eaf8b88817f",
       "resource_file_count": 2866
     },
     "runtime_trees": {
       "BP": {
-        "sha256": "6da9794972087990e2165c2b1867a3fb404e0ab7fb0014b5e1db2bcce8e367e1",
+        "sha256": "f7f67ac766dcb14962dfebb83af19e68a323bed3fa96a789d4f0cb7e7b8b4a0e",
         "files": 794
       },
       "RP": {
-        "sha256": "c4b4dbf62470e7fcc14b566ba8894036f011b52b3eb8517313d270fd81550047",
+        "sha256": "e89ef888799e2ef3430e24092be4bf87a3a6a3fb35ec11cf5ad39eaf8b88817f",
         "files": 2866
       }
     },
-    "archive_sha256": "02fa13983dbec9a72731b5acae8292477df7ee90200f162f345516c8ced50bb6"
+    "archive_sha256": "dc260e112f4c400ce8549ecc73b7eade25feefa32aa86f9edb23bc495e713bb1"
   },
   "owned_helpers": {
     "scripts/host_api/board_api_core.js": "bc7298ec2843f9eb0948da6dc99e52fe71ae9ffcb1afd313b85bd8cf91717017",

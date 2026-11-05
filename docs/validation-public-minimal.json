@@ -1,24 +1,24 @@
 {
   "schema": 1,
   "observed_date": "2026-11-06",
-  "toolkit_version": "0.35.0",
+  "toolkit_version": "0.36.0",
   "sdk_version": "0.1.0",
-  "source_scope": "Reviewed G237 public source and clean original Cookery1.6.4; four packs, no family inputs.",
+  "source_scope": "Reviewed G238 public source and clean original Cookery1.6.4; four packs, no family inputs.",
   "inputs": {
     "grilling": {
-      "filename": "grilling-2.8.237.mcaddon",
-      "sha256": "02fa13983dbec9a72731b5acae8292477df7ee90200f162f345516c8ced50bb6",
+      "filename": "grilling-2.8.238.mcaddon",
+      "sha256": "dc260e112f4c400ce8549ecc73b7eade25feefa32aa86f9edb23bc495e713bb1",
       "distribution": "owned-public-source-candidate"
     },
     "cookery": {
       "filename": "cookery-public.mcaddon",
-      "sha256": "5104b2b47f0cd91e248af245b58371b523065470696423eb7b8a600414595689",
+      "sha256": "94eae2bb70328e02c5c0f4c73ac15f0c1c69df5fd6f49f4055cb1ecd290c8131",
       "distribution": "user-local-only-original-author-input-required"
     }
   },
   "grilling_source": {
-    "commit": "f4b05f04052dfb786f7021cf15790ab605f6bf3e",
-    "git_tree": "db71a7ca5a49f87aa5df376ee5fa8299bf90e1aa"
+    "commit": "7c2d3c0afcb39db314a1f95fa7f0276272b27eb1",
+    "git_tree": "6ab76ba8a670da9047bf9ef81ca0044473ffd4a3"
   },
   "vanilla": {
     "repository": "Mojang/bedrock-samples",
@@ -35,20 +35,20 @@
         "version": [
           2,
           8,
-          30006
+          30008
         ],
         "side": "BP",
         "archive": "grilling-bp.mcpack",
-        "tree_sha256": "890c153dc48208127246dd97cc058a03f5461b02d6c8b1dc601dfc4ae3076fe0",
-        "archive_sha256": "0c1420b7ffaa07293b718b43703b3c87cf1eaf18bb97f85c9dd5e6f707a55f76",
-        "archive_bytes": 760244,
+        "tree_sha256": "3f9e536faa9965690ff851857f4cb5af1ff57b0b00c3b32e46fcecf904ef651f",
+        "archive_sha256": "a54245b34b5145409cc6b458d2096f7046d229ef2570b34d312c478a5abb5838",
+        "archive_bytes": 760530,
         "modules": [
           {
             "uuid": "dcf70052-c592-56e3-84d2-2a9b86abe7ab",
             "version": [
               2,
               8,
-              30006
+              30008
             ]
           },
           {
@@ -56,7 +56,7 @@
             "version": [
               2,
               8,
-              30006
+              30008
             ]
           }
         ],
@@ -82,12 +82,12 @@
         "version": [
           2,
           8,
-          30006
+          30008
         ],
         "side": "RP",
         "archive": "grilling-rp.mcpack",
-        "tree_sha256": "1d96b272ac4469a56b993ee6e7176e0674c014a5d87935bb72c648c47315fe82",
-        "archive_sha256": "ca8f6697c6f7afcb4c2864b4cf826bf0a2157bf419a1067cad332aadb1004a74",
+        "tree_sha256": "59480f6f880fd3ce1d5d8404e8e15e459277e9845302cbbb8ec9068a87225a01",
+        "archive_sha256": "3d67663232ae5a45c6098a60f0d75b628dc49338529907852c8b3d171e96c196",
         "archive_bytes": 14105426,
         "modules": [
           {
@@ -95,7 +95,7 @@
             "version": [
               2,
               8,
-              30006
+              30008
             ]
           }
         ],
@@ -112,12 +112,12 @@
         "version": [
           1,
           6,
-          20014
+          20015
         ],
         "side": "RP",
         "archive": "cookery-rp.mcpack",
-        "tree_sha256": "ad0486d87b3976cff17b7fd0095dee07c89c7dd7513cb4fba69153aa4f63e3dc",
-        "archive_sha256": "87322ed590879d7dfe9164b26c2bdacc7b4b9091e94f525ff4a6ae6549fb954e",
+        "tree_sha256": "5524ea5b149388cf9fa63308a0b50302e1f9efffff5d58ef8133fb9266466378",
+        "archive_sha256": "7ec8a29e763c34766f6d0ab0a8b271c46630ac0b994232d6d7b6f948729ddb0b",
         "archive_bytes": 3258678,
         "modules": [
           {
@@ -125,7 +125,7 @@
             "version": [
               1,
               6,
-              20014
+              20015
             ]
           }
         ],
@@ -142,12 +142,12 @@
         "version": [
           1,
           6,
-          20014
+          20015
         ],
         "side": "BP",
         "archive": "cookery-bp.mcpack",
-        "tree_sha256": "cf95242092f2e9616b5726087e4eddf530f72e93c2497cc1ffa7dbf9be01d80f",
-        "archive_sha256": "ecdd3e9f4c85e438421a5a7ed90efbb3b34450b238b9009aebdd77365d438084",
+        "tree_sha256": "91eebb12ae386c8200c2dadb949abfb901f89f1e7c67d98d36e6f95d8fc9e3ed",
+        "archive_sha256": "e9636dfc1cb48fe3098ca090993093965ad41f05a3b6612ed64c8fcd3948bad3",
         "archive_bytes": 1600694,
         "modules": [
           {
@@ -155,7 +155,7 @@
             "version": [
               1,
               6,
-              20014
+              20015
             ]
           }
         ],
@@ -176,7 +176,7 @@
         ]
       }
     ],
-    "aggregate_sha256": "904c83ac37743535e41be6f2cb68b8c5671e1a6e98360cd8ce36fadf93e5812d",
+    "aggregate_sha256": "643e4ebc9023b613ccf24d54666a0ceebbf95e40ef107ae3d255f525cfdb258f",
     "behavior_player": {
       "pack_id": "grilling-bp",
       "uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
@@ -197,8 +197,8 @@
     "four_pack_ownership_and_repeatability": "PASS",
     "public_suite": {
       "run": 14,
-      "passed": 12,
-      "skipped": 2
+      "passed": 13,
+      "skipped": 1
     },
     "real_station_suite": {
       "run": 2,
@@ -208,12 +208,21 @@
   },
   "retained_native_evidence": [
     {
+      "reference": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/7c2d3c0afcb39db314a1f95fa7f0276272b27eb1/tests/native/heavy-metal/totem-priority-observed.json",
+      "tested_source": "100b6fde3f68081d211f27a560999ac1cb73f94f",
+      "bds": "1.26.60.6",
+      "checks": 39,
+      "scope": "Unchanged registered effect-runtime damage and after-heal handlers with native Players and native applyDamage. Forced-source checks preserve the existing cancellation/effect attempt, not a new guarantee against uncancellable forced death. No remaining-absorption, complete main startup, client or LIVE claim.",
+      "reuse": "The selected Heavy Metal and effect runtime bytes match the tested canonical source. This does not claim a new public four-pack world cycle.",
+      "observed_limit": "BDS override/maxfloat without Heavy Metal consumes the totem and emits healing but still dies; this differs from Java Ordinary rejecting the totem. Remaining absorption is unresolved."
+    },
+    {
       "reference": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/f4b05f04052dfb786f7021cf15790ab605f6bf3e/tests/native/warmth/timing-observed.json",
       "tested_source": "fd4ac5dcd047b4c9baf6424cff11bade52a72807",
       "bds": "1.26.60.6",
       "checks": 21,
       "scope": "Unchanged exported production fxApply/tickPlayerEffects; native SimulatedPlayer timing and actual saved native pig DP after normal same-world restart. Not full main startup, automatic non-player effects, client input/render/audio, or LIVE.",
-      "reuse": "The selected G237 effect/runtime.js is byte-identical to this native Player timing and saved-actor restart implementation."
+      "reuse": "The selected G238 effect runtime differs only in the Ordinary forced-damage explanation comment; warmth timing and saved-actor logic remain unchanged. Heavy Metal priority has separate new native evidence."
     },
     {
       "reference": "https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/84b9d629c373701ceb2d590c3f53ba50e284ea77/docs/validation-public-minimal.json",
@@ -235,8 +244,8 @@
   ],
   "changed_since_prior_public_input": [
     "BP and RP manifest identities",
-    "effect/runtime.js: warmth pre-decrement duration phase",
-    "held_visual_transport.js: pending snapshot recovery"
+    "heavy_metal_damage_runtime.js: yield eligible mainhand/offhand native totems before Heavy Metal",
+    "effect/runtime.js: comment explains unchanged Ordinary forced-damage semantics"
   ],
   "held_snapshot_scope": "G237 production-publisher fault-model regressions passed in canonical CI. No spontaneous native API-failure or rendered-recovery PASS is claimed.",
   "limits": [

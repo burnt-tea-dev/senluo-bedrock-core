@@ -27,7 +27,7 @@ the world. The output still has four packs, with no fifth compatibility layer.
 IE/TACZ-specific player routes are not executed in the public profile.
 
 **Status: current reviewed four-pack source route; no author archive is published.**
-The active profile follows the reviewed source in [its descriptor](adapters/public-minimal.json), including warmth timing and held-snapshot recovery; earlier profiles remain explicit historical inputs.
+The active profile follows the reviewed source in [its descriptor](adapters/public-minimal.json), including warmth timing, held-snapshot recovery and eligible native-totem priority. Earlier profiles remain explicit historical inputs.
 Real original-author reconstruction, unique player ownership and repeatability
 passed. Native warmth timing/restart evidence is reused from the unchanged
 effect implementation. The prior public candidate's one-QA grill/chest/board
