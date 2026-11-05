@@ -167,6 +167,40 @@ Original and generated author archives never belong in public Releases.
 Source checks do not establish real first-person, food, sound or multiplayer
 acceptance.
 
+## Shared first-person left-arm request
+
+`tools/install_player_presentation.py::compose_first_person_arm_request`
+accepts the **effective** resource-player JSON and its
+`controller.render.player.first_person` JSON as bytes, and returns both files.
+It appends a per-render `variable.senluo_fp_left_arm_request=0.0;` reset to
+`pre_animation`, then ORs that variable into the existing `leftArm` and
+`leftSleeve` visibility conditions. Original right-arm conditions, map/eating
+conditions, geometry, animation aliases and gun-controller routing are retained.
+Passing a complete retained pair again preserves its bytes; passing only half
+of an already composed pair fails instead of silently leaving it unconnected.
+
+An active animation may write this variable in its complex `blend_weight`
+expression and return its ordinary blend value. Its owner must supply finite
+duration, first-person/empty-hand conditions and the existing stop path. This
+helper supplies visibility only; it does not create a pose, server property,
+saved state, interval or additional player definition.
+
+The producer must install **both** returned files in the selected owner and
+advance the affected pack pair through the existing release planner. Editing a
+lower-priority player or controller does not connect the effective renderer.
+Existing pinned recipes do not invoke this new helper automatically and retain
+their prior output identities. A new consumer must call it explicitly while
+building its newly identified output.
+
+Source tests cover preservation, retained-pair reuse and a disconnected partial
+pair. A local check on an actual composed player/controller also preserved all
+other parsed fields without changing input files. These are composition checks,
+not installation or client-rendering results. The selected
+[official Molang reference](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/documentation/Molang.html#L752)
+puts `pre_animation` before animation/render-controller processing; it does not
+guarantee the relative order of an injected clip's `blend_weight` and visibility
+evaluation. Same-frame transfer, pose and visible stopping remain unobserved.
+
 ## Optional TACZ test profile
 
 Toolkit0.10 adds a separate local installer for the reviewed TACZ1.0.3 input.
