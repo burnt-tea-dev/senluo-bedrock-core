@@ -3,11 +3,14 @@
 The [current four-pack validation](validation-public-minimal.json) owns the
 reviewed source, candidate identities and native scope. Grilling source,
 original Cookery input, player composition and deterministic reconstruction
-were exercised without Tavern/IE/TACZ/private inputs. Native handler/inventory
-and original-owner save data passed first load, restart and original-pack
-rollback on one QA database. A saved Cookery board also completed its original
-outputs and Grilling bonus. Human input and client rendering/audio remain
-unobserved; test-only observers are not production dependencies.
+were exercised without Tavern/IE/TACZ/private inputs. The summary reuses
+canonical native warmth timing/restart evidence for unchanged effect code.
+Prior public native inventory/board and original-owner save/rollback results
+retain their original candidate identity; those data paths remain unchanged.
+No extra world cycle is claimed for the new source selection. Held-publisher
+fault regressions are source evidence, while human input, client rendering/audio
+and multiplayer remain unobserved. Test-only observers are not production
+dependencies.
 
 The following SDK0.1.0 observation retains its original date/scope and does
 not certify all newer recipes or full-family behavior.
