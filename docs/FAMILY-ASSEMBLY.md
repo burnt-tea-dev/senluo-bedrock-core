@@ -46,7 +46,7 @@ The existing builder, installer, player composer and assembler are reused.
 New reviews update this one active profile instead of introducing another
 version-specific gameplay branch.
 
-The active profile selects the current G234 source. The output advances both
+The active profile selects the reviewed source declared above. The output advances both
 existing Grilling pack/module versions and rebinds the exact Cookery pair.
 It preserves gameplay bytes and save ownership. The selected source supplies
 the same sixteen reviewed host helpers and board declaration as the former
@@ -68,11 +68,18 @@ client evidence must be read at their actual tested scope.
 ### Native and saved-world scope
 
 [Current validation](validation-public-minimal.json) records real input
-reconstruction and one QA database through original packs, candidate load,
-saved restart and original-pack rollback. It covers the production grill
-handlers with native inventories and a partially cut Cookery board that later
-releases original meat/bone plus Grilling skin. The explicit observer overlays
-are test-only; the distributed four archives contain none of them.
+reconstruction and attributes retained engine evidence to its tested source.
+The effect implementation matches the canonical native timing/restart result.
+Held-snapshot recovery has production-publisher fault-model regressions; this
+does not establish spontaneous engine API failure or rendered recovery.
+
+The previous public candidate's one-QA original-pack load, upgrade, saved restart
+and rollback covered native grill/chest metadata and a partially cut Cookery
+board completing its original outputs plus Grilling skin. These storage/board
+paths and save owners remain unchanged. That result is retained at its original
+candidate identity, with no additional world cycle for unchanged persisted
+behavior. The explicit observer overlays are test-only; the distributed four
+archives contain none of them.
 
 This is not a human-click, rendering/audio, arbitrary-NBT or multiplayer PASS.
 Earlier mismatched QA setups remain failures; successful unchanged stages were

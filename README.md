@@ -27,14 +27,15 @@ the world. The output still has four packs, with no fifth compatibility layer.
 IE/TACZ-specific player routes are not executed in the public profile.
 
 **Status: current reviewed four-pack source route; no author archive is published.**
-The active profile uses current G234 source; earlier G213/G219/G233 profiles remain explicit historical inputs.
+The active profile follows the reviewed source in [its descriptor](adapters/public-minimal.json), including warmth timing and held-snapshot recovery; earlier profiles remain explicit historical inputs.
 Real original-author reconstruction, unique player ownership and repeatability
-passed. On BDS1.26.60.6, original-owner grill/chest metadata survived candidate
-first load, saved restart and original-pack rollback on one QA database. The
-Cookery board retained partial cutting and released its original meat/bone plus
-Grilling chicken skin. See the [current validation and exact scope](docs/validation-public-minimal.json).
+passed. Native warmth timing/restart evidence is reused from the unchanged
+effect implementation. The prior public candidate's one-QA grill/chest/board
+upgrade, restart and rollback evidence retains its actual source identity;
+storage and author station code have not changed. See the
+[current validation and exact scope](docs/validation-public-minimal.json).
 
-The native observer invokes the unchanged production handlers with real native
+The prior public observer invokes production handlers with real native
 players/inventories; simulated clicks did not emit the expected global events
 in this configuration. Human input, rendering/audio and multiplayer remain
 unobserved. No client acceptance gate is added. The old G218 structural result
