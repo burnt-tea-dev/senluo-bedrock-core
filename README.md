@@ -26,13 +26,14 @@ reference. That reference is a **build input**, not a third addon installed in
 the world. The output still has four packs, with no fifth compatibility layer.
 IE/TACZ-specific player routes are not executed in the public profile.
 
-**Status: implemented source candidate, not a published one-click addon.**
-Actual original-author input reconstruction, unique BP/RP player ownership,
-held-state public variables/animation aliases and repeatability have been
-checked. [The report](docs/validation-public-player-20261103.json) retains the
-original package-only FAIL and the repaired structural PASS. Native rendering,
-normal survival gameplay, sound, saved-world upgrade/restart and multiplayer
-remain **NOT-RUN** for this candidate. Building a ZIP is not client acceptance.
+**Status: canonical G233 input → local G234 player-complete candidate.**
+The public entry now includes the merged gameplay fixes, rather than asking
+users to install the superseded G213 source. Four packs remain the complete
+public set. Historical G213/G218 descriptors and their structural reports are
+preserved, not relabeled as new G233 acceptance. Source tests and clean-author
+reconstruction are separate from **NOT-RUN** native gameplay, rendering, audio,
+saved-world upgrades and multiplayer. No public Release or LIVE change is
+created by this source update.
 
 Local adaptation is still needed because the original Cookery archive lacks
 this port's host-extension interface. The source workflow is documented;

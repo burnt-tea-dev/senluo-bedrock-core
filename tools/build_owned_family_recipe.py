@@ -17,8 +17,8 @@ import install_cookery_from_descriptor as cookery_installer
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DESCRIPTOR = ROOT / 'adapters/owned-t194-g212-w180-cookery-station-performance.json'
-PUBLIC_MINIMAL_DESCRIPTOR = ROOT / 'adapters/public-minimal-player.json'
-PUBLIC_COOKERY_DESCRIPTOR = ROOT / 'adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json'
+PUBLIC_MINIMAL_DESCRIPTOR = ROOT / 'adapters/public-minimal-g233-player.json'
+PUBLIC_COOKERY_DESCRIPTOR = ROOT / 'adapters/cookery-1.6.4-grilling-2.8.233-station-performance.json'
 
 
 from paired_release import plan_pair, rewrite_dependency as _rewrite_manifest_dependency
@@ -212,7 +212,7 @@ def build_recipe(descriptor, inputs_dir, *, grilling_source=None, vanilla_source
 
 
 def install_public_pair(cookery, grilling, grilling_source, vanilla_source, output):
-    """Build the existing reviewed G218 four-pack route in one local command.
+    """Build the existing reviewed G234 four-pack route in one local command.
 
     Unlike the older package-only prototype, this *requires* the canonical
     player composer and official vanilla reference; it cannot silently produce

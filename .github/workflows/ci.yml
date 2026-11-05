@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: burnt-tea-dev/kaleidoscope-grilling-unofficial
-          ref: 6ea3fa5222c56d8ee2451c7c2d51e7d1dc5894e3
+          ref: 4e7961d9a759287ffc5232937c68d0ba8d61d84b
           path: .grilling-public
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -61,17 +61,17 @@ jobs:
           mkdir -p "$RUNNER_TEMP/public-minimal-inputs"
           curl --fail --location --retry 2 'https://edge.forgecdn.net/files/9317/31/Kaleidoscope%20Cookery%20v1.6.4.mcaddon' --output "$RUNNER_TEMP/cookery-original.mcaddon"
           echo "aa760058f43dce462778a3ac570ba5c1af629cb3b60fdc31bf457e589822eb83  $RUNNER_TEMP/cookery-original.mcaddon" | sha256sum -c -
-          python tools/build_grilling_input.py --source .grilling-public --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json --output "$RUNNER_TEMP/public-minimal-inputs/grilling-2.8.213.mcaddon"
-          python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery-original.mcaddon" --grilling "$RUNNER_TEMP/public-minimal-inputs/grilling-2.8.213.mcaddon" --descriptor adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json --output "$RUNNER_TEMP/public-minimal-inputs/cookery-g213.mcaddon"
-          mv "$RUNNER_TEMP/public-minimal-inputs/cookery-g213.mcaddon.receipt.json" "$RUNNER_TEMP/cookery-g213.receipt.json"
+          python tools/build_grilling_input.py --source .grilling-public --descriptor adapters/cookery-1.6.4-grilling-2.8.233-station-performance.json --output "$RUNNER_TEMP/public-minimal-inputs/grilling-2.8.233.mcaddon"
+          python tools/install_cookery_from_descriptor.py --cookery "$RUNNER_TEMP/cookery-original.mcaddon" --grilling "$RUNNER_TEMP/public-minimal-inputs/grilling-2.8.233.mcaddon" --descriptor adapters/cookery-1.6.4-grilling-2.8.233-station-performance.json --output "$RUNNER_TEMP/public-minimal-inputs/cookery-g233.mcaddon"
+          mv "$RUNNER_TEMP/public-minimal-inputs/cookery-g233.mcaddon.receipt.json" "$RUNNER_TEMP/cookery-g233.receipt.json"
       - name: Verify real station adapter and repeatable four-pack player-complete output
         env:
           PUBLIC_MINIMAL_INPUTS: ${{ runner.temp }}/public-minimal-inputs
           PUBLIC_PLAYER_GRILLING_SOURCE: .grilling-public
           PUBLIC_PLAYER_VANILLA_SOURCE: .vanilla-public
           COOKERY_ORIGINAL_ARCHIVE: ${{ runner.temp }}/cookery-original.mcaddon
-          GRILLING_ADAPTED_ARCHIVE: ${{ runner.temp }}/public-minimal-inputs/grilling-2.8.213.mcaddon
-          COOKERY_TEST_DESCRIPTOR: adapters/cookery-1.6.4-grilling-2.8.213-station-performance.json
+          GRILLING_ADAPTED_ARCHIVE: ${{ runner.temp }}/public-minimal-inputs/grilling-2.8.233.mcaddon
+          COOKERY_TEST_DESCRIPTOR: adapters/cookery-1.6.4-grilling-2.8.233-station-performance.json
         run: |
           python -m unittest discover -s tests -p test_public_minimal.py -v
           python -m unittest discover -s tests -p test_cookery_station_adapter.py -v

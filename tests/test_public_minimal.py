@@ -97,12 +97,14 @@ class PublicMinimalTests(unittest.TestCase):
 
     def test_real_public_profile_is_two_inputs_and_four_pinned_packs(self):
         public = json.loads(builder.PUBLIC_MINIMAL_DESCRIPTOR.read_text())
-        source = json.loads((ROOT / 'adapters/public-minimal-grilling-g213-cookery20012.json').read_text())
+        adapter = json.loads(builder.PUBLIC_COOKERY_DESCRIPTOR.read_text())
         self.assertEqual(set(public['inputs']), {'grilling', 'cookery'})
         self.assertEqual({p['id'] for p in public['packs']},
                          {'grilling-bp', 'grilling-rp', 'cookery-bp', 'cookery-rp'})
-        self.assertEqual(public['inputs']['cookery'], source['inputs']['cookery'])
-        self.assertEqual(public['inputs']['grilling'], source['inputs']['grilling'])
+        self.assertEqual(public['inputs']['grilling']['sha256'], adapter['companion']['archive_sha256'])
+        self.assertEqual(public['player_presentation']['source'], {key: adapter['companion']['source'][key] for key in ('commit', 'git_tree')})
+        for pack in public['packs']:
+            self.assertEqual(pack['version'], adapter['companion']['version'] if pack['input'] == 'grilling' else adapter['output_version'])
         self.assertEqual(public['required_behavior_player_owner'], 'grilling-bp')
 
     def test_reproduces_missing_dependency_rewrite_then_builds_four_pack_pair(self):
@@ -202,9 +204,9 @@ class PublicMinimalTests(unittest.TestCase):
         self.assertEqual([p['version'] for p in public['packs'] if p['input'] == 'grilling'],
                          [[2, 8, 213], [2, 8, 213]])
 
-    @unittest.skipUnless(os.environ.get('PUBLIC_MINIMAL_INPUTS'), 'Real public-minimal archives required')
+    @unittest.skipUnless(os.environ.get('HISTORICAL_G213_INPUTS'), 'Historical G213 archives required')
     def test_real_g213_pair_repeatability_and_manifest_closure(self):
-        inputs = Path(os.environ['PUBLIC_MINIMAL_INPUTS'])
+        inputs = Path(os.environ['HISTORICAL_G213_INPUTS'])
         descriptor = json.loads((ROOT / 'adapters/public-minimal-grilling-g213-cookery20012.json').read_text())
         self.assertEqual({p.name for p in inputs.iterdir()},
                          {p['filename'] for p in descriptor['inputs'].values()})
@@ -473,3 +475,56 @@ class DirectPublicInstallTests(unittest.TestCase):
                 builder.main(['--cookery', str(cookery), '--grilling', str(grilling),
                               '--output', str(output)])
             self.assertFalse(output.exists())
+
+    @unittest.skipUnless(os.environ.get('COOKERY_ORIGINAL_ARCHIVE')
+                         and os.environ.get('GRILLING_ADAPTED_ARCHIVE')
+                         and os.environ.get('PUBLIC_PLAYER_GRILLING_SOURCE')
+                         and os.environ.get('PUBLIC_PLAYER_VANILLA_SOURCE'),
+                         'Real clean original and pinned public build references required')
+    def test_real_direct_install_repeatability_identity_and_input_rejection(self):
+        cookery = Path(os.environ['COOKERY_ORIGINAL_ARCHIVE'])
+        grilling = Path(os.environ['GRILLING_ADAPTED_ARCHIVE'])
+        source = Path(os.environ['PUBLIC_PLAYER_GRILLING_SOURCE'])
+        vanilla = Path(os.environ['PUBLIC_PLAYER_VANILLA_SOURCE'])
+        descriptor = json.loads(builder.PUBLIC_MINIMAL_DESCRIPTOR.read_text())
+        before = {path: digest(path.read_bytes()) for path in (cookery, grilling)}
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            receipts = [builder.install_public_pair(cookery, grilling, source, vanilla, root / name)
+                        for name in ('first', 'second')]
+            self.assertEqual((root / 'first/public-minimal.mcaddon').read_bytes(),
+                             (root / 'second/public-minimal.mcaddon').read_bytes())
+            for name, receipt in zip(('first', 'second'), receipts):
+                self.assertEqual(len(receipt['packs']), 4)
+                self.assertEqual(receipt['behavior_player_definition']['pack_id'], 'grilling-bp')
+                self.assertEqual(receipt['resource_player_definition']['pack_id'], 'grilling-rp')
+                expected = {p['id']: p for p in descriptor['packs']}
+                actual = {}
+                for pack in receipt['packs']:
+                    with zipfile.ZipFile(root / name / pack['archive']) as archive:
+                        value = json.loads(archive.read('manifest.json'))
+                    spec = expected[pack['id']]
+                    version = (descriptor['player_presentation']['output_version']
+                               if spec['input'] == 'grilling' else spec['version'])
+                    self.assertEqual(value['header']['uuid'], spec['uuid'])
+                    self.assertEqual(value['header']['version'], version)
+                    self.assertEqual({m['uuid'] for m in value['modules']},
+                                     {m['uuid'] for m in spec['modules']})
+                    actual[spec['uuid']] = value
+                for value in actual.values():
+                    for dep in value.get('dependencies', []):
+                        if 'uuid' in dep:
+                            self.assertEqual(dep['version'], actual[dep['uuid']]['header']['version'])
+                self.assertEqual(json.loads((root / name / 'installation.json').read_text())['client'],
+                                 'NOT_RUN')
+            for label, path in (('grilling', grilling), ('cookery', cookery)):
+                wrong = root / (label + '-changed.mcaddon')
+                wrong.write_bytes(path.read_bytes() + b'unreviewed input')
+                output = root / ('rejected-' + label)
+                with self.assertRaises(ValueError):
+                    builder.install_public_pair(wrong if label == 'cookery' else cookery,
+                                                wrong if label == 'grilling' else grilling,
+                                                source, vanilla, output)
+                self.assertFalse(output.exists())
+            self.assertEqual({path: digest(path.read_bytes()) for path in before}, before)
+            self.assertFalse(list(root.glob('.public-install-*')))
