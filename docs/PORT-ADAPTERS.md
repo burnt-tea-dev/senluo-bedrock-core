@@ -6,10 +6,12 @@ archives.
 
 For the current public route, use
 [the public-minimal installation](FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only):
-canonical G233 input produces local G234 with Cookery 1.6.20012. The complete
-installation is Grilling BP/RP plus locally adapted Cookery BP/RP; IE, TACZ
-and the full family are not prerequisites. This is an unreleased local source
-candidate, not native gameplay or client acceptance.
+the active profile is declared in `adapters/public-minimal.json` and
+`adapters/cookery-public-minimal.json`. The complete installation remains
+Grilling BP/RP plus locally adapted Cookery BP/RP; IE, TACZ and the full family
+are not prerequisites. Scoped native handlers/inventories and saved-world
+upgrade/restart/rollback are recorded in [current validation](validation-public-minimal.json);
+human input, rendering/audio and multiplayer are unobserved.
 
 [The pinned G212 full-family route](FAMILY-ASSEMBLY.md#current-g212-installation)
 remains available as an explicit optional integration. The examples below
