@@ -55,19 +55,26 @@ geometry, render controllers and attachables are retained. The assembler
 requires exactly one resource-player owner with the declared public variables
 and animation aliases; a competing player is not silently overwritten.
 
-The source input is now canonical G233, but the local output has a **new paired
-Grilling identity 2.8.234 (G234)**. Both existing Grilling UUIDs, module UUIDs,
+The source input is now canonical G234, but the local output has a **new paired
+Grilling identity 2.8.235 (G235)**. Both existing Grilling UUIDs, module UUIDs,
 item/entity IDs, gameplay scripts and save owners remain. Owning manifests and
 mutual dependency versions advance together; Cookery dependencies are rebound
 from original `[1,6,4]` to the locally adapted `[1,6,20012]`. The original
-archives and old G212/G213 output identities are never overwritten.
+archives and all historical output identities are never overwritten.
+
+Canonical G234 from Grilling #360 and the older Core G233 → local G234
+recipe have the same Grilling UUID/version but different bytes. The current
+route therefore uses a new local G235 identity, not a rewritten G234 output.
+This is a source/package identity conflict; no installed-world incident was
+observed. The old G233 descriptor, input/output hashes and source references
+remain frozen for historical reproduction with explicit selection.
 
 ### Build references and genuine addon inputs
 
 Use a clean Grilling source checkout at
-`4e7961d9a759287ffc5232937c68d0ba8d61d84b` (tree
-`a5b1e71c0cb62876ae0993163dacb4f12d412768`). Its original input archive hash is
-`73fcffcd165dff8a6e49357877620aa5cfa9ebd9bbf2b8b2443b62ef6f4b98da`.
+`e9d495816dc8961fd86071016a797185f55c7473` (tree
+`67288d46f7458406a6f0f6f7f6edd0799861a8d8`). Its original input archive hash is
+`c6f153b2ed4596b272524e7ba1c6504f7b76f64ea18f609911ac841a576b0f4d`.
 
 Obtain clean Cookery 1.6.4 from
 [the author's project](https://www.curseforge.com/minecraft-bedrock/addons/kaleidoscope-cookery-unofficial),
@@ -91,14 +98,14 @@ player definition is published in Core's source repository.
 ### Direct local build (recommended)
 
 Once you have the **clean original Cookery 1.6.4 archive** and the reviewed
-**Grilling G233** archive, the existing builder can perform the Cookery local
-adaptation, exact two-input recipe, complete G234 player-RP composition and
+**Grilling G234** archive, the existing builder can perform the Cookery local
+adaptation, exact two-input recipe, complete G235 player-RP composition and
 four-pack assembly **in one command**:
 
 ```sh
 python tools/build_owned_family_recipe.py \
   --cookery /path/to/original-cookery-1.6.4.mcaddon \
-  --grilling /path/to/grilling-2.8.233.mcaddon \
+  --grilling /path/to/grilling-2.8.234.mcaddon \
   --grilling-source ./grilling --vanilla-source ./vanilla \
   --output ./public-minimal-output
 ```
@@ -117,21 +124,21 @@ From this candidate's Core source checkout (Python 3 and Node.js available):
 
 ```sh
 git clone https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial.git grilling
-git -C grilling checkout 4e7961d9a759287ffc5232937c68d0ba8d61d84b
+git -C grilling checkout e9d495816dc8961fd86071016a797185f55c7473
 git clone https://github.com/Mojang/bedrock-samples.git vanilla
 git -C vanilla checkout 15701fa9c13923f12662984c32c124327e40e3d3
 mkdir -p local-inputs
 
 python tools/build_grilling_input.py \
   --source ./grilling \
-  --descriptor adapters/cookery-1.6.4-grilling-2.8.233-station-performance.json \
-  --output ./local-inputs/grilling-2.8.233.mcaddon
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.234-station-performance.json \
+  --output ./local-inputs/grilling-2.8.234.mcaddon
 
 python tools/install_cookery_from_descriptor.py \
   --cookery /path/to/clean-original-Cookery-1.6.4.mcaddon \
-  --grilling ./local-inputs/grilling-2.8.233.mcaddon \
-  --descriptor adapters/cookery-1.6.4-grilling-2.8.233-station-performance.json \
-  --output ./local-inputs/cookery-g233.mcaddon
+  --grilling ./local-inputs/grilling-2.8.234.mcaddon \
+  --descriptor adapters/cookery-1.6.4-grilling-2.8.234-station-performance.json \
+  --output ./local-inputs/cookery-g234.mcaddon
 
 python tools/build_owned_family_recipe.py \
   --profile public-minimal --grilling-source ./grilling --vanilla-source ./vanilla \
@@ -147,6 +154,44 @@ The two recipe inputs are still only Grilling and adapted Cookery. The aggregate
 files; enable both BP/RP pairs. Use the descriptor's order, Beta APIs and Points
 of Interest requirements. Grilling declares minimum engine `[1,26,60]`,
 `@minecraft/server 2.12.0-beta` and `@minecraft/server-ui 2.2.0`.
+
+The G234 input and all 16 copied host helpers were checked against the new
+exact-source descriptor. The adapted Cookery20012 archive remains byte-identical:
+`a13cf4e8f48308c73c0e9acf72352026a0bd0becc9a5c89fff1670e7d9e3c144`.
+A real clean-author local run passed Node 19/19 and Python 75/78, with three
+explicit skips (historical G213 and two optional TACZ input cases). The public
+recipe and direct installer tests actually ran, including consecutive builds,
+four-pack identity/dependency closure, unique BP/RP player ownership, unchanged
+original inputs and rejected altered inputs. The local G235 aggregate is
+`ade40b13dc27bd5f8096dfbe7d1fca638b9599c72a3de0a3aef268f0ed91a3c7`.
+
+Before this candidate, 59 accessible Core and 495 accessible Grilling
+branch/tag refs were checked in their adapter descriptors, release histories
+and canonical pack manifests; none claimed G235. Organization issue, commit
+and default-branch code searches also found no G235 allocation. This is a
+bounded reservation check, not proof about unshared private work. G235 is
+selected provisionally for this local recipe, not externally reserved by
+a global registry. Future canonical or local producers must coordinate
+instead of reusing it for different bytes. No
+published toolkit/package hashes were regenerated, and no Release was made.
+The existing Toolkit 0.33.0 history describes its original source only; a
+future toolkit publication must allocate a new identity for changed sources.
+
+Keep `receipt.json`: it distinguishes source inputs, transformed manifests,
+new output identities, behavior-player owner and resource-player owner.
+The public route does not download IE, TACZ, Tavern or 世界名酒.
+The G213/G218 reproduction report remains historical evidence only.
+**Actual client rendering, audio, normal gameplay, BDS, upgrade/restart and
+multiplayer remain NOT-RUN for this candidate.** Test a disposable world, not
+LIVE; retain a stopped-world backup before any later upgrade.
+
+### Historical G233 → local G234 evidence
+
+The following original evidence belongs only to the superseded G233
+descriptor. It is not evidence for canonical G234 or local G235. Its recorded
+G234 aggregate was also rebuilt with this change and matched the original
+`7d578a39a1759a60fae6f53e91b4982b2f01d6b556d3e9ee40393b2cf175f48b`
+exactly, using the unchanged explicit descriptor and original source pin.
 
 The G233 input is checked against the new descriptor. The local output is
 G234; its hash is recorded by the actual assembler receipt, not inherited from
@@ -165,13 +210,6 @@ The G219 descriptors are retained byte-for-byte, and their historical G220
 aggregate was actually reconstructed with the updated tools, reproducing
 `2d4b4d35607fb22f1c9c46b81ab2031196b56b0d7b54bc6cfe9268637dade678`.
 These are local package/build results, not a new public Release or engine test.
-Keep `receipt.json`: it distinguishes source inputs, transformed manifests,
-new output identities, behavior-player owner and resource-player owner.
-The public route does not download IE, TACZ, Tavern or 世界名酒.
-The G213/G218 reproduction report remains historical evidence only.
-**Actual client rendering, audio, normal gameplay, BDS, upgrade/restart and
-multiplayer remain NOT-RUN for this candidate.** Test a disposable world, not
-LIVE; retain a stopped-world backup before any later upgrade.
 
 ## Current G212 installation
 
@@ -195,8 +233,10 @@ they do not establish compatibility with every third-party player override.
 
 `public-minimal-player.json` preserves the previous G213 → G218 player-complete
 recipe. Select it explicitly with the original source references; the new
-default is `public-minimal-g233-player.json`. Old descriptors and all previously
-published identities remain unchanged.
+default is `public-minimal-g234-player.json`. Old descriptors and all previously
+published identities remain unchanged. The G219 → local G220 and G233 → local
+G234 descriptors also remain byte-for-byte selectable by their explicit paths;
+never relabel either historical output as the current source.
 
 
 Historical G203/G205 startup/decoding/family instructions are preserved at

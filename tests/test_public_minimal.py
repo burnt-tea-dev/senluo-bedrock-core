@@ -107,6 +107,27 @@ class PublicMinimalTests(unittest.TestCase):
             self.assertEqual(pack['version'], adapter['companion']['version'] if pack['input'] == 'grilling' else adapter['output_version'])
         self.assertEqual(public['required_behavior_player_owner'], 'grilling-bp')
 
+    def test_current_output_does_not_reuse_a_known_grilling_identity(self):
+        """G234 source must not reuse the older G233 -> local G234 identity."""
+        public = json.loads(builder.PUBLIC_MINIMAL_DESCRIPTOR.read_text())
+        output = tuple(public['player_presentation']['output_version'])
+        source = {tuple(p['version']) for p in public['packs'] if p['input'] == 'grilling'}
+        self.assertEqual(source, {(2, 8, 234)})
+        self.assertEqual(output, (2, 8, 235))
+        historical = ROOT / 'adapters/public-minimal-g233-player.json'
+        old = json.loads(historical.read_text())
+        self.assertEqual(old['player_presentation']['output_version'], [2, 8, 234])
+        for path in (ROOT / 'adapters').glob('public-minimal*.json'):
+            if path == builder.PUBLIC_MINIMAL_DESCRIPTOR:
+                continue
+            descriptor = json.loads(path.read_text())
+            versions = {tuple(p['version']) for p in descriptor['packs']
+                        if p['input'] == 'grilling'}
+            if 'player_presentation' in descriptor:
+                versions.add(tuple(descriptor['player_presentation']['output_version']))
+            self.assertNotIn(output, versions, path.name)
+        self.assertGreater(output, max(source))
+
     def test_reproduces_missing_dependency_rewrite_then_builds_four_pack_pair(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)

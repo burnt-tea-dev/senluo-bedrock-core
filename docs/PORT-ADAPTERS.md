@@ -6,7 +6,7 @@ archives.
 
 For the current public route, use
 [the public-minimal installation](FAMILY-ASSEMBLY.md#public-minimal-installation-grilling--cookery-only):
-canonical G233 input produces local G234 with Cookery 1.6.20012. The complete
+canonical G234 input produces local G235 with Cookery 1.6.20012. The complete
 installation is Grilling BP/RP plus locally adapted Cookery BP/RP; IE, TACZ
 and the full family are not prerequisites. This is an unreleased local source
 candidate, not native gameplay or client acceptance.
