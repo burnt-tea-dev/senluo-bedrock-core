@@ -19,6 +19,41 @@ from paired_release import advance_manifest as advance_paired_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DESCRIPTOR = ROOT / 'adapters/ie-grilling-2.8.212.json'
+LEFT_ARM_REQUEST = 'variable.senluo_fp_left_arm_request'
+
+
+def compose_first_person_arm_request(player_raw, controller_raw):
+    """Extend one selected player/controller pair; do not add another owner.
+
+    An active animation may request the left arm. Clearing before animations
+    prevents a completed or interrupted clip from leaving the arm requested.
+    Client evaluation order and the rendered pose still need observation.
+    """
+    player = json.loads(player_raw)
+    controller = json.loads(controller_raw)
+    description = player['minecraft:client_entity']['description']
+    if description.get('identifier') != 'minecraft:player':
+        raise ValueError('Arm requests need the selected minecraft:player')
+    parts = controller['render_controllers']['controller.render.player.first_person']['part_visibility']
+    left = [(row, name) for row in parts for name in ('leftArm', 'leftSleeve') if name in row]
+    if sorted(name for _, name in left) != ['leftArm', 'leftSleeve']:
+        raise ValueError('Selected first-person controller needs one left arm and sleeve')
+    if any(not isinstance(row[name], str) for row, name in left):
+        raise ValueError('Selected left-arm visibility must contain Molang conditions')
+    before = description.setdefault('scripts', {}).setdefault('pre_animation', [])
+    reset = LEFT_ARM_REQUEST + '=0.0;'
+    suffix = ' || ' + LEFT_ARM_REQUEST
+    # Retained inputs can already contain this shared fragment. Preserve their
+    # bytes instead of nesting another OR or adding another reset on each build.
+    if before.count(reset) == 1 and all(row[name].endswith(suffix) for row, name in left):
+        return player_raw, controller_raw
+    if any(LEFT_ARM_REQUEST in value for value in [*before, *(row[name] for row, name in left)]):
+        raise ValueError('Selected player/controller has a partial arm-request fragment')
+    before.append(reset)
+    for row, name in left:
+        row[name] = '(' + row[name] + ')' + suffix
+    return tuple((json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
+                 for value in (player, controller))
 
 
 def modern_tacz_player(raw):
