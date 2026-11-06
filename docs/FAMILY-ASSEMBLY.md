@@ -69,21 +69,30 @@ client evidence must be read at their actual tested scope.
 
 [Current validation](validation-public-minimal.json) records real input
 reconstruction and attributes retained engine evidence to its tested source.
-Warmth timing and persistence retain the canonical native timing/restart result;
-the only change in that effect module is an Ordinary damage explanation comment.
-The new Heavy Metal priority has a separate native observation: eligible held
-totems run first, and confirmed native healing clears effects. Forced-damage
-controls and remaining absorption limits stay explicit in the validation.
-Held-snapshot recovery has production-publisher fault-model regressions; this
-does not establish spontaneous engine API failure or rendered recovery.
+Warmth timing and persistence retain the canonical timing/restart result;
+G242 changes Ordinary's damage cause, not the warmth logic in that module.
+Eligible native totem priority retains its separate G238 result. A new G242
+observation covers actual Ordinary food completion with selfDestruct/maxfloat:
+held totems remain intact, and existing Heavy Metal can rescue the player.
+The old override/maxfloat failure remains a historical control. Remaining
+absorption, armor/resistance bypass and other-addon arbitration are not solved.
+
+G239's per-stack skewer cache and G240's cold-dish/oil-pot conversion have
+separate native data and same-diagnostic-world restart observations. The latter
+uses minimal external pot definitions, not complete author Cookery interaction.
+Neither result certifies the newly assembled four-pack set. G241's plate pose
+stays in its existing attachable; this route does not add a shared arm-request
+controller. JSONUI bindings, rendered icons and plate pose pixels are unobserved.
+Held-snapshot recovery retains source fault-model regressions, not spontaneous
+engine API-failure or rendered-recovery acceptance.
 
 The previous public candidate's one-QA original-pack load, upgrade, saved restart
 and rollback covered native grill/chest metadata and a partially cut Cookery
-board completing its original outputs plus Grilling skin. These storage/board
-paths and save owners remain unchanged. That result is retained at its original
-candidate identity, with no additional world cycle for unchanged persisted
-behavior. The explicit observer overlays are test-only; the distributed four
-archives contain none of them.
+board completing its original outputs plus Grilling skin. Grill/board owners,
+player schema and save ownership remain unchanged. This is narrow historical
+evidence, not a claim that all inventory code is unchanged after G239/G240 or
+that a new four-pack world cycle ran. Observer overlays are test-only; the four
+production archives contain none of them.
 
 This is not a human-click, rendering/audio, arbitrary-NBT or multiplayer PASS.
 Earlier mismatched QA setups remain failures; successful unchanged stages were

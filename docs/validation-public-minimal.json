@@ -1,24 +1,24 @@
 {
   "schema": 1,
   "observed_date": "2026-11-06",
-  "toolkit_version": "0.36.0",
+  "toolkit_version": "0.38.0",
   "sdk_version": "0.1.0",
-  "source_scope": "Reviewed G238 public source and clean original Cookery1.6.4; four packs, no family inputs.",
+  "source_scope": "Reviewed G242 public source and clean original Cookery 1.6.4; four packs, no family inputs.",
   "inputs": {
     "grilling": {
-      "filename": "grilling-2.8.238.mcaddon",
-      "sha256": "dc260e112f4c400ce8549ecc73b7eade25feefa32aa86f9edb23bc495e713bb1",
+      "filename": "grilling-2.8.242.mcaddon",
+      "sha256": "e3530329a9f00d12e209b80399b0075c25aaf69f956d2d19859ffeb181363a65",
       "distribution": "owned-public-source-candidate"
     },
     "cookery": {
       "filename": "cookery-public.mcaddon",
-      "sha256": "94eae2bb70328e02c5c0f4c73ac15f0c1c69df5fd6f49f4055cb1ecd290c8131",
+      "sha256": "0a4fe8d29e47ed76b0b89c2f9bf530ab8ce3486ce1272a4b5c4fa3a28ee911df",
       "distribution": "user-local-only-original-author-input-required"
     }
   },
   "grilling_source": {
-    "commit": "7c2d3c0afcb39db314a1f95fa7f0276272b27eb1",
-    "git_tree": "6ab76ba8a670da9047bf9ef81ca0044473ffd4a3"
+    "commit": "a0990b7c5692ef7dfacff9e542390d8448214724",
+    "git_tree": "85c6273107b209204dd6260ebe29bf7d69bac8af"
   },
   "vanilla": {
     "repository": "Mojang/bedrock-samples",
@@ -35,20 +35,20 @@
         "version": [
           2,
           8,
-          30008
+          30012
         ],
         "side": "BP",
         "archive": "grilling-bp.mcpack",
-        "tree_sha256": "3f9e536faa9965690ff851857f4cb5af1ff57b0b00c3b32e46fcecf904ef651f",
-        "archive_sha256": "a54245b34b5145409cc6b458d2096f7046d229ef2570b34d312c478a5abb5838",
-        "archive_bytes": 760530,
+        "tree_sha256": "10aa01b67c632fa673dca069cd11933f51e086b416baf8ac3368499f799e4bad",
+        "archive_sha256": "b32e77c2831faf1f9319c547225d552d5965cbfec4f148037ad4c91db9ecdf7f",
+        "archive_bytes": 763413,
         "modules": [
           {
             "uuid": "dcf70052-c592-56e3-84d2-2a9b86abe7ab",
             "version": [
               2,
               8,
-              30008
+              30012
             ]
           },
           {
@@ -56,7 +56,7 @@
             "version": [
               2,
               8,
-              30008
+              30012
             ]
           }
         ],
@@ -82,20 +82,20 @@
         "version": [
           2,
           8,
-          30008
+          30012
         ],
         "side": "RP",
         "archive": "grilling-rp.mcpack",
-        "tree_sha256": "59480f6f880fd3ce1d5d8404e8e15e459277e9845302cbbb8ec9068a87225a01",
-        "archive_sha256": "3d67663232ae5a45c6098a60f0d75b628dc49338529907852c8b3d171e96c196",
-        "archive_bytes": 14105426,
+        "tree_sha256": "2cb767c5d431f52743711419f826425f46ac2b7453559ab84f7b35a50f0e6018",
+        "archive_sha256": "8b0ea1e6ecde4a1c03a677e6ca56d6bb3096bf35815301ef854256d50ae16d0e",
+        "archive_bytes": 14556204,
         "modules": [
           {
             "uuid": "e7d592db-f4a0-53ce-8b0a-cab7a0cee8d7",
             "version": [
               2,
               8,
-              30008
+              30012
             ]
           }
         ],
@@ -112,12 +112,12 @@
         "version": [
           1,
           6,
-          20015
+          20016
         ],
         "side": "RP",
         "archive": "cookery-rp.mcpack",
-        "tree_sha256": "5524ea5b149388cf9fa63308a0b50302e1f9efffff5d58ef8133fb9266466378",
-        "archive_sha256": "7ec8a29e763c34766f6d0ab0a8b271c46630ac0b994232d6d7b6f948729ddb0b",
+        "tree_sha256": "39a3942158da7239730947fab174fc6ea09a73c30115683378b92f7590d77174",
+        "archive_sha256": "adf70669d8a7cfc344df1befbabe54c4a147635281cf7e11b0874093ef0989c1",
         "archive_bytes": 3258678,
         "modules": [
           {
@@ -125,7 +125,7 @@
             "version": [
               1,
               6,
-              20015
+              20016
             ]
           }
         ],
@@ -142,12 +142,12 @@
         "version": [
           1,
           6,
-          20015
+          20016
         ],
         "side": "BP",
         "archive": "cookery-bp.mcpack",
-        "tree_sha256": "91eebb12ae386c8200c2dadb949abfb901f89f1e7c67d98d36e6f95d8fc9e3ed",
-        "archive_sha256": "e9636dfc1cb48fe3098ca090993093965ad41f05a3b6612ed64c8fcd3948bad3",
+        "tree_sha256": "9ff8869c9521f7c6ce24af2950848a342b4c0405c02b88473bb7e66042ba3ce6",
+        "archive_sha256": "36d7065aa7e7a714c38a9d55639006e2ffd49f1e414f5e81da46acd2b789e6a9",
         "archive_bytes": 1600694,
         "modules": [
           {
@@ -155,7 +155,7 @@
             "version": [
               1,
               6,
-              20015
+              20016
             ]
           }
         ],
@@ -176,7 +176,7 @@
         ]
       }
     ],
-    "aggregate_sha256": "643e4ebc9023b613ccf24d54666a0ceebbf95e40ef107ae3d255f525cfdb258f",
+    "aggregate_sha256": "89d20e62fd27278e57ccd5236597d75db07956449aa40bda21afd982a666fd2b",
     "behavior_player": {
       "pack_id": "grilling-bp",
       "uuid": "c68005c5-23ff-54e8-a3ff-da6349ad43c2",
@@ -212,9 +212,9 @@
       "tested_source": "100b6fde3f68081d211f27a560999ac1cb73f94f",
       "bds": "1.26.60.6",
       "checks": 39,
-      "scope": "Unchanged registered effect-runtime damage and after-heal handlers with native Players and native applyDamage. Forced-source checks preserve the existing cancellation/effect attempt, not a new guarantee against uncancellable forced death. No remaining-absorption, complete main startup, client or LIVE claim.",
-      "reuse": "The selected Heavy Metal and effect runtime bytes match the tested canonical source. This does not claim a new public four-pack world cycle.",
-      "observed_limit": "BDS override/maxfloat without Heavy Metal consumes the totem and emits healing but still dies; this differs from Java Ordinary rejecting the totem. Remaining absorption is unresolved."
+      "scope": "Historical registered Heavy Metal damage and after-heal handlers with native Players and native applyDamage: eligible main/offhand native totems precede Heavy Metal. Not a new public four-pack world cycle or complete main/client result.",
+      "reuse": "Heavy Metal damage handler behavior is unchanged; only its Ordinary cause-mapping comment changed. Ordinary itself now uses selfDestruct and has separate G242 native evidence below.",
+      "observed_limit": "Historical override/maxfloat control consumed a totem and emitted healing but still died. G242 replaces Ordinary's cause with selfDestruct and fixes that scoped route; this old control is not claimed fixed for arbitrary override damage. Remaining absorption is unresolved."
     },
     {
       "reference": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/f4b05f04052dfb786f7021cf15790ab605f6bf3e/tests/native/warmth/timing-observed.json",
@@ -222,7 +222,7 @@
       "bds": "1.26.60.6",
       "checks": 21,
       "scope": "Unchanged exported production fxApply/tickPlayerEffects; native SimulatedPlayer timing and actual saved native pig DP after normal same-world restart. Not full main startup, automatic non-player effects, client input/render/audio, or LIVE.",
-      "reuse": "The selected G238 effect runtime differs only in the Ordinary forced-damage explanation comment; warmth timing and saved-actor logic remain unchanged. Heavy Metal priority has separate new native evidence."
+      "reuse": "Warmth timing and saved-actor logic are unchanged. G242 changes applyOrdinary from override to selfDestruct in the same effect module; that distinct behavior has separate native evidence below."
     },
     {
       "reference": "https://github.com/burnt-tea-dev/senluo-bedrock-core/blob/84b9d629c373701ceb2d590c3f53ba50e284ea77/docs/validation-public-minimal.json",
@@ -239,19 +239,47 @@
       ],
       "checks": 29,
       "scope": "Prior original-pack baseline, candidate load, saved restart and rollback on one QA database: native grill/chest ItemStack data and partially cut Cookery board outputs.",
-      "reuse": "Grill, inventory, station/board code, player schema and persisted formats/owners are unchanged. This is retained evidence, not a new four-pack world cycle."
+      "reuse": "Retain the original candidate result for grill/chest metadata and Cookery board outputs. Grill/board owners, player schema and save ownership are unchanged, but G239 GUI lore/snapshot comparison and G240 cold-dish/oil conversion have changed; their targeted native data/restart results are separate. This is not a new four-pack upgrade/restart/rollback run."
+    },
+    {
+      "reference": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/a0990b7c5692ef7dfacff9e542390d8448214724/tests/native/secret-gui/observed.json",
+      "tested_source": "d6d0ae93397d3ad6dc8d750497ac636067c0a124",
+      "bds": "1.26.60.6",
+      "checks": 30,
+      "scope": "Native ItemStack formatting cache, registered inventory queue, independent same-ID stacks, chest transfer and same diagnostic world restart. Not actual JSONUI binding/loading/rendered pixels or a complete exported pack set.",
+      "reuse": "All seven recorded production file hashes match the selected G242 source exactly. Preserve its diagnostic identity and minimal-content limits."
+    },
+    {
+      "reference": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/a0990b7c5692ef7dfacff9e542390d8448214724/tests/native/cold-houttuynia/observed.json",
+      "tested_source": "93b87ea00f22ddc3ba3057d060576fff9a9a40c0",
+      "bds": "1.26.60.6",
+      "checks": 29,
+      "scope": "Production cold-dish owner with native inventory/offhand/drop, normal/freed-slot/full-inventory cases, exhausted-pot data and same diagnostic world restart. Minimal external pot definitions are not complete original Cookery component interaction; actual sneak-click, natural API failure, full family and client were not tested.",
+      "reuse": "All seven recorded production file hashes match the selected G242 source exactly. Source failure models cover applied-then-thrown output recovery separately."
+    },
+    {
+      "reference": "https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/a0990b7c5692ef7dfacff9e542390d8448214724/tests/native/heavy-metal/ordinary-maxfloat-observed.json",
+      "tested_source": "07f2a7602a38e4625f8497dc5a915ef1fd70ac5f",
+      "bds": "1.26.60.6",
+      "checks": 12,
+      "scope": "Two native Survival Players complete and consume default Ordinary over 100 ticks. SelfDestruct/maxfloat preserves offhand totems; without Heavy Metal the Player dies, with it the existing handler rescues to 1 HP and charges poisoning while preserving Warmth. Not full main startup, save/restart, armor/resistance bypass, arbitrary causes or client behavior.",
+      "reuse": "Six recorded production hashes match exactly, including effect/runtime and food/runtime; heavy_metal_damage_runtime differs only in the comment changing mapped cause from override to selfDestruct. The initial missing-eating-variant fixture failure remains in the referenced record.",
+      "observed_limit": "Remaining absorption, other-addon arbitration and crash atomicity are unresolved. The passive fatal-sensor counterexample remains separate evidence, not an adopted runtime."
     }
   ],
   "changed_since_prior_public_input": [
-    "BP and RP manifest identities",
-    "heavy_metal_damage_runtime.js: yield eligible mainhand/offhand native totems before Heavy Metal",
-    "effect/runtime.js: comment explains unchanged Ordinary forced-damage semantics"
+    "BP/RP manifest identities advance from G238 to G242.",
+    "G239: secret-skewer per-stack formatting cache, ingredient/snapshot cosmetic comparison and native JSONUI/texture sources; gameplay IDs remain unchanged.",
+    "G240: owned cold-houttuynia transaction/output recovery and readable dynamic-property preservation when an oil pot empties.",
+    "G241: existing plate attachable first-person position and scale; no new shared arm-request wiring is selected.",
+    "G242: applyOrdinary uses selfDestruct instead of override with the same max-float damage; Heavy Metal only changes its cause explanation comment."
   ],
   "held_snapshot_scope": "G237 production-publisher fault-model regressions passed in canonical CI. No spontaneous native API-failure or rendered-recovery PASS is claimed.",
   "limits": [
-    "No new public-candidate engine/world cycle for unchanged persisted behavior.",
+    "No new four-pack engine, upgrade, saved restart or rollback run. New canonical diagnostic observations are retained at their actual tested source and scope.",
     "Prior public native tests invoke production handlers with native inventories through QA-only overlays; simulated clicks did not emit expected global events in that configuration.",
     "Human input, rendering/audio, arbitrary unknown NBT and multiplayer remain unobserved.",
+    "Secret-skewer JSONUI collection/binding/rendering and plate pose pixels remain unobserved; source and native data checks are not client acceptance.",
     "Generated author archives stay user-local; no author source archive, private integration or world is published."
   ],
   "client": false,

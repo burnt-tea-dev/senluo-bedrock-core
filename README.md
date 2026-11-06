@@ -27,13 +27,15 @@ the world. The output still has four packs, with no fifth compatibility layer.
 IE/TACZ-specific player routes are not executed in the public profile.
 
 **Status: current reviewed four-pack source route; no author archive is published.**
-The active profile follows the reviewed source in [its descriptor](adapters/public-minimal.json), including warmth timing, held-snapshot recovery and eligible native-totem priority. Earlier profiles remain explicit historical inputs.
-Real original-author reconstruction, unique player ownership and repeatability
-passed. Native warmth timing/restart evidence is reused from the unchanged
-effect implementation. The prior public candidate's one-QA grill/chest/board
-upgrade, restart and rollback evidence retains its actual source identity;
-storage and author station code have not changed. See the
-[current validation and exact scope](docs/validation-public-minimal.json).
+The active profile follows [reviewed G242](adapters/public-minimal.json), including
+per-stack skewer icon sources, cold-dish transaction/oil-pot data fixes, plate
+pose sources and Ordinary's native totem bypass. Earlier profiles remain
+explicit historical inputs. Real original-author reconstruction, unique player
+ownership and repeatability passed. Canonical native observations retain their
+own tested source and scope, including GUI item data/restart, cold-dish/oil data
+and the new Ordinary route. The prior public candidate's grill/chest/board
+upgrade, restart and rollback is historical evidence, not a new world run.
+See the [current validation and exact limits](docs/validation-public-minimal.json).
 
 The prior public observer invokes production handlers with real native
 players/inventories; simulated clicks did not emit the expected global events
