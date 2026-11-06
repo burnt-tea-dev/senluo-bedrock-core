@@ -126,6 +126,56 @@ process.stdout.write(JSON.stringify({reset, results}));
         scripts = player['minecraft:client_entity']['description']['scripts']['pre_animation']
         self.assertEqual(scripts[-2:], [name + '=0.0;' for name in channels])
 
+    def test_lower_parts_follow_their_own_parent_after_arm_requests(self):
+        player, controller = self.fixture()
+        controllers = controller['render_controllers']
+        controllers['controller.render.player.third_person'] = {
+            'geometry': 'Geometry.default', 'textures': ['Texture.default'],
+            'part_visibility': [{'*': True}, {'*Sleeve': 'v.sleeves'},
+                                {'leftPants': 'v.pants'}]}
+        controllers['controller.render.player.map'] = {
+            'geometry': 'Geometry.default',
+            'part_visibility': [{'*': False}, {'head': True}]}
+        children = {'left_forearm': 'leftArm', 'left_cuff': 'leftSleeve',
+                    'left_shin': 'leftLeg', 'left_trouser': 'leftPants'}
+        inputs = tuple(json.dumps(value).encode() for value in (player, controller))
+        result = compose_first_person_arm_request(*inputs, child_parts=children)
+        output = json.loads(result[1])['render_controllers']
+        fp = output['controller.render.player.first_person']['part_visibility']
+        self.assertEqual(fp[-4:], [
+            {'left_forearm': '(q.is_using_item && v.map) || ' + LEFT_ARM_REQUEST},
+            {'left_cuff': '(v.map || v.eating_left) || ' + LEFT_ARM_REQUEST},
+            {'left_shin': False}, {'left_trouser': False}])
+        tp = output['controller.render.player.third_person']['part_visibility']
+        self.assertEqual(tp[-4:], [{'left_forearm': True}, {'left_cuff': 'v.sleeves'},
+                                  {'left_shin': True}, {'left_trouser': 'v.pants'}])
+        self.assertTrue(all(next(iter(row.values())) is False for row in
+            output['controller.render.player.map']['part_visibility'][-4:]))
+        self.assertEqual(output['controller.render.gun'], controllers['controller.render.gun'])
+        self.assertEqual(json.loads(result[0])['minecraft:client_entity']['description']['geometry'],
+                         player['minecraft:client_entity']['description']['geometry'])
+        self.assertEqual(compose_first_person_arm_request(*result, child_parts=children), result)
+        channels = (LEFT_ARM_REQUEST, 'variable.other_fp_left_arm_request')
+        upgraded = compose_first_person_arm_request(*result, child_parts=children,
+                                                    request_variables=channels)
+        self.assertEqual(upgraded, compose_first_person_arm_request(*inputs,
+            child_parts=children, request_variables=channels))
+
+    def test_child_visibility_uses_last_matching_rule_and_keeps_other_fields(self):
+        player, controller = self.fixture()
+        fp = controller['render_controllers']['controller.render.player.first_person']
+        fp['part_visibility'].extend([{'right*': False}, {'rightSleeve': 'v.sleeves'}])
+        result = compose_first_person_arm_request(
+            *(json.dumps(value).encode() for value in (player, controller)),
+            child_parts={'lower_arm': 'rightArm', 'lower_sleeve': 'rightSleeve'})
+        actual = json.loads(result[1])['render_controllers']['controller.render.player.first_person']
+        self.assertEqual(actual['part_visibility'][-2:],
+                         [{'lower_arm': False}, {'lower_sleeve': 'v.sleeves'}])
+        self.assertEqual(actual['materials'], fp['materials'])
+        for children in ({'a*': 'leftArm'}, {'a': 'a'}, {'a': 'b', 'b': 'leftArm'}, []):
+            with self.subTest(children=children), self.assertRaises(ValueError):
+                compose_first_person_arm_request(*result, child_parts=children)
+
 
 class PlayerManifestTests(unittest.TestCase):
     def test_modern_tacz_player_keeps_block_only_push_rule_and_other_data(self):
