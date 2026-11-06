@@ -8,6 +8,7 @@ import argparse
 import io
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -22,13 +23,24 @@ DEFAULT_DESCRIPTOR = ROOT / 'adapters/ie-grilling-2.8.212.json'
 LEFT_ARM_REQUEST = 'variable.senluo_fp_left_arm_request'
 
 
-def compose_first_person_arm_request(player_raw, controller_raw):
+def compose_first_person_arm_request(player_raw, controller_raw, *,
+                                     request_variables=(LEFT_ARM_REQUEST,)):
     """Extend one selected player/controller pair; do not add another owner.
 
-    An active animation may request the left arm. Clearing before animations
+    Each active animation owns a request variable. Clearing before animations
     prevents a completed or interrupted clip from leaving the arm requested.
     Client evaluation order and the rendered pose still need observation.
     """
+    if isinstance(request_variables, (str, bytes)):
+        raise ValueError('Arm requests need a sequence of variable names')
+    request_variables = tuple(request_variables)
+    if (not request_variables
+            or any(not isinstance(name, str)
+                   or not re.fullmatch(r'variable\.[a-z][a-z0-9_]*', name)
+                   for name in request_variables)):
+        raise ValueError('Arm requests need simple lowercase variable names')
+    if len(set(request_variables)) != len(request_variables):
+        raise ValueError('Arm request variables must be distinct')
     player = json.loads(player_raw)
     controller = json.loads(controller_raw)
     description = player['minecraft:client_entity']['description']
@@ -41,17 +53,27 @@ def compose_first_person_arm_request(player_raw, controller_raw):
     if any(not isinstance(row[name], str) for row, name in left):
         raise ValueError('Selected left-arm visibility must contain Molang conditions')
     before = description.setdefault('scripts', {}).setdefault('pre_animation', [])
-    reset = LEFT_ARM_REQUEST + '=0.0;'
-    suffix = ' || ' + LEFT_ARM_REQUEST
-    # Retained inputs can already contain this shared fragment. Preserve their
-    # bytes instead of nesting another OR or adding another reset on each build.
-    if before.count(reset) == 1 and all(row[name].endswith(suffix) for row, name in left):
+    missing = []
+    # A retained single-channel pair may gain another provider. Keep complete
+    # fragments, including the legacy channel, and reject disconnected halves.
+    for variable in dict.fromkeys((LEFT_ARM_REQUEST, *request_variables)):
+        reset = variable + '=0.0;'
+        token = r'(?<![\w.])' + re.escape(variable) + r'(?![\w.])'
+        term = r' \|\| ' + re.escape(variable) + r'(?![\w.])'
+        complete = (before.count(reset) == 1
+                    and all(re.search(term, row[name]) for row, name in left))
+        if complete:
+            continue
+        if any(re.search(token, value) for value in [*before, *(row[name] for row, name in left)]):
+            raise ValueError('Selected player/controller has a partial arm-request fragment')
+        if variable in request_variables:
+            missing.append(variable)
+    if not missing:
         return player_raw, controller_raw
-    if any(LEFT_ARM_REQUEST in value for value in [*before, *(row[name] for row, name in left)]):
-        raise ValueError('Selected player/controller has a partial arm-request fragment')
-    before.append(reset)
-    for row, name in left:
-        row[name] = '(' + row[name] + ')' + suffix
+    for variable in missing:
+        before.append(variable + '=0.0;')
+        for row, name in left:
+            row[name] = '(' + row[name] + ') || ' + variable
     return tuple((json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
                  for value in (player, controller))
 

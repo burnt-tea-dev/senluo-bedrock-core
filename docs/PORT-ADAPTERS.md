@@ -172,16 +172,23 @@ acceptance.
 `tools/install_player_presentation.py::compose_first_person_arm_request`
 accepts the **effective** resource-player JSON and its
 `controller.render.player.first_person` JSON as bytes, and returns both files.
-It appends a per-render `variable.senluo_fp_left_arm_request=0.0;` reset to
-`pre_animation`, then ORs that variable into the existing `leftArm` and
+The optional keyword `request_variables` accepts a nonempty sequence of distinct
+lowercase `variable.<name>` identifiers. It defaults to
+`("variable.senluo_fp_left_arm_request",)`, preserving existing callers.
+It appends a per-render `=0.0;` reset for each channel to
+`pre_animation`, then ORs those variables into the existing `leftArm` and
 `leftSleeve` visibility conditions. Original right-arm conditions, map/eating
 conditions, geometry, animation aliases and gun-controller routing are retained.
+Each action owns its channel, so one action stopping cannot clear another
+action's request. A retained single-channel pair can gain channels without
+duplicating its resets or OR terms. Composition is additive: existing channels
+are preserved, and the caller supplies its current providers together.
 Passing a complete retained pair again preserves its bytes; passing only half
 of an already composed pair fails instead of silently leaving it unconnected.
 
-An active animation may write this variable in its complex `blend_weight`
+An active animation may write its own variable in its complex `blend_weight`
 expression and return its ordinary blend value. Its owner must supply finite
-duration, first-person/empty-hand conditions and the existing stop path. This
+duration, its applicable first-person and held-item conditions, and the existing stop path. This
 helper supplies visibility only; it does not create a pose, server property,
 saved state, interval or additional player definition.
 
@@ -192,8 +199,10 @@ Existing pinned recipes do not invoke this new helper automatically and retain
 their prior output identities. A new consumer must call it explicitly while
 building its newly identified output.
 
-Source tests cover preservation, retained-pair reuse and a disconnected partial
-pair. A local check on an actual composed player/controller also preserved all
+Source tests cover independent requests, resets, preservation, upgrading a
+retained pair and rejecting a disconnected partial pair. The assignment and
+boolean expressions execute in their shared JavaScript subset; this does not
+test Molang scheduling. A local check on an actual composed player/controller also preserved all
 other parsed fields without changing input files. These are composition checks,
 not installation or client-rendering results. The selected
 [official Molang reference](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/documentation/Molang.html#L752)
