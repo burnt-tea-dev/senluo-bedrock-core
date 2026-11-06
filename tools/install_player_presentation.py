@@ -23,8 +23,37 @@ DEFAULT_DESCRIPTOR = ROOT / 'adapters/ie-grilling-2.8.212.json'
 LEFT_ARM_REQUEST = 'variable.senluo_fp_left_arm_request'
 
 
+def _inherit_part_visibility(controller, children):
+    """Keep each new mesh on its original limb/skin-layer visibility gate."""
+    if (not isinstance(children, dict)
+            or any(not isinstance(name, str) or not re.fullmatch(r'[A-Za-z_]\w*', name)
+                   for pair in children.items() for name in pair)
+            or any(parent in children for parent in children.values())):
+        raise ValueError('Child parts need distinct literal bones and original parent bones')
+    for selected in controller['render_controllers'].values():
+        # Gun/armor geometry has its own skeleton and must retain its routes.
+        if selected.get('geometry', '').lower() != 'geometry.default':
+            continue
+        original = selected.get('part_visibility', [])
+        parts = [{name: gate for name, gate in row.items() if name not in children}
+                 for row in original]
+        parts = [row for row in parts if row]
+        additions = []
+        for child, parent in children.items():
+            gate = True
+            for row in parts:
+                for pattern, condition in row.items():
+                    # Bedrock applies wildcard rules in order, with later
+                    # matches replacing earlier ones (including the FP '*').
+                    if re.fullmatch(re.escape(pattern).replace(r'\*', '.*'), parent):
+                        gate = condition
+            additions.append({child: gate})
+        if additions:
+            selected['part_visibility'] = parts + additions
+
+
 def compose_first_person_arm_request(player_raw, controller_raw, *,
-                                     request_variables=(LEFT_ARM_REQUEST,)):
+                                     request_variables=(LEFT_ARM_REQUEST,), child_parts=None):
     """Extend one selected player/controller pair; do not add another owner.
 
     Each active animation owns a request variable. Clearing before animations
@@ -68,14 +97,16 @@ def compose_first_person_arm_request(player_raw, controller_raw, *,
             raise ValueError('Selected player/controller has a partial arm-request fragment')
         if variable in request_variables:
             missing.append(variable)
-    if not missing:
-        return player_raw, controller_raw
     for variable in missing:
         before.append(variable + '=0.0;')
         for row, name in left:
             row[name] = '(' + row[name] + ') || ' + variable
-    return tuple((json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
-                 for value in (player, controller))
+    if child_parts is not None:
+        _inherit_part_visibility(controller, child_parts)
+    # Existing callers and a repeated complete composition retain exact bytes.
+    return tuple(raw if value == json.loads(raw) else
+                 (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
+                 for raw, value in ((player_raw, player), (controller_raw, controller)))
 
 
 def modern_tacz_player(raw):

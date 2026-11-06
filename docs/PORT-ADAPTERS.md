@@ -210,6 +210,30 @@ puts `pre_animation` before animation/render-controller processing; it does not
 guarantee the relative order of an injected clip's `blend_weight` and visibility
 evaluation. Same-frame transfer, pose and visible stopping remain unobserved.
 
+The same function accepts optional `child_parts`, a dictionary from new mesh
+bone to original visibility bone. A local producer can read this directly from
+the `part_visibility` field of OTC's `player-rig-source.json`. It first adds the
+arm requests, then gives each child the final matching parent condition, in
+rule order (including `*`). Forearms follow Arm, cuffs follow Sleeve, shins
+follow Leg and trouser sections follow Pants independently. Thus an FP
+controller's hidden legs stay hidden; a sleeve never borrows the skin's gate.
+Only controllers using `Geometry.default` in the supplied document are extended;
+gun and armor controllers remain unchanged. Recomposition refreshes these
+child rules after a new request channel, without accumulating entries.
+The ordering follows the [official render-controller reference](https://github.com/Mojang/bedrock-samples/blob/15701fa9c13923f12662984c32c124327e40e3d3/documentation/Animations.html).
+
+This is visibility composition, not geometry selection or pose installation.
+It leaves the player's geometry and `Texture.default` alone and does not load
+OTC's local geometry/poses or its baked `source_frame_offsets`. Those already
+belong to the generated model/pose pair and must not be applied a second time.
+The effective player's `Geometry.default` currently resolves to the native
+`geometry.humanoid.custom`; attaching forearm poses there cannot create the
+missing joints. Switching it to either generated variant still requires an
+observed native classic/slim/custom-skin selection contract. Static pivots,
+skin PNG dimensions and a default classic choice do not supply that contract.
+Existing callers omitting `child_parts` retain their prior outputs. This source
+extension alone does not release or install a new game pack.
+
 ## Optional TACZ test profile
 
 Toolkit0.10 adds a separate local installer for the reviewed TACZ1.0.3 input.
