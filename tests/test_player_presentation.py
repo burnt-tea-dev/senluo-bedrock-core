@@ -1,6 +1,7 @@
 import copy
 import json
 from pathlib import Path
+import subprocess
 import sys
 import unittest
 
@@ -55,6 +56,75 @@ class FirstPersonArmRequestTests(unittest.TestCase):
         player, _ = compose_first_person_arm_request(*inputs)
         with self.assertRaisesRegex(ValueError, 'partial arm-request'):
             compose_first_person_arm_request(player, inputs[1])
+
+    def test_two_providers_reset_and_request_independently_in_generated_expressions(self):
+        inputs = tuple(json.dumps(value).encode() for value in self.fixture())
+        channels = (LEFT_ARM_REQUEST, 'variable.other_fp_left_arm_request')
+        player, controller = map(json.loads,
+            compose_first_person_arm_request(*inputs, request_variables=channels))
+        scripts = player['minecraft:client_entity']['description']['scripts']['pre_animation']
+        parts = controller['render_controllers']['controller.render.player.first_person']['part_visibility']
+        expressions = [parts[3]['leftArm'], parts[4]['leftSleeve']]
+        # Execute the generated assignment/boolean subset. This checks source
+        # composition, not Molang's client scheduling or actual rendering.
+        program = r'''
+const {scripts, expressions} = JSON.parse(require('node:fs').readFileSync(0, 'utf8'));
+const variable = {senluo_fp_left_arm_request: 1, other_fp_left_arm_request: 1};
+const v = variable;
+const q = {is_using_item: false, is_item_name_any: () => false};
+scripts.forEach(script => eval(script));
+const reset = [variable.senluo_fp_left_arm_request, variable.other_fp_left_arm_request];
+const results = [];
+for (const [first, second, native] of [[1,0,0], [0,1,0], [0,0,0], [0,0,1]]) {
+  variable.senluo_fp_left_arm_request = first;
+  variable.other_fp_left_arm_request = second;
+  q.is_using_item = Boolean(native);
+  v.map = Boolean(native);
+  results.push(expressions.map(expression => Boolean(eval(expression))));
+}
+process.stdout.write(JSON.stringify({reset, results}));
+'''
+        result = json.loads(subprocess.check_output(['node', '-e', program],
+            input=json.dumps({'scripts': scripts, 'expressions': expressions}).encode()))
+        self.assertEqual(result, {'reset': [0, 0],
+            'results': [[True, True], [True, True], [False, False], [True, True]]})
+
+    def test_existing_single_channel_can_gain_a_provider_without_duplicate_fragments(self):
+        inputs = tuple(json.dumps(value).encode() for value in self.fixture())
+        first = compose_first_person_arm_request(*inputs)
+        channels = (LEFT_ARM_REQUEST, 'variable.other_fp_left_arm_request')
+        upgraded = compose_first_person_arm_request(*first, request_variables=channels)
+        self.assertEqual(upgraded, compose_first_person_arm_request(*inputs,
+            request_variables=channels))
+        self.assertEqual(compose_first_person_arm_request(*upgraded,
+            request_variables=channels), upgraded)
+        self.assertEqual(compose_first_person_arm_request(*upgraded), upgraded)
+
+    def test_new_channel_partial_pair_is_rejected(self):
+        inputs = tuple(json.dumps(value).encode() for value in self.fixture())
+        channels = (LEFT_ARM_REQUEST, 'variable.other_fp_left_arm_request')
+        player, controller = compose_first_person_arm_request(*inputs, request_variables=channels)
+        single = compose_first_person_arm_request(*inputs)
+        for pair in ((player, single[1]), (single[0], controller)):
+            with self.subTest(pair=pair), self.assertRaisesRegex(ValueError, 'partial arm-request'):
+                compose_first_person_arm_request(*pair, request_variables=channels)
+
+    def test_variable_names_cannot_inject_expressions_or_alias_another_provider(self):
+        inputs = tuple(json.dumps(value).encode() for value in self.fixture())
+        for names in ((), LEFT_ARM_REQUEST, (LEFT_ARM_REQUEST, LEFT_ARM_REQUEST),
+                      ('variable.a;variable.b=1',), ('variable.MixedCase',), (None,)):
+            with self.subTest(names=names), self.assertRaises(ValueError):
+                compose_first_person_arm_request(*inputs, request_variables=names)
+
+    def test_provider_names_with_a_common_prefix_remain_separate(self):
+        inputs = tuple(json.dumps(value).encode() for value in self.fixture())
+        channels = ('variable.provider', 'variable.provider_long')
+        first = compose_first_person_arm_request(*inputs, request_variables=channels)
+        self.assertEqual(compose_first_person_arm_request(*first,
+            request_variables=channels), first)
+        player = json.loads(first[0])
+        scripts = player['minecraft:client_entity']['description']['scripts']['pre_animation']
+        self.assertEqual(scripts[-2:], [name + '=0.0;' for name in channels])
 
 
 class PlayerManifestTests(unittest.TestCase):
