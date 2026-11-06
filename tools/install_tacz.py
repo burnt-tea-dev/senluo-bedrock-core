@@ -136,6 +136,26 @@ def offhand_controller(controller):
     return result
 
 
+def repair_projectile_resources(originals, prefix, descriptor):
+    """Keep projectile behavior while retiring its forced ticking region."""
+    changed = {}
+    if descriptor.get('remove_projectile_tick_world'):
+        for name, raw in originals.items():
+            if not name.startswith(prefix + 'entities/bullet/') or not name.endswith('.json'):
+                continue
+            document = read_definition(raw)
+            components = document['minecraft:entity'].get('components', {})
+            if 'minecraft:tick_world' not in components:
+                continue
+            # Native movement, hits and the author's existing timeout remain.
+            del components['minecraft:tick_world']
+            changed[name] = (json.dumps(document, ensure_ascii=False, indent=2) + '\n').encode()
+    if descriptor.get('repair_bullet_function_panes'):
+        name = prefix + 'functions/bullet.mcfunction'
+        changed[name] = originals[name].replace(b'glass_panel', b'glass_pane')
+    return changed
+
+
 def adapt_files(originals, composed, controller, descriptor):
     pin = descriptor['tacz']
     roots = pin['prefixes']
@@ -161,6 +181,7 @@ def adapt_files(originals, composed, controller, descriptor):
             raise ValueError('TACZ AWP block spelling must occur exactly once')
         awp_raw = awp_raw.replace(before, after, 1)
     changed[awp_path] = awp_raw
+    changed.update(repair_projectile_resources(originals, roots['BP'], descriptor))
     client_path = roots['RP'] + 'entity/player.entity.json'
     for name, raw in composed.items():
         if name == 'BP/entities/player.json':
@@ -274,6 +295,10 @@ def adapt_files(originals, composed, controller, descriptor):
         changed[blocks_path] = (json.dumps(catalog, ensure_ascii=False, indent=2) + '\n').encode()
     result.update(changed)
     return result, {'changed_files': {name: sha256(raw) for name, raw in changed.items()},
+                    'runtime_repairs': [name for flag, name in [
+                        ('remove_projectile_tick_world', 'projectile_tick_world_removed'),
+                        ('repair_bullet_function_panes', 'bullet_function_pane_spelling')]
+                        if descriptor.get(flag)],
                     'removed_paths': [old_player], 'behavior_player_path': player,
                     'preserved_author_files': sum(name not in changed and name != old_player for name in originals),
                     'player_properties': len(schema['properties']),
@@ -322,7 +347,7 @@ def apply_archive(tacz, ie, grilling, source, descriptor, source_sounds=None):
             if name not in receipt['changed_files']:
                 receipt['preserved_author_files'] -= 1
             receipt['changed_files'][name] = sha256(files[name])
-            receipt['runtime_repairs'] = ['projectile_hit_invalid_target']
+            receipt.setdefault('runtime_repairs', []).append('projectile_hit_invalid_target')
         output = io.BytesIO()
         with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as target:
             for name, raw in files.items():

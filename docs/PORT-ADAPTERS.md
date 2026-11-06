@@ -270,9 +270,9 @@ were unchanged, with zero installed drift. This is public12 evidence only;
 private57, actual TACZ rollback, rendered gameplay, audio and real viewers remain
 unverified. See [the0.11 validation record](validation-0.11.0.json).
 
-## Current TACZ client-resource composition (toolkit 0.17)
+## Historical TACZ client-resource composition (toolkit 0.17)
 
-The current [descriptor](../adapters/tacz-1.0.3-grilling-2.8.206.json)
+The historical [descriptor](../adapters/tacz-1.0.3-grilling-2.8.206.json)
 uses the canonical Grilling PR334 composer. Its `composer_source` pins the tool
 separately from the unchanged Grilling206 archive's `grilling.source` provenance.
 Pass the clean checkout of `composer_source.commit` to `install_tacz.py
@@ -318,7 +318,7 @@ not inferred from these resource checks.
 
 ## Original TACZ gun appearance and hit lifecycle
 
-The current descriptor produces TACZ20010. The SkinPack author identifies four
+That historical descriptor produces TACZ20010. The SkinPack author identifies four
 reskinned guns: Glock17, AKM, UZI and Type81. Restore their four original Bedrock
 textures with the three corresponding pre-SkinPack cosmetic models. Their item
 icons and all138 animation/controller files are unchanged between the source
@@ -346,3 +346,25 @@ texture mesh for the otherwise hidden ordinary held-item plane. The referenced
 Only the texture path changes: actual gun models, item icons, render controllers,
 animation, material and all texture bytes remain unchanged. The clean-author
 archive regression verifies all affected attachables and their shipped target.
+
+## TACZ projectile region adaptation (toolkit 0.40)
+
+The active [installer descriptor](../adapters/tacz-1.0.3-grilling-2.8.212.json)
+now selects TACZ BP/RP 1.0.20032 and the existing original archive pin.
+`install_tacz.adapt_files` uses `remove_projectile_tick_world` to remove the
+forced ticking-region component from the author's bullet definitions. It
+preserves projectile speed, gravity, collision, damage, hit events and the
+existing script cleanup. Bullets that never had this component keep their bytes.
+There is no second cleanup timer or per-bullet ID registry.
+
+The separate `repair_bullet_function_panes` option corrects `glass_panel` and
+`stained_glass_panel` in the existing function. That fixes a parse warning;
+it is not evidence of the firing-lag cause. Older descriptors that do not
+select these two repairs retain their previous output behavior.
+
+Source regressions and archive comparison establish the narrow changes.
+Native generation, hits and cleanup require an isolated functional observation.
+Only comparable engine/chunk measurements can support a performance claim;
+startup preparation, averages without an idle baseline and external A/B results
+do not establish an improvement on the installed server. Core still emits
+user-local adapted outputs and does not distribute complete author scripts.

@@ -259,6 +259,37 @@ async function load(root){
             self.assertIn({'uuid': 'ie-' + side.lower(), 'version': [1, 1, 20002]}, manifest['dependencies'])
         self.assertEqual(receipt['player_properties'], 28)
 
+    def test_projectile_repair_preserves_hits_physics_and_existing_cleanup(self):
+        originals, composed, controller, descriptor = self.fixture()
+        descriptor.update(remove_projectile_tick_world=True, repair_bullet_function_panes=True)
+        bullet = {'minecraft:entity': {'description': {'identifier': 'bullet:akm'},
+                  'components': {'minecraft:tick_world': {'radius': 2, 'distance_to_players': 128,
+                                                         'never_despawn': False},
+                                 'minecraft:projectile': {'power': 4, 'gravity': 0,
+                                     'on_hit': {'impact_damage': {'damage': 10}, 'remove_on_hit': {}}},
+                                 'minecraft:collision_box': {'width': 0.1, 'height': 0.1}},
+                  'events': {'author:cleanup': {'remove': {'component_groups': ['author:bullet']}}}}}
+        path = 'Author BP/entities/bullet/akm.json'
+        originals[path] = encoded(bullet)
+        without_tick = 'Author BP/entities/bullet/rpg.json'
+        originals[without_tick] = encoded({'minecraft:entity': {'components': {
+            'minecraft:projectile': {'power': 2, 'on_hit': {'explode': {'power': 3}}}}}})
+        function = 'Author BP/functions/bullet.mcfunction'
+        originals[function] = b'fill ~ ~ ~ ~1 ~1 ~1 air replace glass_panel\nfill ~ ~ ~ ~1 ~1 ~1 air replace stained_glass_panel\n'
+        originals['Author BP/scripts/events/cleanup.js'] = b'original ten-tick cleanup'
+        before = copy.deepcopy(originals)
+        fixed, receipt = adapt_files(originals, composed, controller, descriptor)
+        self.assertNotIn('minecraft:tick_world', read_definition(fixed[path])['minecraft:entity']['components'])
+        self.assertEqual(read_definition(fixed[path])['minecraft:entity']['components']['minecraft:projectile'],
+                         bullet['minecraft:entity']['components']['minecraft:projectile'])
+        self.assertEqual(read_definition(fixed[path])['minecraft:entity']['components']['minecraft:collision_box'],
+                         bullet['minecraft:entity']['components']['minecraft:collision_box'])
+        self.assertEqual(read_definition(fixed[path])['minecraft:entity']['events'], bullet['minecraft:entity']['events'])
+        self.assertEqual(fixed[without_tick], originals[without_tick])
+        self.assertEqual(fixed['Author BP/scripts/events/cleanup.js'], originals['Author BP/scripts/events/cleanup.js'])
+        self.assertEqual(fixed[function], originals[function].replace(b'glass_panel', b'glass_pane'))
+        self.assertEqual(originals, before)
+
     def test_rejects_unreviewed_player_owner_over_limit_and_unknown_output(self):
         for damage in ('second-player', 'over-limit', 'unknown-output', 'missing-controller'):
             originals, composed, controller, descriptor = self.fixture()
