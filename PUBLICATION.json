@@ -76,6 +76,7 @@
     "docs/validation-public-player-20261103.json",
     "package.json",
     "release-history.json",
+    "resources/textures/terrain_texture.json",
     "sdk.json",
     "src/host_api/cookery-guide-decoding.js",
     "src/host_api/cookery-guide-startup.js",

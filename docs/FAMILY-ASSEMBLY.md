@@ -4,6 +4,27 @@ Core is a build-time tool, not another gameplay pack. The existing
 `build_owned_family_recipe.py` and `assemble_family.py` serve both public and
 optional family installations. They do not deploy a server or change a world.
 
+## Optional shared still-water renderer data
+
+[`resources/textures/terrain_texture.json`](../resources/textures/terrain_texture.json)
+contains only the two vanilla still-water atlas entries with `quad: 1`.
+It references built-in textures and includes no images, author addon data or
+player definitions. Four mip levels and padding eight are retained; flowing
+water, lava and other atlas entries are not supplied by this file.
+
+An existing resource-pack producer can copy this file to
+`textures/terrain_texture.json` through its normal owned/generated input route.
+Keep the selected Core commit and file hash in that producer's source lock.
+Do not replace another addon's atlas or create another Core gameplay pack.
+If the destination pack already owns an atlas, its producer must preserve that
+content explicitly; this file is not a JSON merger.
+
+This is an optional candidate for Fancy still-water rendering. Successful file
+assembly does not establish the engine's effective atlas merge or a client
+fix. Check the actual world's resource selection and compare near/far water,
+movement, flowing water, color and animation on the affected client. Keep
+that observation separate from JSON, server-loading and save checks.
+
 ## Paired manifest releases
 
 An owned-port descriptor can advance a selected pair without composing a
