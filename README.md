@@ -63,6 +63,23 @@ still selects the historical full family; the public commands explicitly use
 instructions remain available. They do not establish present-day client or
 LIVE status, and their identities are not reused for new output bytes.
 
+## Creative inventory assembly
+
+`tools/creative_catalog.py::regroup_creative(bp_files, rules)` reorganizes one
+local BP through its native `menu_category` and crafting-item catalog. It returns
+only changed BP file bytes, RP locale labels, and a report of unmapped or
+unparsed entries. The caller applies these through its existing assembly path
+and gives changed output a fresh paired identity; this tool never installs packs.
+
+Rules contain `groups` (alias to `category`, `name`, vanilla `icon`, and locale
+`labels`), exact `group_moves` and `items` mappings, and optional `components`
+or exact `tags` mappings for ungrouped items. Component roles are `food`, `drink`,
+`tool`, `weapon`, `ranged`, `projectile` and `wearable`. Existing meaningful
+subgroups remain unless explicitly mapped. Zero-nutrition food input hooks are
+not guessed to be meals. Hidden definitions stay hidden, duplicate block/item
+IDs receive one catalog entry, and unknown entries retain their classification.
+Author archives, scripts and resources remain caller-supplied local inputs.
+
 ## Development and publication
 
 - [SDK contracts and ownership](docs/SDK.md)

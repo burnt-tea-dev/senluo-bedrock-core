@@ -88,6 +88,7 @@
     "tools/build_grilling_input.py",
     "tools/build_owned_family_recipe.py",
     "tools/build_release.py",
+    "tools/creative_catalog.py",
     "tools/export_ie_grilling_compat.py",
     "tools/install_cookery.py",
     "tools/install_cookery_from_descriptor.py",
