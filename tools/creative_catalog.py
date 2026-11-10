@@ -145,14 +145,22 @@ def regroup_creative(bp_files, rules, *, cataloged_elsewhere=()):
     tag_rules = rules.get('tags', {})
     for item in order:
         rows = definitions.get(item, [])
-        visible = [row for row in rows if row[1][row[2]]['description'].get('menu_category', {}).get('category') in CATEGORIES]
+        visible = []
+        for row in rows:
+            _, document, kind = row
+            category = document[kind]['description'].get('menu_category', {}).get('category')
+            legacy = tuple(map(int, document['format_version'].split('.'))) < (1, 21, 60)
+            # Before 1.21.60 an omitted category defaults to Items; it is not
+            # equivalent to an explicit none or a modern hidden definition.
+            if category in CATEGORIES or (legacy and category in (None, '')):
+                visible.append(row)
         if rows and not visible:
             hidden.append(item)
             continue
         if not visible and item not in membership:
             continue
-        menu = visible[0][1][visible[0][2]]['description']['menu_category'] if visible else {}
-        category, group_name = membership.get(item, (menu.get('category'), menu.get('group')))
+        menu = visible[0][1][visible[0][2]]['description'].get('menu_category', {}) if visible else {}
+        category, group_name = membership.get(item, (menu.get('category') or 'items', menu.get('group')))
         alias = item_rules.get(item)
         if alias is None:
             alias = group_rules.get(group_name) or group_rules.get(menu.get('group'))
@@ -176,7 +184,7 @@ def regroup_creative(bp_files, rules, *, cataloged_elsewhere=()):
                 labels.setdefault(locale, {})[group_name] = label
             for path, document, kind in visible:
                 description = document[kind]['description']
-                original = description['menu_category']
+                original = description.get('menu_category', {})
                 changed = {**original, 'category': category}
                 # Legacy loaders prepend minecraft: themselves. Keep their
                 # format/gameplay intact and let the modern catalog own groups.
