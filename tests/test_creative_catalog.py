@@ -6,15 +6,15 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from creative_catalog import CATALOG, regroup_creative
+from creative_catalog import CATALOG, catalog_delegations, regroup_creative
 
 
 def raw(value):
     return json.dumps(value, ensure_ascii=False).encode()
 
 
-def definition(identifier, menu, components=None, kind='item'):
-    return raw({'format_version': '1.21.10', 'minecraft:' + kind: {
+def definition(identifier, menu, components=None, kind='item', format_version='1.21.10'):
+    return raw({'format_version': format_version, 'minecraft:' + kind: {
         'description': {'identifier': identifier, 'menu_category': menu},
         'components': components or {}}})
 
@@ -26,6 +26,7 @@ def rules():
         'bakery': ('items', 'senluo:creative.bakery', 'minecraft:bread', '烘焙'),
         'firearms': ('equipment', 'senluo:creative.firearms', 'minecraft:bow', '槍械'),
         'armor': ('equipment', 'senluo:creative.armor', 'minecraft:iron_chestplate', '護甲'),
+        'workbenches': ('items', 'krep:itemGroup.name.workbenches', 'minecraft:smithing_table', '槍械工作台'),
     }
     return {'groups': {alias: {'category': c, 'name': n, 'icon': i, 'labels': {'zh_TW': label}}
                        for alias, (c, n, i, label) in groups.items()},
@@ -40,7 +41,93 @@ def contents(files):
             for group in category['groups'] for item in group['items']]
 
 
+def catalog(items):
+    return raw({'format_version': '1.21.60', 'minecraft:crafting_items_catalog': {
+        'categories': [{'category_name': 'items', 'groups': [{'items': items}]}]}})
+
+
 class CreativeCatalogTests(unittest.TestCase):
+    def test_legacy_block_uses_catalog_group_without_changing_its_gameplay_format(self):
+        # Reduced TACZ 1.20.70 workbench definition: its legacy properties and
+        # crafting components must not be migrated just to move its menu entry.
+        document = {'format_version': '1.20.70', 'minecraft:block': {
+            'description': {'identifier': 'krep:ammoworkbench',
+                            'properties': {'wiki:rotation': [0, 1, 2, 3]},
+                            'menu_category': {'category': 'equipment', 'group': 'itemGroup.name.craftingTables'}},
+            'components': {'minecraft:crafting_table': {'table_name': 'ammo', 'crafting_tags': ['ammo']}}}}
+        files = {'blocks/ammo.json': raw(document)}
+        plan = rules()
+        plan['items'] = {'krep:ammoworkbench': 'workbenches'}
+        result = regroup_creative(files, plan)
+        output = {**files, **result['updates']}
+        expected = copy.deepcopy(document)
+        expected['minecraft:block']['description']['menu_category'] = {'category': 'items'}
+        self.assertEqual(json.loads(output['blocks/ammo.json']), expected)
+        self.assertEqual(contents(output), [('items', {
+            'name': 'krep:itemGroup.name.workbenches', 'icon': 'minecraft:smithing_table'}, 'krep:ammoworkbench')])
+        self.assertEqual(regroup_creative(output, plan)['updates'], {})
+
+    def test_modern_definition_keeps_the_namespaced_group(self):
+        for version in ('1.21.60', '1.21.100'):
+            with self.subTest(version=version):
+                files = {'blocks/ammo.json': definition('krep:ammoworkbench',
+                    {'category': 'equipment'}, kind='block', format_version=version)}
+                plan = rules()
+                plan['items'] = {'krep:ammoworkbench': 'workbenches'}
+                output = {**files, **regroup_creative(files, plan)['updates']}
+                self.assertEqual(json.loads(output['blocks/ammo.json'])['minecraft:block']['description']['menu_category'],
+                                 {'category': 'items', 'group': 'krep:itemGroup.name.workbenches'})
+
+    def test_effective_definition_catalog_owns_the_item_across_real_pack_maps(self):
+        item = 'kaleidoscope_cookery:flour'
+        # The higher-priority catalog-only pack must defer to the actual
+        # definition owner's catalog, rather than claiming the first mention.
+        packs = [{CATALOG: catalog([item])},
+                 {CATALOG: catalog([item]), 'items/flour.json': definition(item, {'category': 'equipment'})}]
+        delegations = catalog_delegations(packs)
+        self.assertEqual(delegations, [{item}, set()])
+        outputs, results = [], []
+        plan = rules()
+        plan['items'] = {item: 'ingredients'}
+        for files, delegated in zip(packs, delegations):
+            result = regroup_creative(files, plan, cataloged_elsewhere=delegated)
+            results.append(result)
+            outputs.append({**files, **result['updates']})
+        self.assertEqual([row[2] for output in outputs for row in contents(output)], [item])
+        self.assertEqual(results[0]['delegated'], [{'identifier': item, 'category': 'items',
+                                                  'group': 'kaleidoscope_cookery:itemGroup.name.ingredients'}])
+        self.assertEqual(results[0]['hidden'], [])
+        self.assertEqual(results[0]['unmapped'], [])
+
+    def test_catalog_only_fallback_and_delegated_definition_updates(self):
+        item = 'kaleidoscope_cookery:flour'
+        # An effective definition without its own catalog falls back to the
+        # first genuine catalog declarer. It still receives its menu update.
+        packs = [{'items/flour.json': definition(item, {'category': 'equipment'}, format_version='1.21.60'),
+                  'items/internal.json': definition('local:internal', {'category': 'none'})},
+                 {CATALOG: catalog([item, 'minecraft:apple'])},
+                 {CATALOG: catalog([item, 'minecraft:apple'])}]
+        delegations = catalog_delegations(packs)
+        self.assertEqual(delegations, [{item, 'minecraft:apple'}, set(), {item, 'minecraft:apple'}])
+        plan = rules()
+        plan['items'] = {item: 'ingredients', 'local:internal': 'ingredients'}
+        delegations[0].add('local:internal')
+        results = [regroup_creative(files, plan, cataloged_elsewhere=delegated)
+                   for files, delegated in zip(packs, delegations)]
+        output = {**packs[0], **results[0]['updates']}
+        self.assertEqual(json.loads(output['items/flour.json'])['minecraft:item']['description']['menu_category'],
+                         {'category': 'items', 'group': 'kaleidoscope_cookery:itemGroup.name.ingredients'})
+        self.assertEqual(results[0]['labels']['zh_TW']['kaleidoscope_cookery:itemGroup.name.ingredients'], '食材')
+        self.assertNotIn(CATALOG, output)
+        self.assertEqual(results[0]['hidden'], ['local:internal'])
+        self.assertEqual([row['identifier'] for row in results[0]['delegated']], [item])
+        combined = []
+        for files, result in zip(packs, results):
+            output = {**files, **result['updates']}
+            if CATALOG in output:
+                combined.extend(row[2] for row in contents(output))
+        self.assertCountEqual(combined, [item, 'minecraft:apple'])
+
     def test_real_author_menu_and_component_facts_use_one_native_catalog(self):
         # Description/component facts from selected Cookery flour, TACZ AKM,
         # Baking pumpkin_mini_pie and AWW basic_spell_book. No author assets ship.

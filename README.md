@@ -65,7 +65,7 @@ LIVE status, and their identities are not reused for new output bytes.
 
 ## Creative inventory assembly
 
-`tools/creative_catalog.py::regroup_creative(bp_files, rules)` reorganizes one
+`tools/creative_catalog.py::regroup_creative(bp_files, rules, *, cataloged_elsewhere=())` reorganizes one
 local BP through its native `menu_category` and crafting-item catalog. It returns
 only changed BP file bytes, RP locale labels, and a report of unmapped or
 unparsed entries. The caller applies these through its existing assembly path
@@ -78,6 +78,18 @@ or exact `tags` mappings for ungrouped items. Component roles are `food`, `drink
 subgroups remain unless explicitly mapped. Zero-nutrition food input hooks are
 not guessed to be meals. Hidden definitions stay hidden, duplicate block/item
 IDs receive one catalog entry, and unknown entries retain their classification.
+Definitions before format 1.21.60 keep their format and gameplay fields: their
+category is updated, while the modern catalog owns the group instead of writing
+a namespaced group into the legacy definition.
+
+For several packs, call `catalog_delegations(ordered_packs)` with BP file maps
+in the actual highest-to-lowest load priority. The effective definition's pack
+owns an entry if its catalog declares it; otherwise its first catalog declarer
+owns it. Pass each returned ID set as that pack's `cataloged_elsewhere`.
+Delegated definitions still receive classification/locale updates, but do not
+add another catalog entry. The returned `delegated` rows are separate from
+`hidden` and `unmapped`. The caller supplies actual pending catalog outputs;
+the resolver does not infer priority from mapping order or pack names.
 Author archives, scripts and resources remain caller-supplied local inputs.
 
 ## Development and publication
