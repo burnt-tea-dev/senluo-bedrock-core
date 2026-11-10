@@ -19,6 +19,19 @@ New deadlines use the existing 100-tick bucket. Public food data can carry heat,
 seasoning, a native variant and cuisine quality, while preserving custom lore.
 Core does not read another pack's private dynamic properties.
 
+The carrier's client text is owned by
+[`resources/texts/food_api.lang`](../resources/texts/food_api.lang). Its nonempty
+`§r` value is a native formatting reset with no visible glyphs; do not replace it
+with an empty translation value. The V1 key and JSON in `with` are unchanged.
+An installation using a food writer must provide this entry in its resource
+locales, including the `en_US` fallback. The Core Cookery installer
+and Grilling's SDK synchronization use `merge_food_locale()` from
+`tools/install_cookery.py` for this merge. The SDK archive includes the resource
+fragment; the toolkit includes its merge function. Read-only consumers such as
+OTC retain the existing codec and do not need a second writer or a new carrier.
+These source changes require a fresh release before distribution; they do not
+retroactively alter the recorded SDK 0.1.0 release.
+
 The cross-pack client and gameplay APIs remain in
 [Grilling's integration contract](https://github.com/burnt-tea-dev/kaleidoscope-grilling-unofficial/blob/main/docs/BEDROCK-INTEGRATION-API.md).
 Crafting, chopping boards, oil, pots, recipes, rewards and persistent gameplay

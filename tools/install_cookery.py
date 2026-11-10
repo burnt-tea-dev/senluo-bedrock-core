@@ -19,6 +19,20 @@ MAX_MEMBER = 64 * 1024 * 1024
 MAX_TOTAL = 512 * 1024 * 1024
 
 
+def merge_food_locale(raw: bytes) -> bytes:
+    # A nonempty reset code renders no glyphs. Empty .lang values are not a
+    # documented substitute for a translation; the V1 JSON remains in `with`.
+    entry = (Path(__file__).resolve().parents[1] / 'resources/texts/food_api.lang').read_text(encoding='utf-8').rstrip('\r\n')
+    key = entry.split('=', 1)[0]
+    lines = raw.decode('utf-8').splitlines(keepends=True)
+    for index, line in enumerate(lines):
+        if line.split('=', 1)[0] == key:
+            ending = line[len(line.rstrip('\r\n')):]
+            lines[index] = entry + ending
+            return ''.join(lines).encode('utf-8')
+    return raw + (b'\n' if raw and not raw.endswith(b'\n') else b'') + entry.encode('utf-8') + b'\n'
+
+
 def sha256(raw: bytes) -> str:
     return hashlib.sha256(raw).hexdigest()
 
@@ -252,8 +266,20 @@ def apply_archive(cookery: Path, grilling: Path, descriptor: dict) -> tuple[byte
             info.create_system = 3
             files[dest_member] = (info, sdk_additions[source])
 
+        # The host which receives the food codec must also supply its client
+        # text. Use every declared locale so an empty local entry cannot hide
+        # the English fallback. This changes no item or author gameplay data.
+        resource_texts = {}
+        locales = _json_bytes(files[prefixes['cookery_rp'] + 'texts/languages.json'][1], 'Cookery languages')
+        for locale in locales:
+            member = prefixes['cookery_rp'] + 'texts/' + locale + '.lang'
+            info, original = files[member]
+            rendered = merge_food_locale(original)
+            files[member] = (info, rendered)
+            resource_texts[member] = {'before': sha256(original), 'after': sha256(rendered)}
+
         input_tree = _tree_fingerprint(baseline_files,
-                                       exclude=set(manifest_paths) | {prefixes["cookery_bp"] + p for p in changed})
+                                       exclude=set(manifest_paths) | set(resource_texts) | {prefixes["cookery_bp"] + p for p in changed})
         out = __import__("io").BytesIO()
         with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as writer:
             for name, (info, raw) in files.items():
@@ -273,6 +299,7 @@ def apply_archive(cookery: Path, grilling: Path, descriptor: dict) -> tuple[byte
             "changed_paths": {path: {"before": original_files[path], "after": sha256(raw)} for path, raw in changed.items()},
             "sdk_helpers": {src: sha256(raw) for src, raw in sdk_additions.items()},
             "sdk_copies": {prefixes["grilling_bp"] + src: prefixes["cookery_bp"] + dst for src, dst in copies.items()},
+            "resource_texts": resource_texts,
         }
         return output, receipt
     finally:
