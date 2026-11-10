@@ -47,6 +47,62 @@ def catalog(items):
 
 
 class CreativeCatalogTests(unittest.TestCase):
+    def test_legacy_biomes_block_without_menu_keeps_its_actual_catalog_group(self):
+        # Reduced shape of the selected BB 1.21.0 tall_dead_bush definition.
+        # Its omitted menu is a default-visible entry, not an internal variant.
+        block = {'format_version': '1.21.0', 'minecraft:block': {
+            'description': {'identifier': 'bb:tall_dead_bush'},
+            'components': {'minecraft:collision_box': False}}}
+        group = {'name': 'bb:itemGroup.name.desert_plants', 'icon': 'bb:apache_plume'}
+        files = {'blocks/bush.json': raw(block), CATALOG: raw({
+            'format_version': '1.21.60', 'minecraft:crafting_items_catalog': {'categories': [{
+                'category_name': 'nature', 'groups': [{'group_identifier': group, 'items': ['bb:tall_dead_bush']}]}]}})}
+        result = regroup_creative(files, rules())
+        output = {**files, **result['updates']}
+        self.assertEqual(contents(output), [('nature', group, 'bb:tall_dead_bush')])
+        self.assertEqual(result['hidden'], [])
+        self.assertNotIn('blocks/bush.json', result['updates'])
+        self.assertEqual(regroup_creative(output, rules())['updates'], {})
+
+    def test_legacy_omitted_category_defaults_to_items_and_accepts_explicit_rules(self):
+        for menu in (None, {}, {'category': ''}):
+            with self.subTest(menu=menu):
+                block = {'format_version': '1.21.0', 'minecraft:block': {
+                    'description': {'identifier': 'bb:red_mushrooms_group'},
+                    'components': {'minecraft:collision_box': False}}}
+                if menu is not None:
+                    block['minecraft:block']['description']['menu_category'] = menu
+                files = {'blocks/mushrooms.json': raw(block)}
+                result = regroup_creative(files, rules())
+                self.assertEqual(contents({**files, **result['updates']}), [('items', {}, 'bb:red_mushrooms_group')])
+                self.assertEqual(result['hidden'], [])
+                self.assertNotIn('blocks/mushrooms.json', result['updates'])
+                plan = rules()
+                plan['items'] = {'bb:red_mushrooms_group': 'ingredients'}
+                result = regroup_creative(files, plan)
+                output = {**files, **result['updates']}
+                expected = copy.deepcopy(block)
+                expected['minecraft:block']['description']['menu_category'] = {'category': 'items'}
+                self.assertEqual(json.loads(output['blocks/mushrooms.json']), expected)
+                self.assertEqual(contents(output)[0][1]['name'], 'kaleidoscope_cookery:itemGroup.name.ingredients')
+
+    def test_explicit_none_and_modern_omitted_categories_remain_hidden(self):
+        for version, menu in [('1.21.0', {'category': 'none'}),
+                              ('1.21.60', None), ('1.21.100', {}),
+                              ('1.21.60', {'category': 'none'})]:
+            with self.subTest(version=version, menu=menu):
+                document = {'format_version': version, 'minecraft:block': {
+                    'description': {'identifier': 'local:hidden'}, 'components': {}}}
+                if menu is not None:
+                    document['minecraft:block']['description']['menu_category'] = menu
+                files = {'blocks/hidden.json': raw(document), CATALOG: catalog(['local:hidden'])}
+                plan = rules()
+                plan['items'] = {'local:hidden': 'ingredients'}
+                result = regroup_creative(files, plan)
+                self.assertEqual(contents({**files, **result['updates']}), [])
+                self.assertNotIn('blocks/hidden.json', result['updates'])
+                self.assertEqual(result['hidden'], ['local:hidden'])
+
     def test_legacy_block_uses_catalog_group_without_changing_its_gameplay_format(self):
         # Reduced TACZ 1.20.70 workbench definition: its legacy properties and
         # crafting components must not be migrated just to move its menu entry.
