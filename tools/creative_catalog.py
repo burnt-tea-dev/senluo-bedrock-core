@@ -38,7 +38,45 @@ def _role(components):
     return None
 
 
-def regroup_creative(bp_files, rules):
+def catalog_delegations(ordered_packs):
+    """Return delegated IDs per BP, in actual highest-to-lowest pack priority.
+
+    Prefer the effective definition's own catalog when it declares the item.
+    Catalog-only entries otherwise belong to their first actual declarer.
+    """
+    catalogs, definition_owners = [], {}
+    for index, files in enumerate(ordered_packs):
+        catalog = json.loads(files[CATALOG]) if CATALOG in files else {}
+        catalogs.append({item
+                         for category in catalog.get('minecraft:crafting_items_catalog', {}).get('categories', [])
+                         for group in category['groups'] for item in group['items']})
+        for path, raw in files.items():
+            if not path.endswith('.json') or not path.startswith(('items/', 'blocks/')):
+                continue
+            try:
+                document = json.loads(raw)
+            except (ValueError, UnicodeError):
+                continue
+            kind = 'minecraft:item' if path.startswith('items/') else 'minecraft:block'
+            value = document.get(kind)
+            if isinstance(value, dict) and 'identifier' in value.get('description', {}):
+                definition_owners.setdefault(value['description']['identifier'], index)
+
+    declarations = {}
+    for index, items in enumerate(catalogs):
+        for item in items:
+            declarations.setdefault(item, []).append(index)
+    delegated = [set() for _ in catalogs]
+    for item, indexes in declarations.items():
+        effective = definition_owners.get(item)
+        owner = effective if effective in indexes else indexes[0]
+        for index in range(len(catalogs)):
+            if index != owner:
+                delegated[index].add(item)
+    return delegated
+
+
+def regroup_creative(bp_files, rules, *, cataloged_elsewhere=()):
     """Return ``updates``, RP ``labels`` and untouched ``unmapped`` entries.
 
     ``groups`` maps aliases to category/name/vanilla-icon/locale-label objects.
@@ -46,6 +84,8 @@ def regroup_creative(bp_files, rules):
     Optional ``components`` maps the roles food/drink/tool/weapon/ranged/
     projectile/wearable; ``tags`` maps exact native item tags. No rule matches
     by an identifier substring, and no rule promotes a hidden implementation.
+    ``cataloged_elsewhere`` contains IDs owned by another actual pack catalog;
+    their definitions are still classified, but their entries are delegated.
     """
     groups = rules['groups']
     by_name, aliases = {}, {}
@@ -97,7 +137,8 @@ def regroup_creative(bp_files, rules):
         if item not in order:
             order.append(item)
 
-    updates, buckets, labels, unmapped, hidden = {}, {}, {}, [], []
+    updates, buckets, labels, unmapped, hidden, delegated = {}, {}, {}, [], [], []
+    cataloged_elsewhere = set(cataloged_elsewhere)
     item_rules = rules.get('items', {})
     group_rules = rules.get('group_moves', {})
     component_rules = rules.get('components', {})
@@ -136,15 +177,24 @@ def regroup_creative(bp_files, rules):
             for path, document, kind in visible:
                 description = document[kind]['description']
                 original = description['menu_category']
-                changed = {**original, 'category': category, 'group': group_name}
+                changed = {**original, 'category': category}
+                # Legacy loaders prepend minecraft: themselves. Keep their
+                # format/gameplay intact and let the modern catalog own groups.
+                if tuple(map(int, document['format_version'].split('.'))) >= (1, 21, 60):
+                    changed['group'] = group_name
+                else:
+                    changed.pop('group', None)
                 if changed != original:
                     description['menu_category'] = changed
                     updates[path] = _encoded(document)
-        else:
+        elif item not in cataloged_elsewhere:
             unmapped.append({'identifier': item, 'category': category, 'group': group_name})
         if category not in CATEGORIES:
             raise ValueError('Visible entry has no native creative category: ' + item)
-        buckets.setdefault((category, group_name), []).append(item)
+        if item in cataloged_elsewhere:
+            delegated.append({'identifier': item, 'category': category, 'group': group_name})
+        else:
+            buckets.setdefault((category, group_name), []).append(item)
 
     ranks = {name: index for index, name in enumerate(by_name)}
     categories = []
@@ -165,4 +215,4 @@ def regroup_creative(bp_files, rules):
     if (categories or CATALOG in bp_files) and raw != bp_files.get(CATALOG):
         updates[CATALOG] = raw
     return {'updates': updates, 'labels': labels, 'unmapped': unmapped,
-            'unparsed_files': unparsed, 'hidden': hidden}
+            'unparsed_files': unparsed, 'hidden': hidden, 'delegated': delegated}
