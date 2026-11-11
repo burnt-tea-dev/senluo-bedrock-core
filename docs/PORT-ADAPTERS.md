@@ -255,6 +255,37 @@ skin PNG dimensions and a default classic choice do not supply that contract.
 Existing callers omitting `child_parts` retain their prior outputs. This source
 extension alone does not release or install a new game pack.
 
+## TACZ workbench face adaptation (2026-11-11)
+
+The complete author replay calls `install_tacz.adapt_files`, which owns these
+two bounded author geometry adaptations. They are not a deployment overlay,
+a pack-combination exception, or a replacement with the unfinished TACZ port.
+The author archive and the three restored gun-model sources remain unchanged.
+Both workbench input files are pinned by their complete original SHA-256.
+
+- `geometry.gunsmith`, `bone` cube 2: the mat's differently textured up/down
+  planes are only 0.00918 model units apart. Retire only the desk-hidden down
+  face. Preserve its up UV, size, origin, pivot, rotation and outline.
+- `geometry.attachmentblock`, `bone` cube 0: its up/down/east/west UV regions
+  are completely transparent. The opaque north/south rim faces, rather than
+  those transparent faces, lie at +/-8.015 after the author rotation. They
+  overlap the base's endcap area at +/-8.01, and the casing side area at
+  +/-7.99. Their gaps are 0.005 and 0.025 model units. Extend only this rim's
+  local Z bounds by 0.045 per end, placing the opaque faces at +/-8.06. The
+  local origin Z becomes -8.93789 and size Z 16.09; all UVs, inflate, other
+  axes, pivots, rotations, textures, materials and other geometry stay intact.
+  This deliberately changes only the rim's outer span by 0.09 model units
+  (0.005625 blocks), not the whole machine.
+
+The source relation is established by the original author model and texture
+alpha, using the Java SimpleBedrockModel loader's mirrored-X/ZYX convention.
+The Java `gun_smith_table` and `attachment_workbench` models retain the same
+thin mat and sloped rim construction. This is a source-level depth-conflict
+repair, not evidence of an accepted Minecraft picture. No automated tests,
+fixtures, native/gameplay probes, client checks, deployment, or remote writes
+were performed for this adaptation. A normally regenerated complete pair
+needs a fresh paired runtime identity from its caller before installation.
+
 ## Optional TACZ test profile
 
 Toolkit0.10 adds a separate local installer for the reviewed TACZ1.0.3 input.
