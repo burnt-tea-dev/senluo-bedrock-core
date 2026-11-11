@@ -114,6 +114,10 @@ def modern_tacz_player(raw):
     value = json.loads(raw)
     components = value['minecraft:entity']['components']
     legacy = components.get('minecraft:pushable')
+    if (legacy is None and components.get('minecraft:pushable_by_block') == {}
+            and 'minecraft:pushable_by_entity' not in components):
+        # New canonical composers already return the complete modern player.
+        return raw
     if (legacy != {'is_pushable': False, 'is_pushable_by_piston': True}
             or components.get('minecraft:pushable_by_block') != {}
             or 'minecraft:pushable_by_entity' in components):
@@ -125,9 +129,11 @@ def modern_tacz_player(raw):
     return (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
 
 
-def compose_players(source, player, descriptor, tacz=None):
+def compose_players(source, player, descriptor, tacz=None, *, riding=None,
+                    render_controller=None, render_controller_path=None,
+                    native_render_controller=None, behavior_player=None):
     source = Path(source).resolve()
-    pin = descriptor.get('composer_source', descriptor['grilling']['source'])
+    pin = descriptor['composer_source'] if 'composer_source' in descriptor else descriptor['grilling']['source']
     def git(*args):
         return subprocess.check_output(['git', *args], cwd=source, text=True).strip()
     if (git('rev-parse', 'HEAD') != pin['commit']
@@ -146,6 +152,26 @@ def compose_players(source, player, descriptor, tacz=None):
                    '--output', str(output)]
         if tacz is not None:
             command.extend(['--tacz', str(Path(tacz).resolve())])
+        if behavior_player is not None:
+            behavior = directory / 'behavior-player.json'
+            behavior.write_bytes(behavior_player)
+            command.extend(['--composed-behavior', str(behavior)])
+        if riding is not None:
+            if render_controller is None or render_controller_path is None:
+                raise ValueError('Riding needs the selected host controller bytes and its original RP path')
+            controller = directory / 'host-render-controllers.json'
+            selected = json.loads(render_controller)
+            if native_render_controller is not None:
+                # Engine-native TP/map/spectator routes remain effective even
+                # when the host only overrides FP. Carry those routes into the
+                # same document; the selected host wins each existing name.
+                native = json.loads(native_render_controller)
+                selected['render_controllers'] = {
+                    **native['render_controllers'], **selected['render_controllers']}
+            controller.write_text(json.dumps(selected, ensure_ascii=False, indent=2) + '\n')
+            command.extend(['--riding', str(Path(riding).resolve()),
+                            '--host-render-controllers', str(controller),
+                            '--host-render-controllers-target', render_controller_path])
         subprocess.run(command, check=True, capture_output=True, text=True)
         receipt = json.loads((output / 'receipt.json').read_bytes())
         files = {}

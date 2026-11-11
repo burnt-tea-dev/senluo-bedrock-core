@@ -167,6 +167,27 @@ Original and generated author archives never belong in public Releases.
 Source checks do not establish real first-person, food, sound or multiplayer
 acceptance.
 
+## Shared motorcycle presentation input
+
+`tools/install_player_presentation.py::compose_players` accepts `riding` (the
+OTC local export directory), `render_controller` (the effective controller
+bytes), and `render_controller_path` (its original `RP/render_controllers/...`
+path). If the host supplies only FP, pass `native_render_controller` from the
+selected engine; host entries win by controller name. Supply `behavior_player`
+to extend an already composed complete BP/RP pair, retaining accepted IE/TACZ
+changes. This calls the same pinned Grilling composer with
+`--composed-behavior`; it does not repeat the original TACZ merge.
+
+Install every returned `BP/` and `RP/` file into that same selected pair. The
+result includes the player property, player resource definition, geometry,
+animations, controllers and local native license. Taking just the resource
+player disconnects the feature. The original exact clean-source commit/tree
+pin remains required. Pair selection, fresh release identities and admission
+remain the caller's existing responsibilities; this source change selects no
+new pack or version. No test, client observation or deployment was performed
+for this wiring. OTC's `docs/PLAYER-RIG-PROTOTYPE.md` owns the gameplay mapping
+and remaining FP/skin limitations.
+
 ## Shared first-person left-arm request
 
 `tools/install_player_presentation.py::compose_first_person_arm_request`
