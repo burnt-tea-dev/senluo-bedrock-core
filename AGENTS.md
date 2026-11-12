@@ -1,6 +1,6 @@
 # Senluo Bedrock Core
 
-Use the shared [pstack agent workflow](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/5bc82d3d60e1837306eeb3f0ae4da64c7df4b392/family/UPDATE-WORKFLOW.md#pstack-代理入口) for task routing, host adaptation, scoped verification and Draft PR delivery. Its project constraints override upstream defaults; retain the repository-specific contracts below.
+Follow upstream pstack for development and ready PR delivery through the [shared entry](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/1a992c4831f5bb83e237e70223e63acb7d326c69/family/UPDATE-WORKFLOW.md#pstack-代理入口). In Codex, read its linked host adapter once before any pstack skill.
 
 - This repository owns the shared SDK and generic local adapter tooling. Gameplay belongs to its addon repository; host storage retains its existing pack UUID and data format.
 - Never commit author addon archives, complete author scripts, private integration source, host configuration, worlds or credentials. Public release inputs are an explicit allowlist.
