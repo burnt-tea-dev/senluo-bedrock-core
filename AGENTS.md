@@ -1,5 +1,7 @@
 # Senluo Bedrock Core
 
+Use the shared [pstack agent workflow](https://github.com/burnt-tea-dev/kaleidoscope-tavern-unofficial/blob/5bc82d3d60e1837306eeb3f0ae4da64c7df4b392/family/UPDATE-WORKFLOW.md#pstack-代理入口) for task routing, host adaptation, scoped verification and Draft PR delivery. Its project constraints override upstream defaults; retain the repository-specific contracts below.
+
 - This repository owns the shared SDK and generic local adapter tooling. Gameplay belongs to its addon repository; host storage retains its existing pack UUID and data format.
 - Never commit author addon archives, complete author scripts, private integration source, host configuration, worlds or credentials. Public release inputs are an explicit allowlist.
 - Read `.repo-target.json` and verify remote repository name, numeric ID, owner and visibility before remote writes. Changes go through PR, required CI and merge.
