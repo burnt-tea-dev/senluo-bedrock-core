@@ -44,9 +44,8 @@ def _player_parts(doc: dict, controller: dict):
                    and item.startswith("variable.kie_eating_active=")]
     if len(assignments) != 1:
         raise ValueError("IE player must declare its eating-active expression once")
-    gate = assignments[0].partition("=")[2]
-    if gate.endswith(";"):
-        gate = gate[:-1]
+    # The host computes this value in pre_animation before render controllers.
+    gate = "variable.kie_eating_active"
     part_visibility = controller.get("render_controllers", {}).get(
         "controller.render.player.first_person", {}).get("part_visibility", [])
     if len(part_visibility) <= 4:
