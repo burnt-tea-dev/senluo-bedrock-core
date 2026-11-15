@@ -131,7 +131,10 @@ def modern_tacz_player(raw):
 
 def compose_players(source, player, descriptor, tacz=None, *, riding=None,
                     render_controller=None, render_controller_path=None,
-                    native_render_controller=None, behavior_player=None):
+                    native_render_controller=None, behavior_player=None, riding_renderer=None):
+    """Compose players, or rebuild only the riding renderer of a retained pair."""
+    if riding_renderer is not None and (behavior_player is None or riding is not None or tacz is not None):
+        raise ValueError('Riding renderer replay needs a retained pair without a second riding/TACZ composition')
     source = Path(source).resolve()
     pin = descriptor['composer_source'] if 'composer_source' in descriptor else descriptor['grilling']['source']
     def git(*args):
@@ -156,7 +159,7 @@ def compose_players(source, player, descriptor, tacz=None, *, riding=None,
             behavior = directory / 'behavior-player.json'
             behavior.write_bytes(behavior_player)
             command.extend(['--composed-behavior', str(behavior)])
-        if riding is not None:
+        if riding is not None or riding_renderer is not None:
             if render_controller is None or render_controller_path is None:
                 raise ValueError('Riding needs the selected host controller bytes and its original RP path')
             controller = directory / 'host-render-controllers.json'
@@ -169,7 +172,8 @@ def compose_players(source, player, descriptor, tacz=None, *, riding=None,
                 selected['render_controllers'] = {
                     **native['render_controllers'], **selected['render_controllers']}
             controller.write_text(json.dumps(selected, ensure_ascii=False, indent=2) + '\n')
-            command.extend(['--riding', str(Path(riding).resolve()),
+            command.extend(['--riding-renderer' if riding_renderer is not None else '--riding',
+                            str(Path(riding_renderer if riding_renderer is not None else riding).resolve()),
                             '--host-render-controllers', str(controller),
                             '--host-render-controllers-target', render_controller_path])
         subprocess.run(command, check=True, capture_output=True, text=True)
