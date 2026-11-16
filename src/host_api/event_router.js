@@ -15,17 +15,18 @@ function interact(routes,event){
  for(const route of targets)if(route.observe)invoke(route,event);
 }
 function channel(subscribe,unsubscribe,dispatch=broadcast,exclusive=false){
- const routes=[];
- // A callback may remove its own route; that must not skip the next owner.
- const receive=event=>dispatch([...routes],event);
+ let routes=[];
+ // Replace the array only when subscriptions change. An in-flight dispatch
+ // keeps its snapshot even if a callback adds or removes a route.
+ const receive=event=>dispatch(routes,event);
  return (id,handle,{priority=0,blocks,observe=false}={})=>{
   if(exclusive&&routes.some(route=>route.id===id))throw Error('Duplicate block interaction owner: '+id);
   if(!routes.length)subscribe(receive);
   const route={id,handle,priority,blocks:blocks&&new Set(blocks),observe};
-  routes.push(route);routes.sort((a,b)=>a.priority-b.priority);
+  routes=[...routes,route].sort((a,b)=>a.priority-b.priority);
   return ()=>{
    const index=routes.indexOf(route);if(index<0)return;
-   routes.splice(index,1);if(!routes.length)unsubscribe(receive);
+   routes=routes.filter(other=>other!==route);if(!routes.length)unsubscribe(receive);
   };
  };
 }
