@@ -18,7 +18,8 @@ class ReleaseScopeTests(unittest.TestCase):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         root = Path(temporary.name)
-        files = {"LICENSE": b"License remains unchanged\n", "src/core.js": b"export const value = 1;\n",
+        files = {"LICENSE": b"License remains unchanged\n",
+                 "resources/texts/food_api.lang": "senluo.public.food.v1=§r\n".encode(), "src/core.js": b"export const value = 1;\n",
                  "tools/install_cookery.py": b"# Current toolkit installer\n"}
         sha = lambda raw: hashlib.sha256(raw).hexdigest()
         sdk = {"version": "0.1.0", "files": {"scripts/core.js": {
@@ -27,7 +28,7 @@ class ReleaseScopeTests(unittest.TestCase):
         files["package.json"] = b'{"version":"0.8.0"}'
         names = [*files, "PUBLICATION.json", "release-history.json"]
         files["PUBLICATION.json"] = json.dumps({"files": names}).encode()
-        old_payloads = {name: sha(files[name]) for name in ("LICENSE", "sdk.json", "src/core.js")}
+        old_payloads = {name: sha(files[name]) for name in ("LICENSE", "sdk.json", "resources/texts/food_api.lang", "src/core.js")}
         old_payloads["tools/install_cookery.py"] = sha(b"# Historical installer\n")
         history = {"0.1.0": {"payloads": old_payloads}, "0.8.0": {
             "toolkit_version": "0.8.0", "sdk_version": "0.1.0",

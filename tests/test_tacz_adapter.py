@@ -6,6 +6,7 @@ import sys
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
@@ -213,7 +214,10 @@ async function load(root){
     def test_complete_pair_keeps_author_identity_scripts_pixels_and_gun_controller(self):
         originals, composed, controller, descriptor = self.fixture()
         before = copy.deepcopy(originals)
-        result, receipt = adapt_files(originals, composed, controller, descriptor)
+        # This reduced pair covers identity, scripts and player routing.
+        # Exact author workbench geometry belongs to its separate source owner.
+        with patch('install_tacz.repair_workbench_geometry', return_value={}):
+            result, receipt = adapt_files(originals, composed, controller, descriptor)
         self.assertEqual(originals, before)
         self.assertNotIn('Author BP/entities/plalyer.json', result)
         self.assertEqual(result['Author BP/entities/player.json'], composed['BP/entities/player.json'])
@@ -278,7 +282,9 @@ async function load(root){
         originals[function] = b'fill ~ ~ ~ ~1 ~1 ~1 air replace glass_panel\nfill ~ ~ ~ ~1 ~1 ~1 air replace stained_glass_panel\n'
         originals['Author BP/scripts/events/cleanup.js'] = b'original ten-tick cleanup'
         before = copy.deepcopy(originals)
-        fixed, receipt = adapt_files(originals, composed, controller, descriptor)
+        # Keep the existing projectile case scoped to its reduced bullet input.
+        with patch('install_tacz.repair_workbench_geometry', return_value={}):
+            fixed, receipt = adapt_files(originals, composed, controller, descriptor)
         self.assertNotIn('minecraft:tick_world', read_definition(fixed[path])['minecraft:entity']['components'])
         self.assertEqual(read_definition(fixed[path])['minecraft:entity']['components']['minecraft:projectile'],
                          bullet['minecraft:entity']['components']['minecraft:projectile'])

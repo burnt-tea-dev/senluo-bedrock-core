@@ -236,6 +236,7 @@ class AssembleFamilyTests(unittest.TestCase):
             root = Path(td) / "source"
             files = {
                 "LICENSE": "license text",
+                "resources/texts/food_api.lang": "senluo.public.food.v1=§r\n",
                 "PUBLICATION.json": "",
                 "README.md": "toolkit source, no family recipe",
                 "package.json": json.dumps({"name": "senluo-bedrock-core", "version": "0.2.0"}),
@@ -249,11 +250,12 @@ class AssembleFamilyTests(unittest.TestCase):
             names = sorted(files)
             files["PUBLICATION.json"] = json.dumps({"schema": 1, "files": names})
             toolkit_payloads = {name: digest(files[name].encode()) for name in (
-                "LICENSE", "sdk.json", "PUBLICATION.json", "README.md", "package.json",
+                "LICENSE", "sdk.json", "resources/texts/food_api.lang", "PUBLICATION.json", "README.md", "package.json",
                 "tools/build_release.py", "tools/assemble_family.py",
                 "tests/test_assemble_family.py", "docs/FAMILY-ASSEMBLY.md")}
             files["release-history.json"] = json.dumps({"schema": 1,
-                "0.1.0": {"payloads": {}, "cookery_version": [1, 6, 4]},
+                "0.1.0": {"payloads": {name: digest(files[name].encode()) for name in
+                    ("LICENSE", "sdk.json", "resources/texts/food_api.lang")}, "cookery_version": [1, 6, 4]},
                 "0.2.0": {"sdk_version": "0.1.0", "toolkit_version": "0.2.0",
                            "payloads": toolkit_payloads}})
             for relative, content in files.items():
