@@ -77,6 +77,7 @@
     "package.json",
     "release-history.json",
     "resources/textures/terrain_texture.json",
+    "resources/texts/food_api.lang",
     "sdk.json",
     "src/host_api/cookery-guide-decoding.js",
     "src/host_api/cookery-guide-startup.js",
