@@ -92,6 +92,56 @@ Crafting, chopping boards, oil, pots, recipes, rewards and persistent gameplay
 data remain addon responsibilities. Core is not a Java JAR or a Bedrock port of
 the Java Kaleidoscope Lib API.
 
+## Native block shape compaction
+
+`tools/block_shapes.py::compact_block()` compacts explicitly selected block
+bounds into containing boxes. The caller owns input provenance and the decision
+to compact each block. With no new options, the existing behavior is unchanged:
+collision and selection bounds are processed independently. Switching solidity
+is still rejected unless the caller selects the existing `allow_empty` handling
+for mixtures of `false` and boxes.
+
+Use `compact_block(definition, non_solid=True)` when the owner's source confirms
+that the block should allow entities to pass through in every state. This sets
+the base `minecraft:collision_box` to `false` and removes collision overrides
+from every permutation before compaction. It does not infer solidity from a
+model, a selection box or an addon name. The input is copied; block identity,
+state values and other component data retain their existing ownership.
+
+Selection still follows the existing compaction algorithm. This option does not
+turn off cursor selection, and it is not a standalone transformation that
+preserves arbitrary state-specific selection boxes. Review those bounds before
+selecting a block for compaction. Permutations emptied by compaction continue to
+be removed by the existing cleanup.
+
+For a collision decision that must preserve every existing selection box, use
+`with_collision(definition, collision)` instead. It copies the definition, sets
+the supplied native collision value at the base, and removes only collision
+overrides from permutations. Selection bounds, mixed selectable/non-selectable
+states, permutation order and all other data stay intact. The collision value
+is copied too; neither caller-owned argument is mutated. This operation does
+not compact boxes or remove empty permutations. `with_collision(definition,
+False)` therefore supports pass-through multipart decorations whose helper
+cells deliberately have `selection_box:false` without expanding their targets.
+The caller must verify the supplied boolean, box or box array against the
+selected engine/format and the physical behavior of the original source; an
+interaction actor's dimensions are not evidence of physical collision.
+
+For reviewed state-dependent physical shapes, the optional `permutations`
+mapping assigns collision values to exact, already-existing condition strings.
+For example, a furniture block's existing height state can retain distinct short
+and tall collision boxes without changing its visual or selection permutations.
+An unknown condition raises `ValueError`; the helper does not add a state or
+guess an expression. Unspecified permutation collisions are removed, so the
+base and supplied overrides form the complete new physical definition.
+
+Bedrock supports [disabling native block collision](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/blockreference/examples/blockcomponents/minecraftblock_collision_box?view=minecraft-bedrock-stable)
+without disabling the independent [cursor selection box](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/blockreference/examples/blockcomponents/minecraftblock_selection_box?view=minecraft-bedrock-stable).
+This build-time option adds no script callback, tick loop or helper entity.
+Consumers must pin the committed source and hash, then regenerate their copies
+and addon outputs through their existing build. This source capability does not
+publish a toolkit release or modify a generated consumer.
+
 ## Save compatibility
 
 No pack UUID, module UUID, persisted key, item ID, block ID or state value is
