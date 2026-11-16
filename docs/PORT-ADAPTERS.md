@@ -167,6 +167,21 @@ Original and generated author archives never belong in public Releases.
 Source checks do not establish real first-person, food, sound or multiplayer
 acceptance.
 
+## IE source-only arm references
+
+`tools/install_player_presentation.py::source_only_ie_arm_resources` accepts
+resource paths and an optional archive RP prefix. It returns only the present
+`java_grip_aligned_arms.animation.json` and `rig_solved_arms.animation.json` paths
+under `animations/kaleidoscope_immersive_eating/`. The IE archive adapter omits
+these unused reference files from its adapted runtime output and records them
+separately from preserved author files. Original archives remain unchanged.
+
+Retained complete IE inputs use the same function before normal output creation.
+This operation does not replay player composition or alter other animation bytes.
+The selected author input and supported callers must be reviewed when they change;
+arbitrary external commands requesting the omitted animation IDs lose those IDs.
+No client loading-time improvement has been established.
+
 ## Shared motorcycle presentation input
 
 `tools/install_player_presentation.py::compose_players` accepts `riding` (the
