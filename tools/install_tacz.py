@@ -62,7 +62,7 @@ def repair_ui(originals, prefix):
 
 
 def repair_workbench_geometry(originals, prefix):
-    """Adapt the two author workbench face layers without changing materials."""
+    """Adapt author workbench face layers without changing materials."""
     pins = {
         'models/entity/ivw63ij45j/emx6ebskbh/k2swp3uemc/cyukk3ha26/cD2cRDrrpfTHTxMo.json':
             ('geometry.gunsmith', 'dac00c1e5d87d67e58a3422965c82293d51ae37c2f1144db434afaf67bc9d3c0'),
@@ -85,6 +85,18 @@ def repair_workbench_geometry(originals, prefix):
             # uses a different solid UV and is hidden by the desk. Do not draw
             # that competing back layer in the block's double-sided material.
             del bone['cubes'][2]['uv']['down']
+            # The vice foot meets the opaque desk at Y=13.77. Only its front
+            # third overhangs the desk: keep that underside at the original
+            # position/UV density, without the two desk-hidden texture rows
+            # competing with the desk top in the double-sided material.
+            vice, = [row for row in geometry['bones'] if row['name'] == 'vice']
+            foot = vice['cubes'][0]
+            down = foot['uv'].pop('down')
+            vice['cubes'].append({
+                'origin': foot['origin'].copy(),
+                'size': [foot['size'][0], 0, 0.918],
+                'uv': {'down': {'uv': down['uv'], 'uv_size': [3, -1]}},
+            })
         else:
             # Only north/south of this sloped glass rim are opaque. Their
             # author planes sit at +/-8.015, only 0.005 from the base endcaps
