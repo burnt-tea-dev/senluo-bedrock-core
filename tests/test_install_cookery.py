@@ -83,6 +83,8 @@ class InstallerTests(unittest.TestCase):
         untouched_info = zipfile.ZipInfo(bp + "unrelated.bin", (2020, 2, 3, 4, 5, 6))
         untouched_info.external_attr = 0o100640 << 16
         updates = {bp + "manifest.json": bp_manifest, rp + "manifest.json": rp_manifest,
+                   rp + "texts/languages.json": b'["en_US"]',
+                   rp + "texts/en_US.lang": b"pack.name=Cookery\n",
                    bp + target: source, bp + "unrelated.bin": b"keep these bytes\x00",
                    gbp + "scripts/core/helper.js": b"export const sdk=1;\n"}
         cookery_bytes = make_zip({k: v for k, v in updates.items() if not k.startswith(gbp)},
@@ -129,10 +131,10 @@ class InstallerTests(unittest.TestCase):
         cookery, grilling = self.paths(data)
         output, receipt = installer.apply_archive(cookery, grilling, data[2])
         self.assertEqual(receipt["version"], [1, 6, 20001])
-        self.assertEqual(receipt["input_file_count"], 4)
-        self.assertEqual(receipt["output_file_count"], 5)
-        self.assertEqual(receipt["unmodified_input_tree"]["file_count"], 1)
-        self.assertEqual(receipt["output_tree"]["file_count"], 5)
+        self.assertEqual(receipt["input_file_count"], 6)
+        self.assertEqual(receipt["output_file_count"], 7)
+        self.assertEqual(receipt["unmodified_input_tree"]["file_count"], 2)
+        self.assertEqual(receipt["output_tree"]["file_count"], 7)
         self.assertEqual(receipt["manifest_identities"][data[4] + "manifest.json"]["dependencies"],
                          [{"uuid": "rp-uuid", "version": [1, 6, 20001]},
                           {"uuid": "engine", "version": "1.21.0"}])

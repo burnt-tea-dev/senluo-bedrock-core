@@ -118,7 +118,7 @@ class PortAdapterTests(unittest.TestCase):
                 "controller_sha256": digest(ie_controller)},
             "grilling": {"archive_sha256": digest(grilling), "controller_path": grilling_controller_path,
                 "controller_sha256": digest(grilling_controller), "source": {"commit": "synthetic"}},
-            "output_sha256": "d4af47c315c4e7ac64a3e9b7eb0fa086588b6d1d0303a02708c73e65942dcf28"}
+            "output_sha256": "ddffa1cbec88b6a65a9cbf2f65effa0faf5302092c9c292e29c685ac824a4f4c"}
         with tempfile.TemporaryDirectory() as td:
             ie_path, grilling_path = Path(td) / "ie.mcaddon", Path(td) / "grilling.zip"
             ie_path.write_bytes(ie); grilling_path.write_bytes(grilling)
@@ -131,7 +131,7 @@ class PortAdapterTests(unittest.TestCase):
             self.assertEqual(source["render_controllers"]["controller.render.player.first_person"]["part_visibility"][1]["rightArm"],
                              "GRILL_RIGHT")
             self.assertEqual(generated["render_controllers"]["controller.render.player.first_person"]["part_visibility"][1]["rightArm"],
-                             "((query.is_first_person && query.main_hand_item_use_duration>0)) ? (IE_RIGHT) : (GRILL_RIGHT)")
+                             "(variable.kie_eating_active) ? (IE_RIGHT) : (GRILL_RIGHT)")
 
 
 if __name__ == "__main__":
