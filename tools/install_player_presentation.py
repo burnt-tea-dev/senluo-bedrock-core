@@ -212,6 +212,15 @@ def advance_manifest(raw, version, paired_uuids, companion, minimum=None):
     return (json.dumps(manifest, ensure_ascii=False, indent=2) + '\n').encode()
 
 
+def source_only_ie_arm_resources(resource_paths, prefix=''):
+    """Select unused IE arm references; original archives remain source inputs."""
+    paths = set(resource_paths)
+    return tuple(prefix + 'animations/kaleidoscope_immersive_eating/' + name
+                 for name in ('java_grip_aligned_arms.animation.json',
+                              'rig_solved_arms.animation.json')
+                 if prefix + 'animations/kaleidoscope_immersive_eating/' + name in paths)
+
+
 def apply_archive(ie, grilling, source, descriptor, tacz=None):
     if tacz is not None:
         raise ValueError('TACZ needs the reviewed single behavior-player owner adapter')
@@ -248,7 +257,9 @@ def apply_archive(ie, grilling, source, descriptor, tacz=None):
                 {'uuid': descriptor['grilling'][side.lower() + '_uuid'],
                  'version': descriptor['grilling']['version'].copy()},
                 descriptor['behavior_min_engine_version'] if side == 'BP' else None)
-        files = {**originals, **changed}
+        source_only_files = source_only_ie_arm_resources(originals, roots['RP'])
+        files = {name: raw for name, raw in {**originals, **changed}.items()
+                 if name not in source_only_files}
         output = io.BytesIO()
         with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as target:
             for name, raw in files.items():
@@ -264,7 +275,9 @@ def apply_archive(ie, grilling, source, descriptor, tacz=None):
                        grilling_source=descriptor['grilling']['source'],
                        controller=controller_receipt,
                        changed_files={name: sha256(raw) for name, raw in changed.items()},
-                       preserved_author_files=sum(name not in changed for name in originals),
+                       preserved_author_files=sum(name not in changed and name not in source_only_files
+                                                  for name in originals),
+                       source_only_files=list(source_only_files),
                        behavior_player_owner='Grilling; no duplicate added to IE',
                        distribution='user-local only; never a public release asset')
         return result, receipt
