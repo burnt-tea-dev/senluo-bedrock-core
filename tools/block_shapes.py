@@ -9,9 +9,15 @@ import json
 FIELDS = ('minecraft:collision_box', 'minecraft:selection_box')
 
 
-def compact_block(value, *, allow_empty=False):
+def compact_block(value, *, allow_empty=False, non_solid=False):
     result = copy.deepcopy(value)
     block = result['minecraft:block']
+    if non_solid:
+        # The owner explicitly selected pass-through behavior in every state.
+        # Selection bounds remain independent and follow normal compaction.
+        block['components']['minecraft:collision_box'] = False
+        for permutation in block.get('permutations', []):
+            permutation['components'].pop('minecraft:collision_box', None)
     rows = [block['components'], *[p['components'] for p in block.get('permutations', [])]]
     for field in FIELDS:
         values = [row[field] for row in rows if field in row]
