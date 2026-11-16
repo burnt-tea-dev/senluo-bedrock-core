@@ -114,6 +114,27 @@ preserves arbitrary state-specific selection boxes. Review those bounds before
 selecting a block for compaction. Permutations emptied by compaction continue to
 be removed by the existing cleanup.
 
+For a collision decision that must preserve every existing selection box, use
+`with_collision(definition, collision)` instead. It copies the definition, sets
+the supplied native collision value at the base, and removes only collision
+overrides from permutations. Selection bounds, mixed selectable/non-selectable
+states, permutation order and all other data stay intact. The collision value
+is copied too; neither caller-owned argument is mutated. This operation does
+not compact boxes or remove empty permutations. `with_collision(definition,
+False)` therefore supports pass-through multipart decorations whose helper
+cells deliberately have `selection_box:false` without expanding their targets.
+The caller must verify the supplied boolean, box or box array against the
+selected engine/format and the physical behavior of the original source; an
+interaction actor's dimensions are not evidence of physical collision.
+
+For reviewed state-dependent physical shapes, the optional `permutations`
+mapping assigns collision values to exact, already-existing condition strings.
+For example, a furniture block's existing height state can retain distinct short
+and tall collision boxes without changing its visual or selection permutations.
+An unknown condition raises `ValueError`; the helper does not add a state or
+guess an expression. Unspecified permutation collisions are removed, so the
+base and supplied overrides form the complete new physical definition.
+
 Bedrock supports [disabling native block collision](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/blockreference/examples/blockcomponents/minecraftblock_collision_box?view=minecraft-bedrock-stable)
 without disabling the independent [cursor selection box](https://learn.microsoft.com/en-us/minecraft/creator/reference/content/blockreference/examples/blockcomponents/minecraftblock_selection_box?view=minecraft-bedrock-stable).
 This build-time option adds no script callback, tick loop or helper entity.

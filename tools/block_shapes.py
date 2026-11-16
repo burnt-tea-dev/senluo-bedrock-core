@@ -9,15 +9,37 @@ import json
 FIELDS = ('minecraft:collision_box', 'minecraft:selection_box')
 
 
-def compact_block(value, *, allow_empty=False, non_solid=False):
+def with_collision(value, collision, *, permutations=None):
+    """Set owner-reviewed collision values without changing selection.
+
+    The caller supplies the native component value for the selected engine.
+    No shape inference, containing-box compaction or permutation cleanup occurs.
+    Optional overrides must name conditions already present in the definition.
+    """
     result = copy.deepcopy(value)
     block = result['minecraft:block']
+    overrides = permutations or {}
+    conditions = {p['condition'] for p in block.get('permutations', [])}
+    if overrides.keys() - conditions:
+        raise ValueError('Collision override has no existing permutation: ' +
+                         block['description']['identifier'])
+    block['components']['minecraft:collision_box'] = copy.deepcopy(collision)
+    for permutation in block.get('permutations', []):
+        permutation['components'].pop('minecraft:collision_box', None)
+        if permutation['condition'] in overrides:
+            permutation['components']['minecraft:collision_box'] = copy.deepcopy(
+                overrides[permutation['condition']])
+    return result
+
+
+def compact_block(value, *, allow_empty=False, non_solid=False):
     if non_solid:
         # The owner explicitly selected pass-through behavior in every state.
         # Selection bounds remain independent and follow normal compaction.
-        block['components']['minecraft:collision_box'] = False
-        for permutation in block.get('permutations', []):
-            permutation['components'].pop('minecraft:collision_box', None)
+        result = with_collision(value, False)
+    else:
+        result = copy.deepcopy(value)
+    block = result['minecraft:block']
     rows = [block['components'], *[p['components'] for p in block.get('permutations', [])]]
     for field in FIELDS:
         values = [row[field] for row in rows if field in row]
