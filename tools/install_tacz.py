@@ -61,6 +61,43 @@ def repair_ui(originals, prefix):
     return changed
 
 
+def repair_workbench_geometry(originals, prefix):
+    """Adapt the two author workbench face layers without changing materials."""
+    pins = {
+        'models/entity/ivw63ij45j/emx6ebskbh/k2swp3uemc/cyukk3ha26/cD2cRDrrpfTHTxMo.json':
+            ('geometry.gunsmith', 'dac00c1e5d87d67e58a3422965c82293d51ae37c2f1144db434afaf67bc9d3c0'),
+        'models/entity/7sf3y8pgug/tbugf3ryy4/9iflqaiix8/0dmkuyb0dw/GmkKUecFxdaFdugi.json':
+            ('geometry.attachmentblock', 'fabb0d44da0076d5c1ed0f01b85666f8ec09b8492a7b168e6178cba513ac3d70'),
+    }
+    changed = {}
+    for relative, (identifier, digest) in pins.items():
+        path = prefix + relative
+        raw = originals[path]
+        if sha256(raw) != digest:
+            raise ValueError('TACZ workbench geometry preimage differs: ' + path)
+        value = read_definition(raw)
+        geometry, = value['minecraft:geometry']
+        if geometry['description']['identifier'] != identifier:
+            raise ValueError('TACZ workbench geometry identity differs: ' + path)
+        bone, = [row for row in geometry['bones'] if row['name'] == 'bone']
+        if identifier == 'geometry.gunsmith':
+            # This opaque mat is only 0.00918 model units thick. Its underside
+            # uses a different solid UV and is hidden by the desk. Do not draw
+            # that competing back layer in the block's double-sided material.
+            del bone['cubes'][2]['uv']['down']
+        else:
+            # Only north/south of this sloped glass rim are opaque. Their
+            # author planes sit at +/-8.015, only 0.005 from the base endcaps
+            # and 0.025 from the glass casing. Separate those two end faces
+            # along their common normal; keep thickness, pose and every UV.
+            # Each end moves 0.045 model units, to +/-8.06. No inflate change.
+            rim = bone['cubes'][0]
+            rim['origin'][2] = -8.93789
+            rim['size'][2] = 16.09
+        changed[path] = (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
+    return changed
+
+
 def repair_sound_definitions(raw, descriptor):
     definitions = read_definition(raw)
     retired = set(descriptor.get('retired_unused_sound_events', []))
@@ -284,6 +321,7 @@ def adapt_files(originals, composed, controller, descriptor):
             value['dependencies'].append(ie)
         changed[name] = (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
     changed.update(repair_ui(originals, roots['RP']))
+    changed.update(repair_workbench_geometry(originals, roots['RP']))
     sound_path = roots['RP'] + 'sounds/sound_definitions.json'
     changed.update(repair_attachable_textures(originals, roots['RP'], descriptor))
     if sound_path in originals:

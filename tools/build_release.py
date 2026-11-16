@@ -16,7 +16,7 @@ def digest(raw):
 
 
 def sdk_files(sdk):
-    return ['LICENSE', 'sdk.json', *[row['source'] for row in sdk['files'].values()]]
+    return ['LICENSE', 'sdk.json', 'resources/texts/food_api.lang', *[row['source'] for row in sdk['files'].values()]]
 
 
 def validate():
@@ -37,8 +37,8 @@ def validate():
     payloads = release['payloads']
     # Historical source releases also pinned tools. Those belong to their
     # toolkit identity; SDK immutability covers the actual SDK download.
-    for name in set(sdk_files(sdk)) & payloads.keys():
-        if digest((ROOT / name).read_bytes()) != payloads[name]:
+    for name in sdk_files(sdk):
+        if digest((ROOT / name).read_bytes()) != payloads.get(name):
             raise ValueError('Release payload changed without a fresh identity: ' + name)
     for row in sdk['files'].values():
         if digest((ROOT / row['source']).read_bytes()) != row['sha256'] or row['source'] not in payloads:
